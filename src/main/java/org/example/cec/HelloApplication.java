@@ -37,7 +37,7 @@ public class HelloApplication extends Application {
         processButton.setStyle("-fx-background-color: rgba(0,123,255,0.85); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 10 20 10 20;");
         processButton.setOnAction(e -> {
             if (mainSheet == null || weekendSheet == null || holidaysSheet == null) {
-                showAlert("Please select all three sheets before processing.");
+                showAlert("Te rog selecteaza toate fisierele necesare!");
                 return;
             }
             showAlert("Files selected:\n" +
@@ -90,6 +90,12 @@ public class HelloApplication extends Application {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    private File HolidayModify(File mainSheet, File holidaysSheet) {
+
+
+        return mainSheet;
     }
 
     @FunctionalInterface
