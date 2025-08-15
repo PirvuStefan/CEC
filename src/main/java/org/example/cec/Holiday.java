@@ -26,6 +26,6 @@ public class Holiday {
     }
     public String getReason() {return reason; }
     public String getName() {return name; }
-
+    public String getMagazin() {return magazin; }
 
 }

@@ -168,6 +168,43 @@ public class HelloApplication extends Application {
             System.out.println("Holiday: " + holiday.getName() + ", " + holiday.getFirstDay() + "-" + holiday.getLastDay() + ", " + holiday.getReason());
         }
 
+        // now we do have the holiday data, we can modify the mainSheet
+        try (FileInputStream fis = new FileInputStream(mainSheet);
+             Workbook workbook = new XSSFWorkbook(fis)) {
+
+            Sheet sheet = workbook.getSheetAt(0);
+            for (int rowIndex = 0; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+                Row row = sheet.getRow(rowIndex);
+                if (row == null) break;
+                String name = row.getCell(2).getStringCellValue();
+                String magazin = row.getCell(2).getStringCellValue();
+                name = name.toLowerCase();
+                //magazin = magazin.toLowerCase();
+                for( Holiday holiday : holidays) {
+                    if (holiday.getName().toLowerCase().equals(name)) {
+                        // we found a match, we can modify the row
+
+                        System.out.println("Updated row " + (rowIndex + 1) + " for employee: " + name);
+                    }
+                }
+
+
+                // Process each row here
+                System.out.println("Processing row " + (rowIndex + 1));
+            }
+
+
+
+            try (FileOutputStream fos = new FileOutputStream(mainSheet)) {
+                workbook.write(fos);
+            }
+
+            System.out.println("Main sheet updated with holidays successfully!");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return mainSheet;
     }
 
