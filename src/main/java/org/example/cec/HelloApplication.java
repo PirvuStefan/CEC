@@ -115,17 +115,37 @@ public class HelloApplication extends Application {
 
             for (int rowIndex = 2; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
-                if (row == null) continue;
+                if (row == null) break;
 
                 String name = row.getCell(0).getStringCellValue();
                 System.out.println("Processing row " + (rowIndex + 1) + " for employee: " + name);
                 //int firstDay = (int) row.getCell(1).getNumericCellValue();
                 String magazin = row.getCell(1).getStringCellValue();
-                String period = row.getCell(2).getStringCellValue();
+                String period;
+                if (row.getCell(2).getCellType() == CellType.STRING) {
+                    period = row.getCell(2).getStringCellValue();
+                } else if (row.getCell(2).getCellType() == CellType.NUMERIC) {
+                    // If it's a date, format as day of month
+                    int day = row.getCell(2).getDateCellValue().getDate();
+                    period = day + "-" + day;
+                } else {
+                    period = "";
+                } // i should never be a date, we should always have a string like "1-5" or "1-2"
+
                 System.out.println("Vacation Period: " + period);
                 String firstDay = period.split("-")[0].trim();
                 String lastDay = period.split("-")[1].trim();
                 String reason = row.getCell(3).getStringCellValue();
+                reason = switch (reason) {
+                    case "co" -> "concediu";
+                    case "m" -> "maternitate";
+                    case "cm" -> "medical";
+                    case "absmot" -> "absentaMotivata";
+                    case "absmotiv" -> "absentaNemotivata";
+                    default -> "concediu"; // in caz ca nu se potriveste niciunul
+                };
+                Holiday holiday = new Holiday(Integer.parseInt(firstDay), Integer.parseInt(lastDay), reason, name, magazin);
+                holidays.add(holiday); // adauga in vectorul de concedii
 
 
 
