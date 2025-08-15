@@ -8,8 +8,15 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class HelloApplication extends Application {
 
@@ -94,6 +101,23 @@ public class HelloApplication extends Application {
 
     private File HolidayModify(File mainSheet, File holidaysSheet) {
 
+        String filePath = "example.xlsx"; // Path to the existing Excel file
+
+        try (FileInputStream fis = new FileInputStream(new File(filePath));
+             Workbook workbook = new XSSFWorkbook(fis)) {
+
+
+
+            // Save the changes to the file
+            try (FileOutputStream fos = new FileOutputStream(new File(filePath))) {
+                workbook.write(fos);
+            }
+
+            System.out.println("Excel file modified successfully!");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return mainSheet;
     }
