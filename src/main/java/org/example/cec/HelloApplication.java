@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -17,6 +18,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HelloApplication extends Application {
 
@@ -43,15 +46,17 @@ public class HelloApplication extends Application {
         processButton.setPrefWidth(200);
         processButton.setStyle("-fx-background-color: rgba(0,123,255,0.85); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 10 20 10 20;");
         processButton.setOnAction(e -> {
-            if (mainSheet == null || weekendSheet == null || holidaysSheet == null) {
+            if (mainSheet == null & weekendSheet == null & holidaysSheet == null) {
                 showAlert("Te rog selecteaza toate fisierele necesare!");
                 return;
             }
+            holidaysSheet = HolidayModify(mainSheet, holidaysSheet);
             showAlert("Files selected:\n" +
                     "Main: " + mainSheet.getName() + "\n" +
                     "Weekend: " + weekendSheet.getName() + "\n" +
                     "Holidays: " + holidaysSheet.getName());
         });
+
 
         VBox root = new VBox(30, title, fileSelectors, processButton);
         root.setAlignment(Pos.CENTER);
@@ -100,15 +105,40 @@ public class HelloApplication extends Application {
     }
 
     private File HolidayModify(File mainSheet, File holidaysSheet) {
-
-        String filePath = "example.xlsx"; // Path to the existing Excel file
+        List<Holiday> holidays = new ArrayList<>();
+        String filePath = holidaysSheet.getAbsolutePath();
 
         try (FileInputStream fis = new FileInputStream(new File(filePath));
              Workbook workbook = new XSSFWorkbook(fis)) {
 
+            Sheet sheet = workbook.getSheetAt(0);
 
+            for (int rowIndex = 2; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+                Row row = sheet.getRow(rowIndex);
+                if (row == null) continue;
+                System.out.println(row);
 
-            // Save the changes to the file
+                String name = row.getCell(0).getStringCellValue();
+                String vacationPeriod = row.getCell(1).getStringCellValue();
+                String vacationType = row.getCell(2).getStringCellValue();
+
+                // Validate vacationPeriod
+                if (vacationPeriod == null || vacationPeriod.isEmpty() || !vacationPeriod.contains("-")) {
+                    System.err.println("Invalid vacation period for row " + (rowIndex + 1));
+                    continue;
+                }
+
+                try {
+                    String[] periodParts = vacationPeriod.split("-");
+                    int firstDay = Integer.parseInt(periodParts[0].trim());
+                    int lastDay = Integer.parseInt(periodParts[1].split("\\.")[0].trim());
+
+                    holidays.add(new Holiday(firstDay, lastDay, vacationType, name));
+                } catch (NumberFormatException e) {
+                    System.err.println("Error parsing vacation period for row " + (rowIndex + 1) + ": " + vacationPeriod);
+                }
+            }
+
             try (FileOutputStream fos = new FileOutputStream(new File(filePath))) {
                 workbook.write(fos);
             }
@@ -117,6 +147,10 @@ public class HelloApplication extends Application {
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        for (Holiday holiday : holidays) {
+            System.out.println("Holiday: " + holiday.getName() + ", " + holiday.getFirstDay() + "-" + holiday.getLastDay() + ", " + holiday.getReason());
         }
 
         return mainSheet;
