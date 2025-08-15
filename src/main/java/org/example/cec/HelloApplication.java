@@ -116,27 +116,16 @@ public class HelloApplication extends Application {
             for (int rowIndex = 2; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
                 if (row == null) continue;
-                System.out.println(row);
 
                 String name = row.getCell(0).getStringCellValue();
-                String vacationPeriod = row.getCell(1).getStringCellValue();
-                String vacationType = row.getCell(2).getStringCellValue();
+                System.out.println("Processing row " + (rowIndex + 1) + " for employee: " + name);
+                int firstDay = (int) row.getCell(1).getNumericCellValue();
+                System.out.println("Vacation Period: " + firstDay);
 
-                // Validate vacationPeriod
-                if (vacationPeriod == null || vacationPeriod.isEmpty() || !vacationPeriod.contains("-")) {
-                    System.err.println("Invalid vacation period for row " + (rowIndex + 1));
-                    continue;
-                }
 
-                try {
-                    String[] periodParts = vacationPeriod.split("-");
-                    int firstDay = Integer.parseInt(periodParts[0].trim());
-                    int lastDay = Integer.parseInt(periodParts[1].split("\\.")[0].trim());
 
-                    holidays.add(new Holiday(firstDay, lastDay, vacationType, name));
-                } catch (NumberFormatException e) {
-                    System.err.println("Error parsing vacation period for row " + (rowIndex + 1) + ": " + vacationPeriod);
-                }
+
+
             }
 
             try (FileOutputStream fos = new FileOutputStream(new File(filePath))) {
