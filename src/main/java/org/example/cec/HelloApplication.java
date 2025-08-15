@@ -183,6 +183,7 @@ public class HelloApplication extends Application {
                 for( Holiday holiday : holidays) {
                     if (holiday.getName().toLowerCase().equals(name)) {
                         // we found a match, we can modify the row
+                        // now based on the reason of the holiday, we do color the row from the mainSheet ( at that specific employee, from the first day to the last day)
 
                         System.out.println("Updated row " + (rowIndex + 1) + " for employee: " + name);
                     }
@@ -190,7 +191,7 @@ public class HelloApplication extends Application {
 
 
                 // Process each row here
-                System.out.println("Processing row " + (rowIndex + 1));
+               // System.out.println("Processing row " + (rowIndex + 1));
             }
 
 
