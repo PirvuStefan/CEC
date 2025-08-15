@@ -119,8 +119,14 @@ public class HelloApplication extends Application {
 
                 String name = row.getCell(0).getStringCellValue();
                 System.out.println("Processing row " + (rowIndex + 1) + " for employee: " + name);
-                int firstDay = (int) row.getCell(1).getNumericCellValue();
-                System.out.println("Vacation Period: " + firstDay);
+                //int firstDay = (int) row.getCell(1).getNumericCellValue();
+                String magazin = row.getCell(1).getStringCellValue();
+                String period = row.getCell(2).getStringCellValue();
+                System.out.println("Vacation Period: " + period);
+                String firstDay = period.split("-")[0].trim();
+                String lastDay = period.split("-")[1].trim();
+                String reason = row.getCell(3).getStringCellValue();
+
 
 
 
