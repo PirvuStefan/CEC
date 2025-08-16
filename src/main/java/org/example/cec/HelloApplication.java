@@ -26,6 +26,9 @@ public class HelloApplication extends Application {
     private File mainSheet;
     private File weekendSheet;
     private File holidaysSheet;
+    private int daysInMonth;
+    private int firstDayOfWeekend;
+    // we need to know how many days are in a month and what is the first day of the first weekend ( like to know how to count and take in consideration the weekends when we process the data)
 
     @Override
     public void start(Stage stage) {
@@ -172,7 +175,28 @@ public class HelloApplication extends Application {
         try (FileInputStream fis = new FileInputStream(mainSheet);
              Workbook workbook = new XSSFWorkbook(fis)) {
 
+
+
             Sheet sheet = workbook.getSheetAt(0);
+            // Go to row 3 (index 3, since it's 0-based), starting from column F (index 5), and find the last column with an integer (day of month)
+            Row headerRow = sheet.getRow(3);
+            int lastDayOfMonth = -1;
+            int firstDayOfWeekend = 0;
+            if (headerRow != null) {
+                for (int col = 5; col < headerRow.getLastCellNum(); col++) {
+                    if (headerRow.getCell(col) != null && headerRow.getCell(col).getCellType() == CellType.NUMERIC) {
+                        System.out.println("Color" + headerRow.getCell(col).getCellStyle().getFillForegroundColorColor());
+                        int value = (int) headerRow.getCell(col).getNumericCellValue();
+                        if (value >= 1 && value <= 31) {
+                            lastDayOfMonth = value;
+                        }
+                    }
+                    if (headerRow.getCell(col) != null && firstDayOfWeekend == 0 && headerRow.getCell(0).getCellStyle().getFillForegroundColorColor() == null)
+                            firstDayOfWeekend = (int) headerRow.getCell(col).getNumericCellValue();
+                    if( col > 35) break;
+                }
+            }
+            System.out.println("Last day of the month detected: " + lastDayOfMonth);
             for (int rowIndex = 0; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
                 if (row == null) break;
@@ -184,6 +208,9 @@ public class HelloApplication extends Application {
                     if (holiday.getName().toLowerCase().equals(name)) {
                         // we found a match, we can modify the row
                         // now based on the reason of the holiday, we do color the row from the mainSheet ( at that specific employee, from the first day to the last day)
+                        int firstDay = holiday.getFirstDay();
+                        int lastDay = holiday.getLastDay();
+
 
                         System.out.println("Updated row " + (rowIndex + 1) + " for employee: " + name);
                     }
