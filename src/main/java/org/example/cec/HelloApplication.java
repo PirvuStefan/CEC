@@ -12,6 +12,7 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
@@ -185,18 +186,29 @@ public class HelloApplication extends Application {
             if (headerRow != null) {
                 for (int col = 5; col < headerRow.getLastCellNum(); col++) {
                     if (headerRow.getCell(col) != null && headerRow.getCell(col).getCellType() == CellType.NUMERIC) {
-                        System.out.println("Color" + headerRow.getCell(col).getCellStyle().getFillForegroundColorColor());
+
                         int value = (int) headerRow.getCell(col).getNumericCellValue();
                         if (value >= 1 && value <= 31) {
                             lastDayOfMonth = value;
                         }
                     }
-                    if (headerRow.getCell(col) != null && firstDayOfWeekend == 0 && headerRow.getCell(0).getCellStyle().getFillForegroundColorColor() == null)
-                            firstDayOfWeekend = (int) headerRow.getCell(col).getNumericCellValue();
+                    XSSFColor color = (XSSFColor) headerRow.getCell(col).getCellStyle().getFillForegroundColorColor();
+                    String rgbHex ="#FFFFFF"; // default white color
+                    if(color != null){
+                        String hexColor = color.getARGBHex();
+                        rgbHex = hexColor.substring(2, 8); // remove alpha channel
+                        rgbHex = "#" + rgbHex.toUpperCase();
+
+
+                    }
+                    if (headerRow.getCell(col) != null && firstDayOfWeekend == 0) {
+                        if (rgbHex.equals("#FFFF00")) firstDayOfWeekend = (int) headerRow.getCell(col).getNumericCellValue();
+                    }
                     if( col > 35) break;
                 }
             }
             System.out.println("Last day of the month detected: " + lastDayOfMonth);
+            System.out.println("First day of the weekend detected: " + firstDayOfWeekend);
             for (int rowIndex = 0; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
                 if (row == null) break;
