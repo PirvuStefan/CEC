@@ -11,15 +11,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.IndexedColorMap;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.awt.*;
+import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -263,15 +261,15 @@ public class HelloApplication extends Application {
 
                             // Set the cell style based on the reason
                             if (reason.equals("concediu")) {
-                                row.getCell(colIndex).getCellStyle().setFillForegroundColor(new XSSFColor((IndexedColorMap) Color.YELLOW));
+                                row.getCell(colIndex).getCellStyle().setFillForegroundColor(IndexedColors.GREEN.getIndex());
                             } else if (reason.equals("maternitate")) {
-                                row.getCell(colIndex).getCellStyle().setFillForegroundColor(new XSSFColor((IndexedColorMap) Color.PINK));
+                                row.getCell(colIndex).getCellStyle().setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
                             } else if (reason.equals("medical")) {
-                                row.getCell(colIndex).getCellStyle().setFillForegroundColor(new XSSFColor((IndexedColorMap) Color.GREEN));
+                                row.getCell(colIndex).getCellStyle().setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
                             } else if (reason.equals("absentaMotivata")) {
-                                row.getCell(colIndex).getCellStyle().setFillForegroundColor(new XSSFColor((IndexedColorMap) Color.ORANGE));
+                                row.getCell(colIndex).getCellStyle().setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
                             } else if (reason.equals("absentaNemotivata")) {
-                                row.getCell(colIndex).getCellStyle().setFillForegroundColor(new XSSFColor((IndexedColorMap) Color.RED));
+                                row.getCell(colIndex).getCellStyle().setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
                             }
                             // after setting the color, we need to go on the row again and remove the weekend shifts if they were set before this parsing
                         }
