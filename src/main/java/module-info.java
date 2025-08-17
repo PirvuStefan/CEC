@@ -4,6 +4,7 @@ module org.example.cec {
 
     requires com.dlsc.formsfx;
     requires org.apache.poi.ooxml;
+    requires java.desktop;
 
     opens org.example.cec to javafx.fxml;
     exports org.example.cec;

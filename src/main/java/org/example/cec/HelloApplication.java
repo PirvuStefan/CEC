@@ -5,6 +5,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -12,9 +15,11 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.IndexedColorMap;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -222,6 +227,36 @@ public class HelloApplication extends Application {
                         // now based on the reason of the holiday, we do color the row from the mainSheet ( at that specific employee, from the first day to the last day)
                         int firstDay = holiday.getFirstDay();
                         int lastDay = holiday.getLastDay();
+                        String reason = holiday.getReason();
+
+                        for(int i = firstDay; i <= lastDay; i++) {
+                            if( i < 1 || i > 31) break;
+                           // Calculate the weekday for the current day (assuming firstDayOfWeekend is the weekday index, e.g., 6 for Saturday)
+                            int weekday = ((i - 1) + (firstDayOfWeekend - 1)) % 7;
+                            if (weekday == 0 || weekday == 1) continue; // skip weekends (assuming weekend is Saturday and Sunday); // skip weekends
+
+                            int colIndex = i + 4; // because we start from column F (index 5)
+                            if (colIndex >= row.getLastCellNum()) continue; // skip if column index is out of bounds
+
+                            // Set the cell value to the reason
+                            row.createCell(colIndex, CellType.STRING).setCellValue(reason);
+
+                            // Set the cell style based on the reason
+                            if (reason.equals("concediu")) {
+                                row.getCell(colIndex).getCellStyle().setFillForegroundColor(new XSSFColor((IndexedColorMap) Color.YELLOW));
+                            } else if (reason.equals("maternitate")) {
+                                row.getCell(colIndex).getCellStyle().setFillForegroundColor(new XSSFColor((IndexedColorMap) Color.PINK));
+                            } else if (reason.equals("medical")) {
+                                row.getCell(colIndex).getCellStyle().setFillForegroundColor(new XSSFColor((IndexedColorMap) Color.GREEN));
+                            } else if (reason.equals("absentaMotivata")) {
+                                row.getCell(colIndex).getCellStyle().setFillForegroundColor(new XSSFColor((IndexedColorMap) Color.ORANGE));
+                            } else if (reason.equals("absentaNemotivata")) {
+                                row.getCell(colIndex).getCellStyle().setFillForegroundColor(new XSSFColor((IndexedColorMap) Color.RED));
+                            }
+                            // after setting the color, we need to go on the row again and remove the weekend shifts if they were set before this parsing
+                        }
+
+
 
 
                         System.out.println("Updated row " + (rowIndex + 1) + " for employee: " + name);
