@@ -257,7 +257,7 @@ public class HelloApplication extends Application {
                             if (colIndex >= row.getLastCellNum()) continue; // skip if column index is out of bounds
 
                             // Set the cell value to the reason
-                            row.createCell(colIndex, CellType.STRING).setCellValue(reason);
+                            //row.createCell(colIndex, CellType.STRING).setCellValue(reason);
 
                             // Set the cell style based on the reason
                             if (reason.equals("concediu")) {
