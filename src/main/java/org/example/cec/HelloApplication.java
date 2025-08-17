@@ -250,11 +250,22 @@ public class HelloApplication extends Application {
                         for(int i = firstDay; i <= lastDay; i++) {
                             if( i < 1 || i > 31) break;
                            // Calculate the weekday for the current day (assuming firstDayOfWeekend is the weekday index, e.g., 6 for Saturday)
-                            int weekday = ((i - 1) + (firstDayOfWeekend - 1)) % 7;
-                            if (weekday == 0 || weekday == 1) continue; // skip weekends (assuming weekend is Saturday and Sunday); // skip weekends
 
                             int colIndex = i + 4; // because we start from column F (index 5)
                             if (colIndex >= row.getLastCellNum()) continue; // skip if column index is out of bounds
+
+                            XSSFColor color = (XSSFColor) headerRow.getCell(colIndex).getCellStyle().getFillForegroundColorColor();
+                            String rgbHex ="#FFFFFF"; // default white color
+                            if(color != null){
+                                String hexColor = color.getARGBHex();
+                                rgbHex = hexColor.substring(2, 8); // remove alpha channel
+                                rgbHex = "#" + rgbHex.toUpperCase();
+
+
+                            }
+                            if (headerRow.getCell(colIndex) != null) {
+                                if (rgbHex.equals("#FFFF00")) continue;
+                            } // skip weekends
 
                             // Set the cell value to the reason
                             //row.createCell(colIndex, CellType.STRING).setCellValue(reason);
