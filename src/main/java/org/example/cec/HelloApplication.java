@@ -24,6 +24,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +40,15 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) {
+
+        Path outputDir = Path.of("arhiva");
+        try {
+            if (!Files.exists(outputDir)) {
+                Files.createDirectory(outputDir);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Label title = new Label("Excel Sheet Selector");
         title.setStyle("-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: white;");
 
