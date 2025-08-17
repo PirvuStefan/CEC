@@ -12,6 +12,7 @@ import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.IndexedColorMap;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -247,42 +248,47 @@ public class HelloApplication extends Application {
                         int lastDay = holiday.getLastDay();
                         String reason = holiday.getReason();
 
-                        for(int i = firstDay; i <= lastDay; i++) {
-                            if( i < 1 || i > 31) break;
-                           // Calculate the weekday for the current day (assuming firstDayOfWeekend is the weekday index, e.g., 6 for Saturday)
+                        for (int i = firstDay; i <= lastDay; i++) {
+                            if (i < 1 || i > 31) break;
 
                             int colIndex = i + 4; // because we start from column F (index 5)
                             if (colIndex >= row.getLastCellNum()) continue; // skip if column index is out of bounds
 
+                            Cell cell = row.getCell(colIndex);
+                            if (cell == null) {
+                                cell = row.createCell(colIndex, CellType.STRING);
+                            }
+
+                            // Skip weekends
                             XSSFColor color = (XSSFColor) headerRow.getCell(colIndex).getCellStyle().getFillForegroundColorColor();
-                            String rgbHex ="#FFFFFF"; // default white color
-                            if(color != null){
+                            String rgbHex = "#FFFFFF"; // default white color
+                            if (color != null) {
                                 String hexColor = color.getARGBHex();
                                 rgbHex = hexColor.substring(2, 8); // remove alpha channel
                                 rgbHex = "#" + rgbHex.toUpperCase();
-
-
                             }
-                            if (headerRow.getCell(colIndex) != null) {
-                                if (rgbHex.equals("#FFFF00")) continue;
-                            } // skip weekends
+                            if (headerRow.getCell(colIndex) != null && rgbHex.equals("#FFFF00")) {
+                                continue;
+                            }
 
-                            // Set the cell value to the reason
-                            //row.createCell(colIndex, CellType.STRING).setCellValue(reason);
+                            // Create a new cell style
+                            CellStyle newStyle = row.getSheet().getWorkbook().createCellStyle();
+                            newStyle.cloneStyleFrom(cell.getCellStyle());
 
                             // Set the cell style based on the reason
                             if (reason.equals("concediu")) {
-                                row.getCell(colIndex).getCellStyle().setFillForegroundColor(IndexedColors.GREEN.getIndex());
+                                newStyle.setFillForegroundColor(IndexedColors.GREEN.getIndex());
                             } else if (reason.equals("maternitate")) {
-                                row.getCell(colIndex).getCellStyle().setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+                                newStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
                             } else if (reason.equals("medical")) {
-                                row.getCell(colIndex).getCellStyle().setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+                                newStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
                             } else if (reason.equals("absentaMotivata")) {
-                                row.getCell(colIndex).getCellStyle().setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+                                newStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
                             } else if (reason.equals("absentaNemotivata")) {
-                                row.getCell(colIndex).getCellStyle().setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+                                newStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
                             }
-                            // after setting the color, we need to go on the row again and remove the weekend shifts if they were set before this parsing
+                            newStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                            cell.setCellStyle(newStyle);
                         }
 
 
