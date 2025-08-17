@@ -70,7 +70,16 @@ public class HelloApplication extends Application {
                 showAlert("Te rog selecteaza toate fisierele necesare!");
                 return;
             }
-            holidaysSheet = HolidayModify(mainSheet, holidaysSheet);
+            //holidaysSheet = HolidayModify(mainSheet, holidaysSheet);
+            File modifiedSheet = HolidayModify(mainSheet, holidaysSheet);
+            if (modifiedSheet != null) {
+                try {
+                    Files.copy(modifiedSheet.toPath(), outputDir.resolve(modifiedSheet.getName()), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    showAlert("Failed to copy the modified file to the output directory.");
+                }
+            }
             showAlert("Files selected:\n" +
                     "Main: " + mainSheet.getName() + "\n" +
                     "Weekend: " + weekendSheet.getName() + "\n" +
