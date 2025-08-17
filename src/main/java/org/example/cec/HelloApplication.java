@@ -273,7 +273,6 @@ public class HelloApplication extends Application {
 
                             // Set the cell value to the reason
                             cell.setCellValue(""); // Clear the cell value by setting it to an empty string
-
                             // Create a new cell style
                             CellStyle newStyle = row.getSheet().getWorkbook().createCellStyle();
                             newStyle.cloneStyleFrom(cell.getCellStyle());
