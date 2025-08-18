@@ -281,11 +281,11 @@ public class HelloApplication extends Application {
 
                             // Set the cell style based on the reason
                             if (reason.equals("concediu")) {
-                                newStyle.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+                               newStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(0x00, 0xB0, 0x50), null));
                             } else if (reason.equals("maternitate")) {
-                                newStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+                                newStyle.setFillForegroundColor(IndexedColors.PINK.getIndex());
                             } else if (reason.equals("medical")) {
-                                newStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+                                newStyle.setFillForegroundColor(IndexedColors.AQUA.getIndex());;
                             } else if (reason.equals("absentaMotivata")) {
                                 newStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
                             } else if (reason.equals("absentaNemotivata")) {
@@ -294,6 +294,21 @@ public class HelloApplication extends Application {
                             newStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
                             cell.setCellStyle(newStyle);
                         }
+                        int countConcediu = 0;
+                        int countMaternitate = 0;
+                        for(int i = 5; i <= daysInMonth + 5;i++) {
+                            Cell cell = row.getCell(i);
+                            if (cell.getCellStyle().getFillForegroundColorColor() != null) {
+                                if (cell.getCellStyle().getFillForegroundColorColor().equals(new XSSFColor(new java.awt.Color(0x00, 0xB0, 0x50), null))) {
+                                    countConcediu++;
+                                } else if (cell.getCellStyle().getFillForegroundColorColor().equals(new XSSFColor(java.awt.Color.PINK, null)))
+                                    countMaternitate++;
+
+
+                            }
+                        }
+
+                        System.out.println(countConcediu + " " + countMaternitate);
 
 
 
@@ -321,6 +336,8 @@ public class HelloApplication extends Application {
 
         return mainSheet;
     }
+
+
 
     @FunctionalInterface
     interface FileConsumer {
