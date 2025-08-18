@@ -296,7 +296,7 @@ public class HelloApplication extends Application {
                         }
                         int countConcediu = 0;
                         int countMaternitate = 0;
-                        for(int i = 5; i <= daysInMonth + 5;i++) {
+                        for(int i = 5; i <= daysInMonth + 4;i++) {
                             Cell cell = row.getCell(i);
                             if (cell.getCellStyle().getFillForegroundColorColor() != null) {
                                 if (cell.getCellStyle().getFillForegroundColorColor().equals(new XSSFColor(new java.awt.Color(0x00, 0xB0, 0x50), null))) {
