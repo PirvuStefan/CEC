@@ -179,7 +179,7 @@ public class HelloApplication extends Application {
                 Row row = sheet.getRow(rowIndex);
                 if (row == null) break;
                 String name = row.getCell(2).getStringCellValue();
-                String magazin = row.getCell(2).getStringCellValue();
+                String magazin = row.getCell(1).getStringCellValue();
                 name = name.toLowerCase();
                 //magazin = magazin.toLowerCase();
                 for( Holiday holiday : holidays) {
@@ -236,8 +236,6 @@ public class HelloApplication extends Application {
                                 // if the cell is a weekend day, we skip it
                                 if(headerRow.getCell(colIndex + 2).getNumericCellValue() > 0 ) headerRow.getCell(colIndex + 2).setCellValue("");
                             }
-
-                            color = (XSSFColor) headerRow.getCell(colIndex + 1).getCellStyle().getFillForegroundColorColor();
 
                             // Set the cell value to the reason
                             cell.setCellValue(""); // Clear the cell value by setting it to an empty string
