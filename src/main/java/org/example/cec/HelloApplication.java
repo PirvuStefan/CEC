@@ -190,6 +190,16 @@ public class HelloApplication extends Application {
                         int lastDay = holiday.getLastDay();
                         String reason = holiday.getReason();
 
+                        XSSFColor colorBefore = (XSSFColor) headerRow.getCell(firstDay + 2).getCellStyle().getFillForegroundColorColor(); // two days before the first day of the holiday
+                        if(colorBefore != null){
+                            String hexColorBefore = colorBefore.getARGBHex();
+                            String rgbHexBefore = hexColorBefore.substring(2, 8); // remove alpha channel
+                            rgbHexBefore = "#" + rgbHexBefore.toUpperCase();
+                            if (rgbHexBefore.equals("#FFFF00")) { // if is yellow, we delete the shift ( 8 0 0 ) , monday now is free and he cant work no more on that day
+                               headerRow.getCell(firstDay + 2).setCellValue("");
+                            }
+                        }
+
                         for (int i = firstDay; i <= lastDay; i++) {
                             if (i < 1 || i > 31) break;
 
@@ -215,6 +225,20 @@ public class HelloApplication extends Application {
                                 continue;
                             }
 
+                            color = (XSSFColor) headerRow.getCell(colIndex + 2).getCellStyle().getFillForegroundColorColor();
+                            rgbHex = "#FFFFFF"; // default white color
+                            if (color != null) {
+                                String hexColor = color.getARGBHex();
+                                rgbHex = hexColor.substring(2, 8); // remove alpha channel
+                                rgbHex = "#" + rgbHex.toUpperCase();
+                            }
+                            if(headerRow.getCell(colIndex + 2) != null && rgbHex.equals("#FFFF00")) {
+                                // if the cell is a weekend day, we skip it
+                                if(headerRow.getCell(colIndex + 2).getNumericCellValue() > 0 ) headerRow.getCell(colIndex + 2).setCellValue("");
+                            }
+
+                            color = (XSSFColor) headerRow.getCell(colIndex + 1).getCellStyle().getFillForegroundColorColor();
+
                             // Set the cell value to the reason
                             cell.setCellValue(""); // Clear the cell value by setting it to an empty string
                             // Create a new cell style
@@ -228,10 +252,10 @@ public class HelloApplication extends Application {
                                 newStyle.setFillForegroundColor(IndexedColors.PINK.getIndex());
                             } else if (reason.equals("medical")) {
                                 newStyle.setFillForegroundColor(IndexedColors.AQUA.getIndex());;
-                            } else if (reason.equals("absentaMotivata")) {
-                                newStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
-                            } else if (reason.equals("absentaNemotivata")) {
-                                newStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+                            } else if (reason.equals("absenta")) {
+                                newStyle.setFillForegroundColor(IndexedColors.ORANGE.getIndex());
+                            } else if (reason.equals("demisie")) {
+                                newStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
                             }
                             newStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
                             cell.setCellStyle(newStyle);
@@ -299,8 +323,8 @@ public class HelloApplication extends Application {
                     case "co" -> "concediu";
                     case "m" -> "maternitate";
                     case "cm" -> "medical";
-                    case "absmot" -> "absentaMotivata";
-                    case "absmotiv" -> "absentaNemotivata";
+                    case "abs" -> "absenta";
+                    case "dem" -> "demisie";
                     default -> "concediu";
                 };
                 Holiday holiday = new Holiday(Integer.parseInt(firstDay), Integer.parseInt(lastDay), reason, name, magazin);
