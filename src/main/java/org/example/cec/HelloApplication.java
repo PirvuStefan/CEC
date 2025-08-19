@@ -104,7 +104,7 @@ public class HelloApplication extends Application {
         label.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
 
         TextField filePath = new TextField();
-        filePath.setEditable(false);
+        filePath.setEditable(true); // to enable text editing in the filepath
         filePath.setStyle("-fx-background-radius: 8; -fx-background-color: white;");
 
         Button browseButton = new Button("Browse");
