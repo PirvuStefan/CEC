@@ -133,7 +133,7 @@ public class HelloApplication extends Application {
     }
 
     private File HolidayModify(File mainSheet, File holidaysSheet) {
-        List<Holiday> holidays = new ArrayList<>();
+        List<Holiday> holidays;
         String filePath = holidaysSheet.getAbsolutePath();
 
         holidays = InitialiseHolidaysList(holidaysSheet);
@@ -236,26 +236,12 @@ public class HelloApplication extends Application {
                             newStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
                             cell.setCellStyle(newStyle);
                         }
-                        int countConcediu = 0;
-                        int countMaternitate = 0;
-                        for(int i = 5; i <= daysInMonth + 4;i++) {
-                            Cell cell = row.getCell(i);
-                            if (cell.getCellStyle().getFillForegroundColorColor() != null) {
-                                if (cell.getCellStyle().getFillForegroundColorColor().equals(new XSSFColor(new java.awt.Color(0x00, 0xB0, 0x50), null))) {
-                                    countConcediu++;
-                                } else if (cell.getCellStyle().getFillForegroundColorColor().equals(new XSSFColor(java.awt.Color.PINK, null)))
-                                    countMaternitate++;
 
+                        if(reason.equals("materniate"))
+                            row.getCell(daysInMonth + 6).setCellValue(row.getCell(daysInMonth + 6).getNumericCellValue() + (lastDay - firstDay + 1)); // add the number of days of maternity leave to the maternity leave column
+                        if(reason.equals("concediu"))
+                           row.getCell(daysInMonth + 6).setCellValue(row.getCell(daysInMonth + 6).getNumericCellValue() + (lastDay - firstDay + 1));
 
-                            }
-                        }
-
-                        System.out.println(countConcediu + " " + countMaternitate);
-
-
-
-
-                        System.out.println("Updated row " + (rowIndex + 1) + " for employee: " + name);
                     }
                 }
 
