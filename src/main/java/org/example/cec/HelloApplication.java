@@ -391,22 +391,28 @@ public class HelloApplication extends Application {
 
             Sheet sheet = workbook.getSheetAt(0);
             Map<String, List<Employee>> weekendEmployees = new HashMap<>();
+            String magazin = "";
+            List < Employee > employees = new ArrayList<>();
 
             for (int rowIndex = 2; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
                 if (row == null) break;
 
-                String name = row.getCell(0).getStringCellValue();
-                String magazin = row.getCell(1).getStringCellValue();
-                int numberOfShifts = (int) row.getCell(2).getNumericCellValue();
-                int[] shifts = new int[31]; // assuming max 31 days in a month
+                String name = row.getCell(1).getStringCellValue();
+                if(!row.getCell(0).getStringCellValue().isEmpty()) magazin = row.getCell(0).getStringCellValue();
 
-                for (int i = 0; i < numberOfShifts; i++) {
-                    shifts[i] = (int) row.getCell(i + 3).getNumericCellValue();
+                int numberOfShifts = (int) row.getCell(2).getNumericCellValue();
+                // asumming the number of shifts is in the third cell (index 2) of the row
+
+
+
+                Employee employee = new Employee(name, numberOfShifts);
+                employees.add(employee);
+                if(row.getCell(0).getStringCellValue().isEmpty()) {
+                    weekendEmployees.put(magazin, employees);
+                    employees.clear();
                 }
 
-                Employee employee = new Employee(name, numberOfShifts, shifts);
-                weekendEmployees.computeIfAbsent(magazin, k -> new ArrayList<>()).add(employee);
             }
 
             return weekendEmployees;
