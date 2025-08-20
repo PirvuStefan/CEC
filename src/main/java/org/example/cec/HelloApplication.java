@@ -26,7 +26,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HelloApplication extends Application {
 
@@ -371,6 +373,48 @@ public class HelloApplication extends Application {
         }
 
         return holidays;
+    }
+
+    private File WeekendModify(File mainSheet, File weekendSheet){
+
+        Map< String , List<Employee> > weekendEmployees = new HashMap<>();
+
+        weekendEmployees = InitialiseWeekendList(weekendSheet);
+
+
+        return mainSheet;
+    }
+
+    private Map< String, List<Employee>> InitialiseWeekendList(File weekendSheet) {
+        try (FileInputStream fis = new FileInputStream(weekendSheet);
+             Workbook workbook = new XSSFWorkbook(fis)) {
+
+            Sheet sheet = workbook.getSheetAt(0);
+            Map<String, List<Employee>> weekendEmployees = new HashMap<>();
+
+            for (int rowIndex = 2; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+                Row row = sheet.getRow(rowIndex);
+                if (row == null) break;
+
+                String name = row.getCell(0).getStringCellValue();
+                String magazin = row.getCell(1).getStringCellValue();
+                int numberOfShifts = (int) row.getCell(2).getNumericCellValue();
+                int[] shifts = new int[31]; // assuming max 31 days in a month
+
+                for (int i = 0; i < numberOfShifts; i++) {
+                    shifts[i] = (int) row.getCell(i + 3).getNumericCellValue();
+                }
+
+                Employee employee = new Employee(name, numberOfShifts, shifts);
+                weekendEmployees.computeIfAbsent(magazin, k -> new ArrayList<>()).add(employee);
+            }
+
+            return weekendEmployees;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new HashMap<>(); // return an empty map if there was an error
     }
 
 
