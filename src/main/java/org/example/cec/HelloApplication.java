@@ -39,7 +39,6 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) {
-
         Path outputDir = Path.of("arhiva");
         try {
             if (!Files.exists(outputDir)) {
@@ -48,6 +47,7 @@ public class HelloApplication extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         Label title = new Label("Excel Sheet Selector");
         title.setStyle("-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: white;");
 
@@ -56,20 +56,19 @@ public class HelloApplication extends Application {
         fileSelectors.setAlignment(Pos.CENTER);
 
         fileSelectors.getChildren().addAll(
-                createFileSelector("Main Employee Sheet", file -> mainSheet = file),
-                createFileSelector("Weekend Work Sheet", file -> weekendSheet = file),
-                createFileSelector("Holidays Sheet", file -> holidaysSheet = file)
+            createFileSelector("Main Employee Sheet", file -> mainSheet = file),
+            createFileSelector("Weekend Work Sheet", file -> weekendSheet = file),
+            createFileSelector("Holidays Sheet", file -> holidaysSheet = file)
         );
 
         Button processButton = new Button("Process Data");
         processButton.setPrefWidth(200);
         processButton.setStyle("-fx-background-color: rgba(0,123,255,0.85); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 10 20 10 20;");
         processButton.setOnAction(e -> {
-            if (mainSheet == null & weekendSheet == null & holidaysSheet == null) {
+            if (mainSheet == null || weekendSheet == null || holidaysSheet == null) {
                 showAlert("Te rog selecteaza toate fisierele necesare!");
                 return;
             }
-            //holidaysSheet = HolidayModify(mainSheet, holidaysSheet);
             File modifiedSheet = HolidayModify(mainSheet, holidaysSheet);
             if (modifiedSheet != null) {
                 try {
@@ -85,18 +84,46 @@ public class HelloApplication extends Application {
                     "Holidays: " + holidaysSheet.getName());
         });
 
-
-        VBox root = new VBox(30, title, fileSelectors, processButton);
+        Button instructionsButton = new Button("How to Use");
+        instructionsButton.setPrefWidth(200);
+        instructionsButton.setStyle("-fx-background-color: rgba(0,123,255,0.85); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 10 20 10 20;");
+        VBox root = new VBox(30, title, fileSelectors, processButton, instructionsButton);
         root.setAlignment(Pos.CENTER);
         root.setPadding(new Insets(20));
         root.setStyle("-fx-background-color: linear-gradient(to bottom right, rgba(0,100,200,0.85), rgba(0,180,255,0.85));");
 
-        Scene scene = new Scene(root, 600, 400);
+        Scene mainScene = new Scene(root, 600, 400);
+        stage.setScene(mainScene);
         stage.setTitle("Excel File Selector");
-        stage.setScene(scene);
         stage.setMinWidth(500);
         stage.setMinHeight(350);
         stage.show();
+
+        instructionsButton.setOnAction(e -> stage.setScene(createInstructionsScene(stage, mainScene))); // Redirect to instructions page
+    }
+
+    private Scene createInstructionsScene(Stage stage, Scene mainScene) {
+        Label title = new Label("How to Use the Application");
+        title.setStyle("-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: white;");
+
+        Label instructions = new Label(
+                "1. Select the required Excel files using the 'Browse' buttons.\n" +
+                        "2. Ensure the files are correctly formatted.\n" +
+                        "3. Click 'Process Data' to modify the main sheet.\n" +
+                        "4. The modified file will be saved in the 'arhiva' folder."
+        );
+        instructions.setStyle("-fx-font-size: 16px; -fx-text-fill: white; -fx-padding: 10;");
+
+        Button backButton = new Button("Back to Main Page");
+        backButton.setStyle("-fx-background-color: rgba(0,123,255,0.85); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 10 20 10 20;");
+        backButton.setOnAction(e -> stage.setScene(mainScene)); // Go back to the main scene
+
+        VBox layout = new VBox(20, title, instructions, backButton);
+        layout.setAlignment(Pos.CENTER);
+        layout.setPadding(new Insets(20));
+        layout.setStyle("-fx-background-color: linear-gradient(to bottom right, rgba(0,100,200,0.85), rgba(0,180,255,0.85));");
+
+        return new Scene(layout, 600, 400);
     }
 
     private HBox createFileSelector(String labelText, FileConsumer fileSetter) {
