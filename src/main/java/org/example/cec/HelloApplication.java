@@ -402,11 +402,14 @@ public class HelloApplication extends Application {
                 if(!row.getCell(0).getStringCellValue().isEmpty()) magazin = row.getCell(0).getStringCellValue();
 
                 int numberOfShifts = (int) row.getCell(2).getNumericCellValue();
-                // asumming the number of shifts is in the third cell (index 2) of the row
+                int hasWorkedSaturday = (int) row.getCell(3).getNumericCellValue(); // assuming the hasWorkedSaturday is in the fourth cell (index 3) of the row
+
+
 
 
 
                 Employee employee = new Employee(name, numberOfShifts);
+                if(hasWorkedSaturday == 1) employee.hasWorked();
                 employees.add(employee);
                 if(row.getCell(0).getStringCellValue().isEmpty()) {
                     weekendEmployees.put(magazin, employees);
