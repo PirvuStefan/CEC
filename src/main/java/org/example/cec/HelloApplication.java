@@ -67,11 +67,44 @@ public class HelloApplication extends Application {
         processButton.setPrefWidth(200);
         processButton.setStyle("-fx-background-color: rgba(0,123,255,0.85); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 10 20 10 20;");
         processButton.setOnAction(e -> {
-            if (mainSheet == null || weekendSheet == null || holidaysSheet == null) {
+            if (weekendSheet == null && holidaysSheet == null) {
                 showAlert("Te rog selecteaza toate fisierele necesare!");
                 return;
             }
-            File modifiedSheet = HolidayModify(mainSheet, holidaysSheet);
+            if(mainSheet == null){
+                showAlert("Fisierul principal nu a fost selectat!");
+                return;
+            }
+            if(weekendSheet != null && holidaysSheet == null){
+                File modifiedSheet = WeekendModify(mainSheet, weekendSheet);
+                if (modifiedSheet != null) {
+                    try {
+                        Files.copy(modifiedSheet.toPath(), outputDir.resolve(modifiedSheet.getName()), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                        showAlert("Failed to copy the modified file to the output directory.");
+                    }
+                }
+                showAlert("Fisierul principal a fost modificat cu succes folosind fisierul de weekend!");
+                return;
+
+            }
+            if(weekendSheet == null && holidaysSheet != null){
+                File modifiedSheet = HolidayModify(mainSheet, holidaysSheet);
+                if (modifiedSheet != null) {
+                    try {
+                        Files.copy(modifiedSheet.toPath(), outputDir.resolve(modifiedSheet.getName()), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                        showAlert("Failed to copy the modified file to the output directory.");
+                    }
+                }
+                showAlert("Fisierul principal a fost modificat cu succes folosind fisierul de concedii!");
+                return;
+            }
+
+            File modifiedSheet = WeekendModify(mainSheet, weekendSheet);
+            HolidayModify(modifiedSheet, holidaysSheet);
             if (modifiedSheet != null) {
                 try {
                     Files.copy(modifiedSheet.toPath(), outputDir.resolve(modifiedSheet.getName()), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
@@ -80,10 +113,11 @@ public class HelloApplication extends Application {
                     showAlert("Failed to copy the modified file to the output directory.");
                 }
             }
-            showAlert("Files selected:\n" +
-                    "Main: " + mainSheet.getName() + "\n" +
-                    "Weekend: " + weekendSheet.getName() + "\n" +
-                    "Holidays: " + holidaysSheet.getName());
+
+            showAlert("Fisierul principal a fost modificat cu succes folosind ambele fisiere!");
+
+
+
         });
 
         Button instructionsButton = new Button("How to Use");
@@ -379,7 +413,20 @@ public class HelloApplication extends Application {
 
         Map< String , List<Employee> > weekendEmployees = new HashMap<>();
 
+        WeekendShift test = new WeekendShift();
+        test.initialiseSize(weekendSheet); // to set the size of the weekend shift ( static variable)
         weekendEmployees = InitialiseWeekendList(weekendSheet);
+
+        for( String magazin : weekendEmployees.keySet()){
+            List < Employee > employees = weekendEmployees.get(magazin);
+            for( Employee employee : employees){
+                System.out.println("Employee: " + employee.name + ", Shifts: " + employee.numberOfShifts + ", Has Worked Saturday: " + employee.hasWorkedSaturday);
+                for( int i = 0; i < WeekendShift.size; i++){
+                    System.out.println("Shift day " + (i+1) + ": " + WeekendShift.pos[i]);
+                    System.out.print( employee.shift.work[i] + " ");
+                }
+            }
+        }
 
 
 
