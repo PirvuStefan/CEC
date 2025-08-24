@@ -380,6 +380,8 @@ public class HelloApplication extends Application {
         Map< String , List<Employee> > weekendEmployees = new HashMap<>();
 
         weekendEmployees = InitialiseWeekendList(weekendSheet);
+        WeekendShift weekendShift = new WeekendShift();
+        weekendShift.initialiseSize(weekendSheet);
 
 
         return mainSheet;
