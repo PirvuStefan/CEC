@@ -411,7 +411,7 @@ public class HelloApplication extends Application {
 
     private File WeekendModify(File mainSheet, File weekendSheet){
 
-        Map< String , List<Employee> > weekendEmployees = new HashMap<>();
+        Map< String , List<Employee> > weekendEmployees;
 
         WeekendShift test = new WeekendShift();
         test.initialiseSize(weekendSheet); // to set the size of the weekend shift ( static variable)
