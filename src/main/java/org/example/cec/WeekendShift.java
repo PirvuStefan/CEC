@@ -12,13 +12,13 @@ import java.io.FileInputStream;
 public class WeekendShift {
 
     static int size;
-    Pair[] days;
+    static int[] pos;
+    boolean[] work;
     public void initialiseDays(int size){
         WeekendShift.size = size;
-        days = new Pair[size];
-        for(int i = 0; i < size; i++){
-            days[i].work = false;
-        }
+
+        for(int i = 0; i < size; i++) work[i] = false;
+
     }
 
     public void initialiseSize(File weekendFile) {
@@ -27,7 +27,12 @@ public class WeekendShift {
             Workbook workbook = new XSSFWorkbook(fis);
             Sheet sheet = workbook.getSheetAt(0);
             Row row = sheet.getRow(1);
-            while (row.getCell(count + 3) != null) count++;  // +3 deoarece primele 3 coloane sunt magazin, nume si numarul de shift uri
+            while (row.getCell(count + 3) != null){
+                pos[ count ] = (int) row.getCell(count + 3).getNumericCellValue();
+                count++;
+
+            }
+                // +3 deoarece primele 3 coloane sunt magazin, nume si numarul de shift uri
 
 
 
