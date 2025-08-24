@@ -11,9 +11,9 @@ import java.io.FileInputStream;
 
 public class WeekendShift {
 
-    private static int size;
+    static int size;
     Pair[] days;
-    private void initaliseDays(int size){
+    public void initialiseDays(int size){
         WeekendShift.size = size;
         days = new Pair[size];
         for(int i = 0; i < size; i++){
@@ -38,6 +38,7 @@ public class WeekendShift {
         count--;
         size = count;
     }
+
 
 
 }

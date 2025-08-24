@@ -382,6 +382,7 @@ public class HelloApplication extends Application {
         weekendEmployees = InitialiseWeekendList(weekendSheet);
         WeekendShift weekendShift = new WeekendShift();
         weekendShift.initialiseSize(weekendSheet);
+        weekendShift.initialiseDays(WeekendShift.size);
 
 
         return mainSheet;
@@ -409,8 +410,8 @@ public class HelloApplication extends Application {
 
 
 
-
-                Employee employee = new Employee(name, numberOfShifts);
+                WeekendShift shift = new WeekendShift();
+                Employee employee = new Employee(name, numberOfShifts, shift);
                 if(hasWorkedSaturday == 1) employee.hasWorked();
                 employees.add(employee);
                 if(row.getCell(0).getStringCellValue().isEmpty()) {

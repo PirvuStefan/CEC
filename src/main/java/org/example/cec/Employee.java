@@ -4,12 +4,13 @@ public class Employee {
     String name; // numele angajatului
     int numberOfShifts; // numarul de ture care trebuie sa fie acoperite in luna respectiva
     boolean hasWorkedSaturday;
-    int[] shifts = new int[20];   // 0 gol, 1 weekend, 2 sarbatoare
+    WeekendShift shift;   //
 
-    Employee(String name, int numberOfShifts) {
+    Employee(String name, int numberOfShifts, WeekendShift shift) {
         this.name = name;
         this.numberOfShifts = numberOfShifts;
         this.hasWorkedSaturday = false; // presupunem ca nu a lucrat sambata in luna precedenta
+        this.shift = shift;
     }
 
     public void hasWorked() {
