@@ -380,9 +380,7 @@ public class HelloApplication extends Application {
         Map< String , List<Employee> > weekendEmployees = new HashMap<>();
 
         weekendEmployees = InitialiseWeekendList(weekendSheet);
-        WeekendShift weekendShift = new WeekendShift();
-        weekendShift.initialiseSize(weekendSheet);
-        weekendShift.initialiseDays(WeekendShift.size);
+
 
 
         return mainSheet;
@@ -411,6 +409,7 @@ public class HelloApplication extends Application {
 
 
                 WeekendShift shift = new WeekendShift();
+                shift.initialiseDays(WeekendShift.size);
                 Employee employee = new Employee(name, numberOfShifts, shift);
                 if(hasWorkedSaturday == 1) employee.hasWorked();
                 employees.add(employee);

@@ -15,8 +15,8 @@ public class WeekendShift {
     static int[] pos;
     boolean[] work;
     public void initialiseDays(int size){
-        WeekendShift.size = size;
 
+        WeekendShift.size = size;
         for(int i = 0; i < size; i++) work[i] = false;
 
     }
