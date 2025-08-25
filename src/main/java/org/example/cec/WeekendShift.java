@@ -17,12 +17,14 @@ public class WeekendShift {
     public void initialiseDays(int size){
 
         WeekendShift.size = size;
+        work = new boolean[size];
         for(int i = 0; i < size; i++) work[i] = false;
 
     }
 
     public void initialiseSize(File weekendFile) {
         int count = 0;
+        pos = new int[32];
         try (FileInputStream fis = new FileInputStream(weekendFile)) {
             Workbook workbook = new XSSFWorkbook(fis);
             Sheet sheet = workbook.getSheetAt(0);
