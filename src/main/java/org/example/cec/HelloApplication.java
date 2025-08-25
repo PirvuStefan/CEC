@@ -458,7 +458,7 @@ public class HelloApplication extends Application {
                 WeekendShift shift = new WeekendShift();
                 shift.initialiseDays(WeekendShift.size);
                 Employee employee = new Employee(name, numberOfShifts, shift);
-                if(hasWorkedSaturday == 1) employee.hasWorked();
+                if(hasWorkedSaturday != 0) employee.hasWorked(true);
                 employees.add(employee);
                 if(row.getCell(0).getStringCellValue().isEmpty()) {
                     weekendEmployees.put(magazin, employees);

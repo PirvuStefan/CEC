@@ -13,8 +13,8 @@ public class Employee {
         this.shift = shift;
     }
 
-    public void hasWorked() {
-        this.hasWorkedSaturday = true;
+    public void hasWorked(boolean worked) {
+        this.hasWorkedSaturday = worked;
     }
 
 }
