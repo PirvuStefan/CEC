@@ -29,12 +29,12 @@ public class WeekendShift {
             Workbook workbook = new XSSFWorkbook(fis);
             Sheet sheet = workbook.getSheetAt(0);
             Row row = sheet.getRow(1);
-            while (row.getCell(count + 3) != null){
-                pos[ count ] = (int) row.getCell(count + 3).getNumericCellValue();
+            while (row.getCell(count + 4) != null){
+                pos[ count ] = (int) row.getCell(count + 4).getNumericCellValue();
                 count++;
 
             }
-                // +3 deoarece primele 3 coloane sunt magazin, nume si numarul de shift uri
+                // +4 deoarece primele 4 coloane sunt magazin, nume, numarul de shift uri si daca a lucrat sambata in luna precedenta
 
 
 
