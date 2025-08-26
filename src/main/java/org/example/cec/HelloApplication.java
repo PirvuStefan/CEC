@@ -423,6 +423,7 @@ public class HelloApplication extends Application {
         else System.out.println("Lista de angajati pentru weekend a fost initializata cu succes!");
 
         for( String magazin : weekendEmployees.keySet()){
+            System.out.println("Magazin: " + magazin);
             List < Employee > employees = weekendEmployees.get(magazin);
             for( Employee employee : employees){
                 System.out.println("Employee: " + employee.name + ", Shifts: " + employee.numberOfShifts + ", Has Worked Saturday: " + employee.hasWorkedSaturday);
