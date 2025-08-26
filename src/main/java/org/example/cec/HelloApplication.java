@@ -417,6 +417,10 @@ public class HelloApplication extends Application {
         test.initialiseSize(weekendSheet); // to set the size of the weekend shift ( static variable)
         System.out.println("da");
         weekendEmployees = InitialiseWeekendList(weekendSheet);
+        if( weekendEmployees.isEmpty()){
+            System.out.println("Eroare la initializarea listei de angajati pentru weekend!");
+        }
+        else System.out.println("Lista de angajati pentru weekend a fost initializata cu succes!");
 
         for( String magazin : weekendEmployees.keySet()){
             List < Employee > employees = weekendEmployees.get(magazin);
