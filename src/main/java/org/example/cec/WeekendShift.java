@@ -1,9 +1,6 @@
 package org.example.cec;
 
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
@@ -30,7 +27,7 @@ public class WeekendShift {
             Sheet sheet = workbook.getSheetAt(0);
             Row row = sheet.getRow(1);
             while (row.getCell(count + 4) != null){
-                pos[ count ] = (int) row.getCell(count + 4).getNumericCellValue();
+                pos[ count ] = getValueint(row, count + 4);
                 count++;
 
             }
@@ -46,6 +43,26 @@ public class WeekendShift {
         size = count;
     }
 
+    private int getValueint(Row row, int cellIndex) {
+        Cell cell = row.getCell(cellIndex);
+        if (cell == null) {
+            return 0; // sau altă valoare implicită
+        }
+        if (cell.getCellType() == CellType.NUMERIC) {
+            return (int) cell.getNumericCellValue();
+        } else if (cell.getCellType() == CellType.STRING) {
+            try {
+                return Integer.parseInt(cell.getStringCellValue());
+            } catch (NumberFormatException e) {
+                return 0; // sau altă valoare implicită
+            }
+        }
+        return 0; // sau altă valoare implicită
+
+    }
+
 
 
 }
+
+

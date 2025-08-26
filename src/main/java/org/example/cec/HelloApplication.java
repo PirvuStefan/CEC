@@ -485,4 +485,10 @@ public class HelloApplication extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+    public int getValueint(Cell cell){
+        if(cell.getCellType() == CellType.NUMERIC) return (int) cell.getNumericCellValue();
+        if(cell.getCellType() == CellType.STRING) return Integer.parseInt(cell.getStringCellValue());
+        return 0;
+    }
 }
