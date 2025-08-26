@@ -425,6 +425,7 @@ public class HelloApplication extends Application {
         for( String magazin : weekendEmployees.keySet()){
             System.out.println("Magazin: " + magazin);
             List < Employee > employees = weekendEmployees.get(magazin);
+            if( employees.isEmpty()) System.out.println("GOL");
             for( Employee employee : employees){
                 System.out.println("Employee: " + employee.name + ", Shifts: " + employee.numberOfShifts + ", Has Worked Saturday: " + employee.hasWorkedSaturday);
                 for( int i = 0; i < WeekendShift.size; i++){
