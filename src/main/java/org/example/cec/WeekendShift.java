@@ -14,6 +14,7 @@ public class WeekendShift {
     public void initialiseDays(int size){
 
         WeekendShift.size = size;
+        System.out.print(size + " Marimea : ");
         work = new boolean[size];
         for(int i = 0; i < size; i++) work[i] = false;
 
