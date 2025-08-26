@@ -414,8 +414,7 @@ public class HelloApplication extends Application {
         Map< String , List<Employee> > weekendEmployees;
 
         WeekendShift test = new WeekendShift();
-        test.initialiseSize(weekendSheet); // to set the size of the weekend shift ( static variable)
-        System.out.println("da");
+        test.initialiseSize(weekendSheet); // to set the size of the weekend shift ( static variable);
         weekendEmployees = InitialiseWeekendList(weekendSheet);
         if( weekendEmployees.isEmpty()){
             System.out.println("Eroare la initializarea listei de angajati pentru weekend!");
@@ -424,15 +423,16 @@ public class HelloApplication extends Application {
 
         for( String magazin : weekendEmployees.keySet()){
             System.out.println("Magazin: " + magazin);
+            System.out.print("----------------------\n");
             List < Employee > employees = weekendEmployees.get(magazin);
             if( employees.isEmpty()) System.out.println("GOL");
             for( Employee employee : employees){
                 System.out.println("Employee: " + employee.name + ", Shifts: " + employee.numberOfShifts + ", Has Worked Saturday: " + employee.hasWorkedSaturday);
                 for( int i = 0; i < WeekendShift.size; i++){
                     System.out.println("Shift day " + (i+1) + ": " + WeekendShift.pos[i]);
-                    System.out.print( employee.shift.work[i] + " ");
                 }
             }
+            System.out.print("----------------------\n");
         }
 
 
