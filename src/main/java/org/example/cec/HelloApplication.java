@@ -469,11 +469,11 @@ public class HelloApplication extends Application {
                 if(hasWorkedSaturday != 0) employee.hasWorked(true);
                 employees.add(employee);
                 if(!nextRow.getCell(0).getStringCellValue().isEmpty()) {
-                    weekendEmployees.put(magazin, employees);
+                    weekendEmployees.put(magazin, new ArrayList<>(employees));
                     employees.clear();
                 }
                 if(nextRow.getCell(1).getStringCellValue().isEmpty()){
-                    weekendEmployees.put(magazin, employees);
+                    weekendEmployees.put(magazin, new ArrayList<>(employees));
                     employees.clear();
                     break;
                 }
