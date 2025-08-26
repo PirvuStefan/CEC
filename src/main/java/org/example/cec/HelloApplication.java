@@ -415,6 +415,7 @@ public class HelloApplication extends Application {
 
         WeekendShift test = new WeekendShift();
         test.initialiseSize(weekendSheet); // to set the size of the weekend shift ( static variable)
+        System.out.println("da");
         weekendEmployees = InitialiseWeekendList(weekendSheet);
 
         for( String magazin : weekendEmployees.keySet()){
