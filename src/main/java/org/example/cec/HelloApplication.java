@@ -30,6 +30,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Collections.swap;
+
 public class HelloApplication extends Application {
 
     private File mainSheet;
@@ -503,5 +505,19 @@ public class HelloApplication extends Application {
         if(cell.getCellType() == CellType.NUMERIC) return (int) cell.getNumericCellValue();
         if(cell.getCellType() == CellType.STRING) return Integer.parseInt(cell.getStringCellValue());
         return 0;
+    }
+
+    public String whatDay(int x, int[] v){
+        // testam ce e tip de zi este y
+        // v[i] si v[i+1] si v[i+2]
+        if( x == v[0] && v[0] + 1 != v[1]) return "duminca";
+        if( x == v[v.length - 1] && v[v.length - 1] - 1 != v[v.length - 2]) return "sambata";
+
+        for(int i = 0; i < v.length; i++)
+            if( v[i] == x && v[i] + 1 == v[i + 1]) return "sambata";
+            else if( v[i] == x && v[i] - 1 == v[i - 1]) return "duminica";
+        return "none";
+
+
     }
 }
