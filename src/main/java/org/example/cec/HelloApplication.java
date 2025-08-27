@@ -544,14 +544,18 @@ public class HelloApplication extends Application {
                         "-fx-background-radius: 10; " +
                         "-fx-padding: 10 20 10 20;"
         ));
-        processButton.setOnMousePressed(e -> processButton.setStyle(
-                "-fx-background-color: rgba(0,90,200,1); " +
-                        "-fx-text-fill: white; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-background-radius: 10; " +
-                        "-fx-padding: 10 20 10 20;" +
-                        "-fx-effect: innershadow(gaussian, #003366, 10, 0.5, 0, 2);"
-        ));
+       processButton.setOnMousePressed(e -> {
+           processButton.setStyle(
+                   "-fx-background-color: rgba(0,90,200,1); " +
+                   "-fx-text-fill: white; " +
+                   "-fx-font-weight: bold; " +
+                   "-fx-background-radius: 10; " +
+                   "-fx-padding: 10 20 10 20;" +
+                   "-fx-effect: innershadow(gaussian, #003366, 10, 0.5, 0, 2);"
+           );
+//           javafx.scene.media.AudioClip clickSound = new javafx.scene.media.AudioClip(getClass().getResource("/sounds/click.mp3").toExternalForm());
+//           clickSound.play();
+       });//Make sure to place your sound file (e.g., click.mp3) in the resources/sounds directory of your project.
         processButton.setOnMouseReleased(e -> processButton.setStyle(
                 "-fx-background-color: rgba(0,150,255,1); " +
                         "-fx-text-fill: white; " +
