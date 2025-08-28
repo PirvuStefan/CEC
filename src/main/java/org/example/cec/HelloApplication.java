@@ -565,4 +565,16 @@ public class HelloApplication extends Application {
                         "-fx-effect: dropshadow(gaussian, #007bff, 10, 0.5, 0, 2);"
         ));
     }
+
+    private int[][] generateShift(int[][] x){
+
+        for(int i = 0; i < x.length; i++){
+            for(int j = 0; j < x[i].length; j++){
+
+            }
+        }
+
+        return x;
+    }
+    private boolean checkArray(int)
 }
