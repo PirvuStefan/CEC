@@ -141,18 +141,21 @@ public class HelloApplication extends Application {
     }
 
     private Scene createInstructionsScene(Stage stage, Scene mainScene) {
-        Label title = new Label("How to Use the Application");
+      Label title = new Label("Ghid De Utilizare  \u2714"); // \u2714 is the check mark symbol
         title.setStyle("-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: white;");
 
         Label instructions = new Label(
-                "1. Select the required Excel files using the 'Browse' buttons.\n" +
-                        "2. Ensure the files are correctly formatted.\n" +
-                        "3. Click 'Process Data' to modify the main sheet.\n" +
-                        "4. The modified file will be saved in the 'arhiva' folder."
+                """
+                        1. Selecteaza fisierele necesare apasand pe butonul cauta .
+                        2. Fii sigur ca fisierele sunt corect formatate .
+                        3. Apasa 'Proceseaza Datele' .
+                        4. Fisierul modificat se poate gasi in folderul 'arhiva' .
+                        5. Nu uita sa faci o copie de siguranta a fisierelor originale inainte de procesare.
+                        """
         );
         instructions.setStyle("-fx-font-size: 16px; -fx-text-fill: white; -fx-padding: 10;");
 
-        Button backButton = new Button("Back to Main Page");
+        Button backButton = new Button("Inapoi la Pagina Principala");
         backButton.setStyle("-fx-background-color: rgba(0,123,255,0.85); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 10 20 10 20;");
         backButton.setOnAction(e -> stage.setScene(mainScene)); // Go back to the main scene
 
@@ -507,7 +510,7 @@ public class HelloApplication extends Application {
         return 0;
     }
 
-    public String whatDay(int x, int[] v){
+    private String whatDay(int x, int[] v){
         // testam ce e tip de zi este y
         // v[i] si v[i+1] si v[i+2]
         if( x == v[0] && v[0] + 1 != v[1]) return "duminica";
@@ -519,6 +522,12 @@ public class HelloApplication extends Application {
         return "none";
 
 
+    }
+
+    private boolean canWork(int x, boolean hasWorkedLastSaturday, int[] pos){
+        String day = whatDay(x, pos);
+        if( x == pos[0] && day.equals("duminica") && hasWorkedLastSaturday) return false;
+        return true;
     }
 
     private void styleProcessButton(Button processButton) {
@@ -582,6 +591,27 @@ public class HelloApplication extends Application {
 
     private int[] generateFirstOne(boolean workedSaturday, int numberOfShifts, int[] pos){
           int[] x = new int[WeekendShift.size];
+          if(numberOfShifts == 0) return x;
+          do{
+            for(int i = 0; i < x.length; i++){
+              if( numberOfShifts == 0) return x;
+              if( canWork(pos[i], workedSaturday, pos) ){
+                  x[i] = 1;
+                  numberOfShifts--;
+              }
+              else if( i > 0 && whatDay(pos[i], pos).equals("duminica") && x[i - 1] == 0 && pos[i-1] + 1 == pos[i]){ // if is a sunday and the day before was not a shift and is indeed a saturday
+                  x[i] = 1;
+                  numberOfShifts--;
+              }
+              else if( i > 0 && whatDay(pos[i], pos).equals("sambata") && x[i + 1] == 0 && pos[i+1] - 1 == pos[i]){ // if is a saturday and the day before was not a shift and is indeed a friday
+                  x[i] = 1;
+                  numberOfShifts--;
+              }
+            }
+          }while(numberOfShifts > 0);
+
+
+          return x;
     }
 
 }
