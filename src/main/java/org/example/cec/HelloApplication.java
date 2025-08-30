@@ -579,8 +579,8 @@ public class HelloApplication extends Application {
 
         x[0] = generateFirstOne(workedSaturday[0], numberOfShifts[0], pos); // the first one is associated random to not be repetitive
 
-        for(int i = 1; i< WeekendShift.size ; i++){
-            x[i] = generateLine();
+        for(int i = 1; i < WeekendShift.size ; i++){
+            x[i] = generateLine(x, i, workedSaturday, numberOfShifts, pos);
         }
 
 
@@ -617,13 +617,14 @@ public class HelloApplication extends Application {
     private int[] generateLine(int[][] x, int lineIndex, boolean[] workedSaturday, int[] numberOfShifts, int[] pos){
            int[] v = new int[WeekendShift.size];
            int minim = Integer.MAX_VALUE;
+           for(int j = 0; j < v.length; j++)
            for(int i = 0; i < lineIndex; i++){
                int count = 0;
-               for(int j = 0; j < WeekendShift.size; j++){
-                   if( x[i][j] == 1) count++;
-               }
+               if( x[i][j] == 1) count++;
+
                if( count < minim) minim = count;
            }
+
 
 
            do{
@@ -648,7 +649,7 @@ public class HelloApplication extends Application {
                           v[i] = 1;
                           numberOfShifts[lineIndex]--;
                       }
-                      else if( i == pos.length - 1  && whatDay(pos[i], pos).equals("sambata") )\
+                      else if( i == pos.length - 1  && whatDay(pos[i], pos).equals("sambata") )
                       {
                             v[i] = 1;
                             numberOfShifts[lineIndex]--;
@@ -656,7 +657,7 @@ public class HelloApplication extends Application {
                   }
 
               }
-              minim--;
+              minim++;
 
 
            }while(numberOfShifts[lineIndex] > 0);
