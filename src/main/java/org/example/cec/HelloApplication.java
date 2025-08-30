@@ -616,6 +616,50 @@ public class HelloApplication extends Application {
 
     private int[] generateLine(int[][] x, int lineIndex, boolean[] workedSaturday, int[] numberOfShifts, int[] pos){
            int[] v = new int[WeekendShift.size];
+           int minim = Integer.MAX_VALUE;
+           for(int i = 0; i < lineIndex; i++){
+               int count = 0;
+               for(int j = 0; j < WeekendShift.size; j++){
+                   if( x[i][j] == 1) count++;
+               }
+               if( count < minim) minim = count;
+           }
+
+
+           do{
+              if(numberOfShifts[lineIndex] == 0) return v;
+
+              for(int i = 0; i < v.length; i++){
+                  int count = 0 ;
+                    for(int j = 0; j < lineIndex; j++){
+                        if( x[j][i] == 1) count++;
+                    }
+                  if( count == minim ){
+                      if( canWork(pos[i], workedSaturday[lineIndex], pos))
+                      {
+                            v[i] = 1;
+                            numberOfShifts[lineIndex]--;
+                      }// daca luna incepe cu o zi de duminica si a lucrat sambata in luna precedenta, nu poate lucra duminica
+                      else if( i > 0 && whatDay(pos[i], pos).equals("duminica") && v[i - 1] == 0 && pos[i-1] + 1 == pos[i]){ // if is a sunday and the day before was not a shift and is indeed a saturday
+                          v[i] = 1;
+                          numberOfShifts[lineIndex]--;
+                      }//
+                      else if( i > 0 && whatDay(pos[i], pos).equals("sambata") && v[i + 1] == 0 && pos[i+1] - 1 == pos[i] && i < pos.length - 1){ // if is a saturday and the day before was not a shift and is indeed a friday
+                          v[i] = 1;
+                          numberOfShifts[lineIndex]--;
+                      }
+                      else if( i == pos.length - 1  && whatDay(pos[i], pos).equals("sambata") )\
+                      {
+                            v[i] = 1;
+                            numberOfShifts[lineIndex]--;
+                      }
+                  }
+
+              }
+              minim--;
+
+
+           }while(numberOfShifts[lineIndex] > 0);
 
 
 
