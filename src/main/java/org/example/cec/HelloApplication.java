@@ -579,12 +579,12 @@ public class HelloApplication extends Application {
 
         x[0] = generateFirstOne(workedSaturday[0], numberOfShifts[0], pos); // the first one is associated random to not be repetitive
 
-
-        for(int i = 0; i < x.length; i++){
-            for(int j = 0; j < x[i].length; j++){
-
-            }
+        for(int i = 1; i< WeekendShift.size ; i++){
+            x[i] = generateLine();
         }
+
+
+
 
         return x;
     }
@@ -612,6 +612,14 @@ public class HelloApplication extends Application {
 
 
           return x;
+    }
+
+    private int[] generateLine(int[][] x, int lineIndex, boolean[] workedSaturday, int[] numberOfShifts, int[] pos){
+           int[] v = new int[WeekendShift.size];
+
+
+
+           return v;
     }
 
 }
