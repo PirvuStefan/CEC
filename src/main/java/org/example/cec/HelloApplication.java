@@ -422,6 +422,14 @@ public class HelloApplication extends Application {
         else System.out.println("Lista de angajati pentru weekend a fost initializata cu succes!");
 
         for( String magazin : weekendEmployees.keySet()){
+
+            int[][] x = generateShift(x,
+                    weekendEmployees.get(magazin).stream().map(e -> e.hasWorkedSaturday).mapToBoolean(Boolean::booleanValue).toArray(),
+                    weekendEmployees.get(magazin).stream().mapToInt(e -> e.numberOfShifts).toArray(),
+                    WeekendShift.pos
+            );)
+
+
             System.out.println("Magazin: " + magazin);
             System.out.print("----------------------\n");
             List < Employee > employees = weekendEmployees.get(magazin);
@@ -521,8 +529,7 @@ public class HelloApplication extends Application {
 
     private boolean canWorkInTheFirstDayOfTheMonth(int x, boolean hasWorkedLastSaturday, int[] pos){
         String day = whatDay(x, pos);
-        if( x == pos[0] && day.equals("duminica") && hasWorkedLastSaturday) return false;
-        return true;
+        return x != pos[0] || !day.equals("duminica") || !hasWorkedLastSaturday;
     }
 
     private void styleProcessButton(Button processButton) {
@@ -574,9 +581,10 @@ public class HelloApplication extends Application {
 
         x[0] = generateFirstOne(workedSaturday[0], numberOfShifts[0], pos); // the first one is associated random to not be repetitive
 
-        for(int i = 1; i < WeekendShift.size ; i++){
+        for(int i = 1; i < x[0].length ; i++){
             x[i] = generateLine(x, i, workedSaturday, numberOfShifts, pos);
         }
+
 
 
 
@@ -612,14 +620,12 @@ public class HelloApplication extends Application {
     private int[] generateLine(int[][] x, int lineIndex, boolean[] workedSaturday, int[] numberOfShifts, int[] pos){
            int[] v = new int[WeekendShift.size];
            int minim = Integer.MAX_VALUE;
-           for(int j = 0; j < v.length; j++)
-           for(int i = 0; i < lineIndex; i++){
+           for(int j = 0; j < v.length; j++) {
                int count = 0;
-               if( x[i][j] == 1) count++;
+               for (int i = 0; i < lineIndex; i++) if (x[i][j] == 1) count++;
 
-               if( count < minim) minim = count;
+               if (count < minim) minim = count;
            }
-
 
 
            do{
