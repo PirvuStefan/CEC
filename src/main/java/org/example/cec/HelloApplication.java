@@ -13,12 +13,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.xssf.usermodel.IndexedColorMap;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.awt.*;
-import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -29,8 +26,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static java.util.Collections.swap;
 
 public class HelloApplication extends Application {
 
@@ -122,7 +117,7 @@ public class HelloApplication extends Application {
 
         });
 
-        Button instructionsButton = new Button("How to Use");
+        Button instructionsButton = new Button("Cum folosim aplicatia?");
         instructionsButton.setPrefWidth(200);
         instructionsButton.setStyle("-fx-background-color: rgba(0,123,255,0.85); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 10 20 10 20;");
         VBox root = new VBox(30, title, fileSelectors, processButton, instructionsButton);
@@ -132,7 +127,7 @@ public class HelloApplication extends Application {
 
         Scene mainScene = new Scene(root, 600, 400);
         stage.setScene(mainScene);
-        stage.setTitle("Excel File Selector");
+        stage.setTitle("Central Excel Controller");
         stage.setMinWidth(500);
         stage.setMinHeight(350);
         stage.show();
@@ -524,7 +519,7 @@ public class HelloApplication extends Application {
 
     }
 
-    private boolean canWork(int x, boolean hasWorkedLastSaturday, int[] pos){
+    private boolean canWorkInTheFirstDayOfTheMonth(int x, boolean hasWorkedLastSaturday, int[] pos){
         String day = whatDay(x, pos);
         if( x == pos[0] && day.equals("duminica") && hasWorkedLastSaturday) return false;
         return true;
@@ -595,7 +590,7 @@ public class HelloApplication extends Application {
           do{
             for(int i = 0; i < x.length; i++){
               if( numberOfShifts == 0) return x;
-              if( canWork(pos[i], workedSaturday, pos) ){
+              if( canWorkInTheFirstDayOfTheMonth(pos[i], workedSaturday, pos) ){
                   x[i] = 1;
                   numberOfShifts--;
               }
@@ -636,7 +631,7 @@ public class HelloApplication extends Application {
                         if( x[j][i] == 1) count++;
                     }
                   if( count == minim ){
-                      if( canWork(pos[i], workedSaturday[lineIndex], pos))
+                      if( canWorkInTheFirstDayOfTheMonth(pos[i], workedSaturday[lineIndex], pos))
                       {
                             v[i] = 1;
                             numberOfShifts[lineIndex]--;
