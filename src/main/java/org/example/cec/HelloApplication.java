@@ -423,11 +423,11 @@ public class HelloApplication extends Application {
 
         for( String magazin : weekendEmployees.keySet()){
 
-            int[][] x = generateShift(x,
-                    weekendEmployees.get(magazin).stream().map(e -> e.hasWorkedSaturday).mapToBoolean(Boolean::booleanValue).toArray(),
-                    weekendEmployees.get(magazin).stream().mapToInt(e -> e.numberOfShifts).toArray(),
-                    WeekendShift.pos
-            );)
+           int[][] x = generateShift(x,
+                   weekendEmployees.get(magazin).stream().map(e -> e.hasWorkedSaturday).map(Boolean::booleanValue).toArray(Boolean[]::new),
+                   weekendEmployees.get(magazin).stream().mapToInt(e -> e.numberOfShifts).toArray(),
+                   WeekendShift.pos
+           );
 
 
             System.out.println("Magazin: " + magazin);
