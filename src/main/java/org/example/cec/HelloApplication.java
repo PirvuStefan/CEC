@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,7 +77,7 @@ public class HelloApplication extends Application {
                 File modifiedSheet = WeekendModify(mainSheet, weekendSheet);
                 if (modifiedSheet != null) {
                     try {
-                        Files.copy(modifiedSheet.toPath(), outputDir.resolve(modifiedSheet.getName()), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                        Files.copy(modifiedSheet.toPath(), outputDir.resolve(modifiedSheet.getName()), StandardCopyOption.REPLACE_EXISTING);
                     } catch (IOException ex) {
                         ex.printStackTrace();
                         showAlert("Failed to copy the modified file to the output directory.");
@@ -90,7 +91,7 @@ public class HelloApplication extends Application {
                 File modifiedSheet = HolidayModify(mainSheet, holidaysSheet);
                 if (modifiedSheet != null) {
                     try {
-                        Files.copy(modifiedSheet.toPath(), outputDir.resolve(modifiedSheet.getName()), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                        Files.copy(modifiedSheet.toPath(), outputDir.resolve(modifiedSheet.getName()), StandardCopyOption.REPLACE_EXISTING);
                     } catch (IOException ex) {
                         ex.printStackTrace();
                         showAlert("Failed to copy the modified file to the output directory.");
@@ -104,7 +105,7 @@ public class HelloApplication extends Application {
             HolidayModify(modifiedSheet, holidaysSheet);
             if (modifiedSheet != null) {
                 try {
-                    Files.copy(modifiedSheet.toPath(), outputDir.resolve(modifiedSheet.getName()), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                    Files.copy(modifiedSheet.toPath(), outputDir.resolve(modifiedSheet.getName()), StandardCopyOption.REPLACE_EXISTING);
                 } catch (IOException ex) {
                     ex.printStackTrace();
                     showAlert("Failed to copy the modified file to the output directory.");
@@ -423,23 +424,27 @@ public class HelloApplication extends Application {
 
         for( String magazin : weekendEmployees.keySet()){
 
-           int[][] x = generateShift(x,
-                   weekendEmployees.get(magazin).stream().map(e -> e.hasWorkedSaturday).map(Boolean::booleanValue).toArray(Boolean[]::new),
-                   weekendEmployees.get(magazin).stream().mapToInt(e -> e.numberOfShifts).toArray(),
-                   WeekendShift.pos
-           );
+
 
 
             System.out.println("Magazin: " + magazin);
             System.out.print("----------------------\n");
             List < Employee > employees = weekendEmployees.get(magazin);
-            if( employees.isEmpty()) System.out.println("GOL");
+            
+            boolean[] workedSaturday = new boolean[employees.size()];
+            int[] numberOfShifts = new int[employees.size()];
+            for( int i = 0; i < employees.size(); i++){
+                workedSaturday[i] = employees.get(i).hasWorkedSaturday;
+                numberOfShifts[i] = employees.get(i).numberOfShifts;
+            }
             for( Employee employee : employees){
                 System.out.println("Employee: " + employee.name + ", Shifts: " + employee.numberOfShifts + ", Has Worked Saturday: " + employee.hasWorkedSaturday);
                 for( int i = 0; i < WeekendShift.size; i++){
                     System.out.println("Shift day " + (i+1) + ": " + WeekendShift.pos[i]);
                 }
             }
+            int[][] x = new int[employees.size()][WeekendShift.size];
+             x = generateShift(x, workedSaturday, numberOfShifts, WeekendShift.pos);
             System.out.print("----------------------\n");
         }
 
@@ -581,7 +586,7 @@ public class HelloApplication extends Application {
 
         x[0] = generateFirstOne(workedSaturday[0], numberOfShifts[0], pos); // the first one is associated random to not be repetitive
 
-        for(int i = 1; i < x[0].length ; i++){
+        for(int i = 1; i < x.length ; i++){
             x[i] = generateLine(x, i, workedSaturday, numberOfShifts, pos);
         }
 
