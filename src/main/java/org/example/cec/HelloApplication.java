@@ -621,6 +621,11 @@ public class HelloApplication extends Application {
                   x[i] = 1;
                   numberOfShifts--;
               }
+              else if( i == pos.length - 1  && whatDay(pos[i], pos).equals("sambata") )
+              {
+                  x[i] = 1;
+                  numberOfShifts--;
+              }
             }
           }while(numberOfShifts > 0);
 
@@ -630,46 +635,46 @@ public class HelloApplication extends Application {
 
     private int[] generateLine(int[][] x, int lineIndex, boolean[] workedSaturday, int[] numberOfShifts, int[] pos){
            int[] v = new int[WeekendShift.size];
-           int minim = Integer.MAX_VALUE;
-           for(int j = 0; j < v.length; j++) {
-               int count = 0;
-               for (int i = 0; i < lineIndex; i++) if (x[i][j] == 1) count++;
-
-               if (count < minim) minim = count;
-           }
+           int minim = calculateMin(x, lineIndex); // calculate the minimum number of shifts assigned to any day so far
 
 
            do{
+               boolean loop = false;
               if(numberOfShifts[lineIndex] == 0) return v;
 
               for(int i = 0; i < v.length; i++){
+                  if( numberOfShifts[lineIndex] == 0) return v;
                   int count = 0 ;
                     for(int j = 0; j < lineIndex; j++){
                         if( x[j][i] == 1) count++;
                     }
+
                   if( count == minim ){
                       if( i == 0 && whatDay(pos[i], pos).equals("duminica") && !workedSaturday[i])  // if is the first day of the month and is a sunday and he worked last saturday, he cannot work this sunday
                       {
                             v[i] = 1;
-                            numberOfShifts[lineIndex]--;
+                          if(--numberOfShifts[lineIndex] == 0) return v;
                       }// daca luna incepe cu o zi de duminica si a lucrat sambata in luna precedenta, nu poate lucra duminica
                       else if( i > 0 && whatDay(pos[i], pos).equals("duminica") && v[i - 1] == 0 && pos[i-1] + 1 == pos[i]){ // if is a sunday and the day before was not a shift and is indeed a saturday
                           v[i] = 1;
-                          numberOfShifts[lineIndex]--;
+                          if(--numberOfShifts[lineIndex] == 0) return v;
                       }//
                       else if( i > 0 && whatDay(pos[i], pos).equals("sambata") && v[i + 1] == 0 && pos[i+1] - 1 == pos[i] && i < pos.length - 1){ // if is a saturday and the day before was not a shift and is indeed a friday
                           v[i] = 1;
-                          numberOfShifts[lineIndex]--;
+                          if(--numberOfShifts[lineIndex] == 0) return v;
                       }
                       else if( i == pos.length - 1  && whatDay(pos[i], pos).equals("sambata") )
                       {
                             v[i] = 1;
-                            numberOfShifts[lineIndex]--;
+                            if(--numberOfShifts[lineIndex] == 0) return v;
+
                       }
+
+                    loop = true;
                   }
 
               }
-              minim++;
+              if(!loop) minim++; // if we did not assign any shift in this iteration, we increase the minimum to allow more flexibility
 
 
            }while(numberOfShifts[lineIndex] > 0);
@@ -677,6 +682,17 @@ public class HelloApplication extends Application {
 
 
            return v;
+    }
+
+    private int calculateMin(int[][] x, int lineIndex){
+        int minim = Integer.MAX_VALUE;
+        for(int j = 0; j < x[0].length; j++) {
+            int count = 0;
+            for (int i = 0; i < lineIndex; i++) if (x[i][j] == 1) count++;
+
+            if (count < minim) minim = count;
+        }
+        return minim;
     }
 
 }
