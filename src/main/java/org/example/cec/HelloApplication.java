@@ -445,6 +445,12 @@ public class HelloApplication extends Application {
             }
             int[][] x = new int[employees.size()][WeekendShift.size];
              x = generateShift(x, workedSaturday, numberOfShifts, WeekendShift.pos);
+             for(int i = 0; i < x.length; i++){
+                 for(int j = 0; j < x[i].length; j++){
+                     System.out.print(x[i][j] + " ");
+                 }
+                 System.out.print("\n");
+             }
             System.out.print("----------------------\n");
         }
 
@@ -603,7 +609,7 @@ public class HelloApplication extends Application {
           do{
             for(int i = 0; i < x.length; i++){
               if( numberOfShifts == 0) return x;
-              if( canWorkInTheFirstDayOfTheMonth(pos[i], workedSaturday, pos) ){
+              if( i == 0 && whatDay(pos[i], pos).equals("duminica") && !workedSaturday){  // if is the first day of the month and is a sunday and he worked last saturday, he cannot work this sunday
                   x[i] = 1;
                   numberOfShifts--;
               }
@@ -642,7 +648,7 @@ public class HelloApplication extends Application {
                         if( x[j][i] == 1) count++;
                     }
                   if( count == minim ){
-                      if( canWorkInTheFirstDayOfTheMonth(pos[i], workedSaturday[lineIndex], pos))
+                      if( i == 0 && whatDay(pos[i], pos).equals("duminica") && !workedSaturday[i])  // if is the first day of the month and is a sunday and he worked last saturday, he cannot work this sunday
                       {
                             v[i] = 1;
                             numberOfShifts[lineIndex]--;
