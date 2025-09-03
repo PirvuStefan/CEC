@@ -526,13 +526,15 @@ public class HelloApplication extends Application {
 
     private String whatDay(int x, int[] v){
         // testam ce e tip de zi este y
+
         // v[i] si v[i+1] si v[i+2]
         if( x == v[0] && v[0] + 1 != v[1]) return "duminica";
-        if( x == v[v.length - 1] && v[v.length - 1] - 1 != v[v.length - 2]) return "sambata";
+        if( x == v[WeekendShift.size - 1] && v[WeekendShift.size - 1] - 1 != v[WeekendShift.size - 2]) return "sambata";
 
-        for(int i = 0; i < v.length; i++)
-            if( v[i] == x && v[i] + 1 == v[i + 1]) return "sambata";
-            else if( v[i] == x && v[i] - 1 == v[i - 1]) return "duminica";
+        for(int i = 0; i < WeekendShift.size; i++)
+            if( v[i] == x && i + 1 < WeekendShift.size && v[i] + 1 == v[i + 1]) return "sambata";
+            else if( v[i] == x && i - 1 >= 0 && v[i] - 1 == v[i - 1]) return "duminica";
+
         return "none";
 
 
@@ -655,20 +657,21 @@ public class HelloApplication extends Application {
                             v[i] = 1;
                           if(--numberOfShifts[lineIndex] == 0) return v;
                       }// daca luna incepe cu o zi de duminica si a lucrat sambata in luna precedenta, nu poate lucra duminica
+                      else if( i == WeekendShift.size - 1  && whatDay(pos[i], pos).equals("sambata") )
+                      {
+                          v[i] = 1;
+                          if(--numberOfShifts[lineIndex] == 0) return v;
+
+                      }
                       else if( i > 0 && whatDay(pos[i], pos).equals("duminica") && v[i - 1] == 0 && pos[i-1] + 1 == pos[i]){ // if is a sunday and the day before was not a shift and is indeed a saturday
                           v[i] = 1;
                           if(--numberOfShifts[lineIndex] == 0) return v;
                       }//
-                      else if( i > 0 && whatDay(pos[i], pos).equals("sambata") && v[i + 1] == 0 && pos[i+1] - 1 == pos[i] && i < pos.length - 1){ // if is a saturday and the day before was not a shift and is indeed a friday
+                      else if( i > 0 && whatDay(pos[i], pos).equals("sambata") && v[i + 1] == 0 && pos[i+1] - 1 == pos[i] && i < WeekendShift.size - 1){ // if is a saturday and the day before was not a shift and is indeed a friday
                           v[i] = 1;
                           if(--numberOfShifts[lineIndex] == 0) return v;
                       }
-                      else if( i == pos.length - 1  && whatDay(pos[i], pos).equals("sambata") )
-                      {
-                            v[i] = 1;
-                            if(--numberOfShifts[lineIndex] == 0) return v;
 
-                      }
 
                     loop = true;
                   }
