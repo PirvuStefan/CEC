@@ -678,9 +678,9 @@ public class HelloApplication extends Application {
 
 
 
-                  }
+                    }
 
-              }
+            }
               if(!loop) minim++; // if we did not assign any shift in this iteration, we increase the minimum to allow more flexibility
 
 
