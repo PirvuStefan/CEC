@@ -449,7 +449,7 @@ public class HelloApplication extends Application {
                  for(int j = 0; j < x[i].length; j++){
                      System.out.print(x[i][j] + " ");
                  }
-                 System.out.print("\n");
+                 System.out.print(workedSaturday[i] + "\n");
              }
             System.out.print("----------------------\n");
         }
@@ -654,7 +654,7 @@ public class HelloApplication extends Application {
                 }
 
                 if (count == minim) {
-                    if (i == 0 && whatDay(pos[i], pos).equals("duminicaF") && !workedSaturday[i] && v[i] == 0)  // if is the first day of the month and is a sunday and he worked last saturday, he cannot work this sunday
+                    if (i == 0 && whatDay(pos[i], pos).equals("duminicaF") && !workedSaturday[lineIndex] && v[i] == 0)  // if is the first day of the month and is a sunday and he worked last saturday, he cannot work this sunday
                     {
                         v[i] = 1;
                         if (--numberOfShifts[lineIndex] == 0) return v;
@@ -679,14 +679,14 @@ public class HelloApplication extends Application {
 
 
 
-                    }
+                }
 
             }
               if(!loop) minim++; // if we did not assign any shift in this iteration, we increase the minimum to allow more flexibility
 
             if( tries++ > 1000){
                 System.out.println("Cannot assign shifts for employee at line index " + lineIndex);
-               // break; // to avoid infinite loops in case of impossible assignments
+                return v;
             }
            }while(numberOfShifts[lineIndex] > 0);
 
