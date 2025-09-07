@@ -513,6 +513,8 @@ public class HelloApplication extends Application {
 
                             if( daysInMonth == 0 ) daysInMonth = daysInMonth(mainSheet);
 
+                            System.out.println(daysInMonth );
+
 
                             switch (whatDay(day, pos)) {
                                 case "sambataF" -> row.getCell(colIndex).setCellValue(8);
@@ -536,7 +538,8 @@ public class HelloApplication extends Application {
 
                         }
                     }
-                    break; // exit the loop after modifying the employee
+                    System.out.println("Main sheet updated with weekend shifts successfully! " + employeeName);break; // exit the loop after modifying the employee
+
                 }
             }
 
@@ -544,7 +547,7 @@ public class HelloApplication extends Application {
                 workbook.write(fos);
             }
 
-            System.out.println("Main sheet updated with weekend shifts successfully! " + employeeName);
+
 
         } catch (IOException e) {
             e.printStackTrace();
