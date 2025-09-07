@@ -528,8 +528,8 @@ public class HelloApplication extends Application {
         // testam ce e tip de zi este y
 
         // v[i] si v[i+1] si v[i+2]
-        if( x == v[0] && v[0] + 1 != v[1]) return "duminica";
-        if( x == v[WeekendShift.size - 1] && v[WeekendShift.size - 1] - 1 != v[WeekendShift.size - 2]) return "sambata";
+        if( x == v[0] && v[0] + 1 != v[1]) return "duminicaF";
+        if( x == v[WeekendShift.size - 1] && v[WeekendShift.size - 1] - 1 != v[WeekendShift.size - 2]) return "sambataF";
 
         for(int i = 0; i < WeekendShift.size; i++)
             if( v[i] == x && i + 1 < WeekendShift.size && v[i] + 1 == v[i + 1]) return "sambata";
@@ -639,6 +639,7 @@ public class HelloApplication extends Application {
     private int[] generateLine(int[][] x, int lineIndex, boolean[] workedSaturday, int[] numberOfShifts, int[] pos) {
         int[] v = new int[WeekendShift.size];
         int minim = calculateMin(x, lineIndex); // calculate the minimum number of shifts assigned to any day so far
+        int tries = 0;
 
 
         do {
@@ -653,13 +654,13 @@ public class HelloApplication extends Application {
                 }
 
                 if (count == minim) {
-                    if (i == 0 && whatDay(pos[i], pos).equals("duminica") && !workedSaturday[i] && v[i] == 0)  // if is the first day of the month and is a sunday and he worked last saturday, he cannot work this sunday
+                    if (i == 0 && whatDay(pos[i], pos).equals("duminicaF") && !workedSaturday[i] && v[i] == 0)  // if is the first day of the month and is a sunday and he worked last saturday, he cannot work this sunday
                     {
                         v[i] = 1;
                         if (--numberOfShifts[lineIndex] == 0) return v;
                         loop = true;
                     }// daca luna incepe cu o zi de duminica si a lucrat sambata in luna precedenta, nu poate lucra duminica
-                    else if (i == WeekendShift.size - 1 && whatDay(pos[i], pos).equals("sambata") && v[i] == 0) // if is the last day of the month and is a saturday
+                    else if (i == WeekendShift.size - 1 && whatDay(pos[i], pos).equals("sambataF") && v[i] == 0) // if is the last day of the month and is a saturday
                     {
                         v[i] = 1;
                         if (--numberOfShifts[lineIndex] == 0) return v;
@@ -667,10 +668,10 @@ public class HelloApplication extends Application {
 
                     } else if (i > 0 && whatDay(pos[i], pos).equals("duminica") && v[i - 1] == 0 && pos[i - 1] + 1 == pos[i] && v[i] == 0) { // if is a sunday and the day before was not a shift and is indeed a saturday
                         v[i] = 1;
-                          if(--numberOfShifts[lineIndex] == 0) return v;
-                          loop = true;
-                      }//
-                      else if( i > 0 && whatDay(pos[i], pos).equals("sambata") && v[i + 1] == 0 && pos[i+1] - 1 == pos[i] && i < WeekendShift.size - 1 && v[i] == 0){ // if is a saturday and the day before was not a shift and is indeed a friday
+                        if(--numberOfShifts[lineIndex] == 0) return v;
+                        loop = true;
+                    }
+                    else if( i > 0 && whatDay(pos[i], pos).equals("sambata") && v[i + 1] == 0 && pos[i+1] - 1 == pos[i] && i < WeekendShift.size - 1 && v[i] == 0){ // if is a saturday and the day before was not a shift and is indeed a friday
                           v[i] = 1;
                           if(--numberOfShifts[lineIndex] == 0) return v;
                           loop = true;
@@ -683,7 +684,10 @@ public class HelloApplication extends Application {
             }
               if(!loop) minim++; // if we did not assign any shift in this iteration, we increase the minimum to allow more flexibility
 
-
+            if( tries++ > 1000){
+                System.out.println("Cannot assign shifts for employee at line index " + lineIndex);
+               // break; // to avoid infinite loops in case of impossible assignments
+            }
            }while(numberOfShifts[lineIndex] > 0);
 
 
