@@ -459,6 +459,76 @@ public class HelloApplication extends Application {
         return mainSheet;
     }
 
+    private File WeekendMofidyEmployee(File mainSheet, String employeeName, int shifts[], int[] pos){
+        try (FileInputStream fis = new FileInputStream(mainSheet);
+             Workbook workbook = new XSSFWorkbook(fis)) {
+
+            Sheet sheet = workbook.getSheetAt(0);
+            for (int rowIndex = 0; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+                Row row = sheet.getRow(rowIndex);
+                if (row == null) break;
+                String name = row.getCell(2).getStringCellValue();
+                name = name.toUpperCase();
+                if (name.equals(employeeName)) {
+                    // we found the employee, now we can modify the shifts
+                    for (int i = 0; i < shifts.length; i++) {
+                        if (shifts[i] == 1) {
+                            int day = pos[i];
+                            int colIndex = day + 2; // because we start from column F (index 5)
+                            if (colIndex >= row.getLastCellNum()) continue; // skip if column index is out of bounds
+
+                            Cell cell = row.getCell(colIndex);
+                            if (cell == null) {
+                                cell = row.createCell(colIndex, CellType.STRING);
+                            }
+
+                            if( whatDay(day, pos).equals("sambata") ){
+                                row.getCell(colIndex).setCellValue(8);
+                                row.getCell(colIndex + 1).setCellValue(0);
+                                row.getCell(colIndex + 2).setCellValue(0);
+                            }
+                            else if( whatDay(day, pos).equals("duminica") ){
+                                row.getCell(colIndex - 2).setCellValue(8);
+                                row.getCell(colIndex - 1).setCellValue(0);
+                                row.getCell(colIndex).setCellValue(0);
+                            }
+                            else if( whatDay(day, pos).equals("sambataF") ){
+                                row.getCell(colIndex).setCellValue(8);
+                            }
+                            else if( whatDay(day, pos).equals("duminicaF") ){
+                                row.getCell(colIndex).setCellValue(8);
+                            }
+                            else continue; // not a weekend day, we skip it
+
+                            // Set the cell value to "8 0 0"
+                            cell.setCellValue("8 0 0");
+
+                            // Create a new cell style
+                            CellStyle newStyle = row.getSheet().getWorkbook().createCellStyle();
+                            newStyle.cloneStyleFrom(cell.getCellStyle());
+
+                            // Set the cell style to light blue
+                            newStyle.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex());
+                            newStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                            cell.setCellStyle(newStyle);
+                        }
+                    }
+                    break; // exit the loop after modifying the employee
+                }
+            }
+
+            try (FileOutputStream fos = new FileOutputStream(mainSheet)) {
+                workbook.write(fos);
+            }
+
+            System.out.println("Main sheet updated with weekend shifts successfully!");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return mainSheet;
+    }
+
     private Map< String, List<Employee>> InitialiseWeekendList(File weekendSheet) {
         try (FileInputStream fis = new FileInputStream(weekendSheet);
              Workbook workbook = new XSSFWorkbook(fis)) {
