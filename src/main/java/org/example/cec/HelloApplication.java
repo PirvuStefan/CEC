@@ -481,6 +481,11 @@ public class HelloApplication extends Application {
                  System.out.print(workedSaturday[i] + "\n");
              }
             System.out.print("----------------------\n");
+
+            for( int i = 0; i < employees.size(); i++){
+               mainSheet = WeekendMofidyEmployee(mainSheet, employees.get(i).name.toUpperCase(), x[i], WeekendShift.pos);
+            }
+
         }
 
 
@@ -506,29 +511,22 @@ public class HelloApplication extends Application {
                             int colIndex = day + 2; // because we start from column F (index 5)
                             if (colIndex >= row.getLastCellNum()) continue; // skip if column index is out of bounds
 
-                            Cell cell = row.getCell(colIndex);
-                            if (cell == null) {
-                                cell = row.createCell(colIndex, CellType.STRING);
-                            }
-
                             daysInMonth = daysInMonth(mainSheet);
 
 
-                            if( whatDay(day, pos).equals("sambataF") ){
-                                row.getCell(colIndex).setCellValue(8);
-                            }
-                            else if( whatDay(day, pos).equals("duminicaF") ){
-                                row.getCell(colIndex).setCellValue(8);
-                            }
-                            else if( whatDay(day, pos).equals("sambata") ){
-                                row.getCell(colIndex).setCellValue(8);
-                                if( day + 1  > daysInMonth )row.getCell(colIndex + 1).setCellValue(0);
-                                if( day + 2 > daysInMonth ) row.getCell(colIndex + 2).setCellValue(0);
-                            }
-                            else if( whatDay(day, pos).equals("duminica") ){
-                                if(day > 2 ) row.getCell(colIndex - 2).setCellValue(8);
-                                if(day > 1)  row.getCell(colIndex - 1).setCellValue(0);
-                                row.getCell(colIndex).setCellValue(0);
+                            switch (whatDay(day, pos)) {
+                                case "sambataF" -> row.getCell(colIndex).setCellValue(8);
+                                case "duminicaF" -> row.getCell(colIndex).setCellValue(8);
+                                case "sambata" -> {
+                                    row.getCell(colIndex).setCellValue(8);
+                                    if (day + 1 > daysInMonth) row.getCell(colIndex + 1).setCellValue(0);
+                                    if (day + 2 > daysInMonth) row.getCell(colIndex + 2).setCellValue(0);
+                                }
+                                case "duminica" -> {
+                                    if (day > 2) row.getCell(colIndex - 2).setCellValue(8);
+                                    if (day > 1) row.getCell(colIndex - 1).setCellValue(0);
+                                    row.getCell(colIndex).setCellValue(0);
+                                }
                             }
 
 
