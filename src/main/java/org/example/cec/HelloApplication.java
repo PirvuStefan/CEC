@@ -33,7 +33,7 @@ public class HelloApplication extends Application {
     private File mainSheet;
     private File weekendSheet;
     private File holidaysSheet;
-    private int daysInMonth;
+    private static int daysInMonth;
     private int firstDayOfWeekend;
     // we need to know how many days are in a month and what is the first day of the first weekend ( like to know how to count and take in consideration the weekends when we process the data)
 
@@ -196,6 +196,34 @@ public class HelloApplication extends Application {
         alert.showAndWait();
     }
 
+   private int daysInMonth(File mainSheet) {
+       int lastDayOfMonth = -1;
+       try (FileInputStream fis = new FileInputStream(mainSheet);
+            Workbook workbook = new XSSFWorkbook(fis)) {
+
+           Sheet sheet = workbook.getSheetAt(0);
+           Row headerRow = sheet.getRow(3);
+           firstDayOfWeekend = 0;
+           if (headerRow != null) {
+               for (int col = 5; col < headerRow.getLastCellNum(); col++) {
+                   if (headerRow.getCell(col) != null && headerRow.getCell(col).getCellType() == CellType.NUMERIC) {
+                       int value = (int) headerRow.getCell(col).getNumericCellValue();
+                       if (value >= 1 && value <= 31) {
+                           lastDayOfMonth = value;
+                       }
+                       else return lastDayOfMonth;
+                   }
+                   else return lastDayOfMonth;
+                   if( col > 35 ) return lastDayOfMonth;
+               }
+           }
+       } catch (IOException e) {
+           e.printStackTrace();
+       }
+       return lastDayOfMonth;
+   }
+
+
     private File HolidayModify(File mainSheet, File holidaysSheet) {
         List<Holiday> holidays;
         String filePath = holidaysSheet.getAbsolutePath();
@@ -323,6 +351,7 @@ public class HelloApplication extends Application {
                             cell.setCellStyle(newStyle);
                         }
 
+                        daysInMonth = daysInMonth(mainSheet);
                         if(reason.equals("materniate"))
                             row.getCell(daysInMonth + 6).setCellValue(row.getCell(daysInMonth + 6).getNumericCellValue() + (lastDay - firstDay + 1)); // add the number of days of maternity leave to the maternity leave column
                         if(reason.equals("concediu"))
@@ -482,6 +511,8 @@ public class HelloApplication extends Application {
                                 cell = row.createCell(colIndex, CellType.STRING);
                             }
 
+                            daysInMonth = daysInMonth(mainSheet);
+
 
                             if( whatDay(day, pos).equals("sambataF") ){
                                 row.getCell(colIndex).setCellValue(8);
@@ -491,8 +522,8 @@ public class HelloApplication extends Application {
                             }
                             else if( whatDay(day, pos).equals("sambata") ){
                                 row.getCell(colIndex).setCellValue(8);
-                                row.getCell(colIndex + 1).setCellValue(0);
-                                row.getCell(colIndex + 2).setCellValue(0);
+                                if( day + 1  > daysInMonth )row.getCell(colIndex + 1).setCellValue(0);
+                                if( day + 2 > daysInMonth ) row.getCell(colIndex + 2).setCellValue(0);
                             }
                             else if( whatDay(day, pos).equals("duminica") ){
                                 if(day > 2 ) row.getCell(colIndex - 2).setCellValue(8);
