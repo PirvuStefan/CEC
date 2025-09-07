@@ -482,35 +482,29 @@ public class HelloApplication extends Application {
                                 cell = row.createCell(colIndex, CellType.STRING);
                             }
 
-                            if( whatDay(day, pos).equals("sambata") ){
-                                row.getCell(colIndex).setCellValue(8);
-                                row.getCell(colIndex + 1).setCellValue(0);
-                                row.getCell(colIndex + 2).setCellValue(0);
-                            }
-                            else if( whatDay(day, pos).equals("duminica") ){
-                                row.getCell(colIndex - 2).setCellValue(8);
-                                row.getCell(colIndex - 1).setCellValue(0);
-                                row.getCell(colIndex).setCellValue(0);
-                            }
-                            else if( whatDay(day, pos).equals("sambataF") ){
+
+                            if( whatDay(day, pos).equals("sambataF") ){
                                 row.getCell(colIndex).setCellValue(8);
                             }
                             else if( whatDay(day, pos).equals("duminicaF") ){
                                 row.getCell(colIndex).setCellValue(8);
                             }
-                            else continue; // not a weekend day, we skip it
+                            else if( whatDay(day, pos).equals("sambata") ){
+                                row.getCell(colIndex).setCellValue(8);
+                                row.getCell(colIndex + 1).setCellValue(0);
+                                row.getCell(colIndex + 2).setCellValue(0);
+                            }
+                            else if( whatDay(day, pos).equals("duminica") ){
+                                if(day > 2 ) row.getCell(colIndex - 2).setCellValue(8);
+                                if(day > 1)  row.getCell(colIndex - 1).setCellValue(0);
+                                row.getCell(colIndex).setCellValue(0);
+                            }
 
-                            // Set the cell value to "8 0 0"
-                            cell.setCellValue("8 0 0");
 
-                            // Create a new cell style
-                            CellStyle newStyle = row.getSheet().getWorkbook().createCellStyle();
-                            newStyle.cloneStyleFrom(cell.getCellStyle());
+
 
                             // Set the cell style to light blue
-                            newStyle.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex());
-                            newStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-                            cell.setCellStyle(newStyle);
+
                         }
                     }
                     break; // exit the loop after modifying the employee
