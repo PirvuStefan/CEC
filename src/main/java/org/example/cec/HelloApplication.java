@@ -483,7 +483,7 @@ public class HelloApplication extends Application {
             System.out.print("----------------------\n");
 
             for( int i = 0; i < employees.size(); i++){
-               mainSheet = WeekendMofidyEmployee(mainSheet, employees.get(i).name.toUpperCase(), x[i], WeekendShift.pos);
+               mainSheet = WeekendModifyEmployee(mainSheet, employees.get(i).name.toUpperCase(), x[i], WeekendShift.pos);
             }
 
         }
@@ -493,7 +493,7 @@ public class HelloApplication extends Application {
         return mainSheet;
     }
 
-    private File WeekendMofidyEmployee(File mainSheet, String employeeName, int shifts[], int[] pos){
+    private File WeekendModifyEmployee(File mainSheet, String employeeName, int shifts[], int[] pos){
         try (FileInputStream fis = new FileInputStream(mainSheet);
              Workbook workbook = new XSSFWorkbook(fis)) {
 
@@ -511,7 +511,7 @@ public class HelloApplication extends Application {
                             int colIndex = day + 2; // because we start from column F (index 5)
                             if (colIndex >= row.getLastCellNum()) continue; // skip if column index is out of bounds
 
-                            daysInMonth = daysInMonth(mainSheet);
+                            if( daysInMonth == 0 ) daysInMonth = daysInMonth(mainSheet);
 
 
                             switch (whatDay(day, pos)) {
@@ -544,7 +544,7 @@ public class HelloApplication extends Application {
                 workbook.write(fos);
             }
 
-            System.out.println("Main sheet updated with weekend shifts successfully!");
+            System.out.println("Main sheet updated with weekend shifts successfully! " + employeeName);
 
         } catch (IOException e) {
             e.printStackTrace();
