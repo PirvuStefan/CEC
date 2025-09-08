@@ -512,7 +512,7 @@ public class HelloApplication extends Application {
 
                             if( daysInMonth == 0 ) daysInMonth = daysInMonthCalculate(mainSheet);
 
-                            System.out.println(daysInMonth );
+
 
 
                             switch (whatDay(day, pos)) {
@@ -799,6 +799,12 @@ public class HelloApplication extends Application {
             if (count < minim) minim = count;
         }
         return minim;
+    }
+
+    private void resetStaticVariables(){
+        WeekendShift.size = 0;
+        WeekendShift.pos = new int[32];
+        daysInMonth = 0;
     }
 
 }
