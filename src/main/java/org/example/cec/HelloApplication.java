@@ -507,8 +507,8 @@ public class HelloApplication extends Application {
                     for (int i = 0; i < shifts.length; i++) {
                         if (shifts[i] == 1) {
                             int day = pos[i];
-                            int colIndex = day + 5; // because we start from column F (index 5)
-                            if (colIndex >= row.getLastCellNum()) continue; // skip if column index is out of bounds
+                            int colIndex = day + 4; // because we start from column F (index 5)
+                            System.out.println("Modifying shift for " + employeeName + " on day " + day + " at column index " + colIndex + " with shift type " + whatDay(day, pos));
 
                             if( daysInMonth == 0 ) daysInMonth = daysInMonthCalculate(mainSheet);
 
@@ -520,13 +520,13 @@ public class HelloApplication extends Application {
                                 case "duminicaF" -> row.getCell(colIndex).setCellValue(8);
                                 case "sambata" -> {
                                     row.getCell(colIndex).setCellValue(8);
-                                    if (day + 2 <= daysInMonth) row.getCell(colIndex + 2).setCellValue(0);
-                                    if (day + 1 <= daysInMonth) row.getCell(colIndex + 1).setCellValue(0);
+                                    if (day + 2 <= daysInMonth) row.getCell(colIndex + 2).setCellValue(1);
+                                    if (day + 1 <= daysInMonth) row.getCell(colIndex + 1).setCellValue(1);
                                 }
                                 case "duminica" -> {
-                                    if (day > 2) row.getCell(colIndex - 2).setCellValue(8);
-                                    if (day > 1) row.getCell(colIndex - 1).setCellValue(0);
-                                    row.getCell(colIndex).setCellValue(0);
+                                    if (day > 2) row.getCell(colIndex - 2).setCellValue(9);
+                                    if (day > 1) row.getCell(colIndex - 1).setCellValue(2);
+                                    row.getCell(colIndex).setCellValue(2);
                                 }
                             }
 
