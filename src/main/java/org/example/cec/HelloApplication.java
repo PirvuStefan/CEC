@@ -520,8 +520,8 @@ public class HelloApplication extends Application {
                                 case "duminicaF" -> row.getCell(colIndex).setCellValue(8);
                                 case "sambata" -> {
                                     row.getCell(colIndex).setCellValue(8);
-                                    if (day + 1 > daysInMonth) row.getCell(colIndex + 1).setCellValue(0);
-                                    if (day + 2 > daysInMonth) row.getCell(colIndex + 2).setCellValue(0);
+                                    if (day + 2 <= daysInMonth) row.getCell(colIndex + 2).setCellValue(0);
+                                    if (day + 1 <= daysInMonth) row.getCell(colIndex + 1).setCellValue(0);
                                 }
                                 case "duminica" -> {
                                     if (day > 2) row.getCell(colIndex - 2).setCellValue(8);
