@@ -196,16 +196,15 @@ public class HelloApplication extends Application {
         alert.showAndWait();
     }
 
-   private int daysInMonth(File mainSheet) {
+   private int daysInMonthCalculate(File mainSheet) {
        int lastDayOfMonth = -1;
        try (FileInputStream fis = new FileInputStream(mainSheet);
             Workbook workbook = new XSSFWorkbook(fis)) {
 
            Sheet sheet = workbook.getSheetAt(0);
            Row headerRow = sheet.getRow(3);
-           firstDayOfWeekend = 0;
            if (headerRow != null) {
-               for (int col = 5; col < headerRow.getLastCellNum(); col++) {
+               for (int col = 5; col < 40; col++) {
                    if (headerRow.getCell(col) != null && headerRow.getCell(col).getCellType() == CellType.NUMERIC) {
                        int value = (int) headerRow.getCell(col).getNumericCellValue();
                        if (value >= 1 && value <= 31) {
@@ -214,7 +213,7 @@ public class HelloApplication extends Application {
                        else return lastDayOfMonth;
                    }
                    else return lastDayOfMonth;
-                   if( col > 35 ) return lastDayOfMonth;
+                   if( col > 34 ) return lastDayOfMonth;
                }
            }
        } catch (IOException e) {
@@ -351,7 +350,7 @@ public class HelloApplication extends Application {
                             cell.setCellStyle(newStyle);
                         }
 
-                        daysInMonth = daysInMonth(mainSheet);
+                        daysInMonth = daysInMonthCalculate(mainSheet);
                         if(reason.equals("materniate"))
                             row.getCell(daysInMonth + 6).setCellValue(row.getCell(daysInMonth + 6).getNumericCellValue() + (lastDay - firstDay + 1)); // add the number of days of maternity leave to the maternity leave column
                         if(reason.equals("concediu"))
@@ -508,10 +507,10 @@ public class HelloApplication extends Application {
                     for (int i = 0; i < shifts.length; i++) {
                         if (shifts[i] == 1) {
                             int day = pos[i];
-                            int colIndex = day + 2; // because we start from column F (index 5)
+                            int colIndex = day + 5; // because we start from column F (index 5)
                             if (colIndex >= row.getLastCellNum()) continue; // skip if column index is out of bounds
 
-                            if( daysInMonth == 0 ) daysInMonth = daysInMonth(mainSheet);
+                            if( daysInMonth == 0 ) daysInMonth = daysInMonthCalculate(mainSheet);
 
                             System.out.println(daysInMonth );
 
