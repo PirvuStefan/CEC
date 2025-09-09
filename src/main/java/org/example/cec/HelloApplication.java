@@ -84,6 +84,7 @@ public class HelloApplication extends Application {
                     }
                 }
                 showAlert("Fisierul principal a fost modificat cu succes folosind fisierul de weekend!");
+                resetStaticVariables();
                 return;
 
             }
@@ -98,6 +99,7 @@ public class HelloApplication extends Application {
                     }
                 }
                 showAlert("Fisierul principal a fost modificat cu succes folosind fisierul de concedii!");
+                resetStaticVariables();
                 return;
             }
 
@@ -113,6 +115,7 @@ public class HelloApplication extends Application {
             }
 
             showAlert("Fisierul principal a fost modificat cu succes folosind ambele fisiere!");
+            resetStaticVariables();
 
 
 
@@ -520,13 +523,13 @@ public class HelloApplication extends Application {
                                 case "duminicaF" -> row.getCell(colIndex).setCellValue(8);
                                 case "sambata" -> {
                                     row.getCell(colIndex).setCellValue(8);
-                                    if (day + 2 <= daysInMonth) row.getCell(colIndex + 2).setCellValue(1);
-                                    if (day + 1 <= daysInMonth) row.getCell(colIndex + 1).setCellValue(1);
+                                    if (day + 2 <= daysInMonth) row.getCell(colIndex + 2).setCellValue("");
+                                    if (day + 1 <= daysInMonth) row.getCell(colIndex + 1).setCellValue("");
                                 }
                                 case "duminica" -> {
-                                    if (day > 2) row.getCell(colIndex - 2).setCellValue(9);
-                                    if (day > 1) row.getCell(colIndex - 1).setCellValue(2);
-                                    row.getCell(colIndex).setCellValue(2);
+                                    row.getCell(colIndex).setCellValue(8);
+                                    if (day > 2) row.getCell(colIndex - 2).setCellValue("");
+                                    if (day > 1) row.getCell(colIndex - 1).setCellValue("");
                                 }
                             }
 
