@@ -227,7 +227,7 @@ public class HelloApplication extends Application {
                   - Absenta: Portocaliu ( abs )
                   - Demisie: Rosu ( dem )
                 - Zilele de weekend care coincid cu vacanta sunt eliberate automat.
-                - In tabelul excel, in coloana "periodata" se introduce perioada vacantei in formatul "zz-zz" (ex: 10-23).
+                - In tabelul excel, in coloana "periodata" se introduce perioada vacantei in formatul "zz*zz" (ex: 10*23).
                 - In coloana "tip concediu" se introduce tipul vacantei folosind abrevierile specificate mai sus.
                 - Daca o persoana are mai multe perioade de vacanta, se adauga cate un rand separat pentru fiecare perioada.
                 - Toate modificarile sunt salvate si arhivate in folderul 'arhiva'.
@@ -471,12 +471,14 @@ public class HelloApplication extends Application {
              Workbook workbook = new XSSFWorkbook(fis)) {
 
             Sheet sheet = workbook.getSheetAt(0);
+            System.out.println(sheet.getSheetName() );
 
             for (int rowIndex = 2; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
                 if (row == null) break;
 
                 String name = row.getCell(0).getStringCellValue();
+                if( name == null || name.isEmpty() ) break;
                 System.out.println("Processing row " + (rowIndex + 1) + " for employee: " + name);
                 String magazin = row.getCell(1).getStringCellValue();
                 String period;
@@ -490,8 +492,8 @@ public class HelloApplication extends Application {
                 }
 
                 System.out.println("Vacation Period: " + period);
-                String firstDay = period.split("-")[0].trim();
-                String lastDay = period.split("-")[1].trim();
+                String firstDay = period.split("\\*")[0].trim();
+                String lastDay = period.split("\\*")[1].trim();
                 String reason = row.getCell(3).getStringCellValue();
                 reason = switch (reason) {
                     case "co" -> "concediu";
