@@ -596,6 +596,10 @@ public class HelloApplication extends Application {
 
                             if( daysInMonth == 0 ) daysInMonth = daysInMonthCalculate(mainSheet);
 
+                            if( whatDay(day, pos).equals("duminica") && checkColor(row.getCell(colIndex + 1 )) && checkColor(row.getCell(colIndex - 2)) ) continue;
+                            if( whatDay(day, pos).equals("sambata") && checkColor(row.getCell(colIndex - 1 )) && checkColor(row.getCell(colIndex + 2)) ) continue;
+
+
 
 
 
@@ -636,6 +640,19 @@ public class HelloApplication extends Application {
             e.printStackTrace();
         }
         return mainSheet;
+    }
+
+    private boolean checkColor( Cell cell ){
+        String s;
+        if( cell == null ) s =  "#FFFFFF";
+        XSSFColor color = (XSSFColor) cell.getCellStyle().getFillForegroundColorColor();
+        String rgbHex = "#FFFFFF"; // default white color
+        if(color != null){
+            String hexColor = color.getARGBHex();
+            rgbHex = hexColor.substring(2, 8); // remove alpha channel
+            rgbHex = "#" + rgbHex.toUpperCase();
+        }
+        return rgbHex.equals("#FFFFFF");
     }
 
     private Map< String, List<Employee>> InitialiseWeekendList(File weekendSheet) {
