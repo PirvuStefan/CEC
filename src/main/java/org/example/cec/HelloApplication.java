@@ -435,11 +435,11 @@ public class HelloApplication extends Application {
                             cell.setCellStyle(newStyle);
                         }
 
-                        daysInMonth = daysInMonthCalculate(mainSheet);
-                        if(reason.equals("materniate"))
-                            row.getCell(daysInMonth + 6).setCellValue(row.getCell(daysInMonth + 6).getNumericCellValue() + (lastDay - firstDay + 1)); // add the number of days of maternity leave to the maternity leave column
-                        if(reason.equals("concediu"))
-                           row.getCell(daysInMonth + 6).setCellValue(row.getCell(daysInMonth + 6).getNumericCellValue() + (lastDay - firstDay + 1));
+                     //   daysInMonth = daysInMonthCalculate(mainSheet);
+//                        if(reason.equals("materniate"))
+//                            row.getCell(daysInMonth + 6).setCellValue(row.getCell(daysInMonth + 6).getNumericCellValue() + (lastDay - firstDay + 1)); // add the number of days of maternity leave to the maternity leave column
+//                        if(reason.equals("concediu"))
+//                           row.getCell(daysInMonth + 6).setCellValue(row.getCell(daysInMonth + 6).getNumericCellValue() + (lastDay - firstDay + 1));
 
                     }
                 }
