@@ -340,19 +340,23 @@ public class HelloApplication extends Application {
                         int lastDay = holiday.getLastDay();
                         String reason = holiday.getReason();
 
-                        XSSFColor colorBefore = (XSSFColor) headerRow.getCell(firstDay + 2).getCellStyle().getFillForegroundColorColor(); // two days before the first day of the holiday
-                        XSSFColor colorBefore2 = (XSSFColor) headerRow.getCell(firstDay + 3).getCellStyle().getFillForegroundColorColor(); // two days before the first day of the holiday
-                        if(colorBefore != null){
-                            String hexColorBefore = colorBefore.getARGBHex();
-                            String rgbHexBefore = hexColorBefore.substring(2, 8); // remove alpha channel
-                            rgbHexBefore = "#" + rgbHexBefore.toUpperCase();
-                            if (rgbHexBefore.equals("#FFFF00")) { // if is yellow, we delete the shift ( 8 0 0 ) , monday now is free and he cant work no more on that day
-                               headerRow.getCell(firstDay + 2).setCellValue("");
-                            }
-                        }
+
 
                         for (int i = firstDay; i <= lastDay; i++) {
                             if (i < 1 || i > 31) break;
+
+
+                            if( i == firstDay && firstDay > 2 ) { // if the first day is greater than 2, we need to check if the day before the first day is a weekend day ( yellow color ) , if it is a weekend day we need to delete the shift from that day
+                                XSSFColor colorBefore = (XSSFColor) headerRow.getCell(firstDay + 2).getCellStyle().getFillForegroundColorColor(); // two days before the first day of the holiday
+                                if(colorBefore != null){
+                                    String hexColorBefore = colorBefore.getARGBHex();
+                                    String rgbHexBefore = hexColorBefore.substring(2, 8); // remove alpha channel
+                                    rgbHexBefore = "#" + rgbHexBefore.toUpperCase();
+                                    if (rgbHexBefore.equals("#FFFF00")) { // if is yellow, we delete the shift ( 8 0 0 ) , monday now is free and he cant work no more on that day
+                                        headerRow.getCell(firstDay + 2).setCellValue("");
+                                    }
+                                }
+                            }
 
                             int colIndex = i + 4; // because we start from column F (index 5)
                             if (colIndex >= row.getLastCellNum()) break; // skip if column index is out of bounds
