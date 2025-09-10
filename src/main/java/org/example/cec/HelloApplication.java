@@ -323,34 +323,7 @@ public class HelloApplication extends Application {
             Sheet sheet = workbook.getSheetAt(0);
             // Go to row 3 (index 3, since it's 0-based), starting from column F (index 5), and find the last column with an integer (day of month)
             Row headerRow = sheet.getRow(3);
-            int lastDayOfMonth = -1;
-            int firstDayOfWeekend = 0;
-            if (headerRow != null) {
-                for (int col = 5; col < headerRow.getLastCellNum(); col++) {
-                    if (headerRow.getCell(col) != null && headerRow.getCell(col).getCellType() == CellType.NUMERIC) {
 
-                        int value = (int) headerRow.getCell(col).getNumericCellValue();
-                        if (value >= 1 && value <= 31) {
-                            lastDayOfMonth = value;
-                        }
-                    }
-                    XSSFColor color = (XSSFColor) headerRow.getCell(col).getCellStyle().getFillForegroundColorColor();
-                    String rgbHex ="#FFFFFF"; // default white color
-                    if(color != null){
-                        String hexColor = color.getARGBHex();
-                        rgbHex = hexColor.substring(2, 8); // remove alpha channel
-                        rgbHex = "#" + rgbHex.toUpperCase();
-
-
-                    }
-                    if (headerRow.getCell(col) != null && firstDayOfWeekend == 0) {
-                        if (rgbHex.equals("#FFFF00")) firstDayOfWeekend = (int) headerRow.getCell(col).getNumericCellValue();
-                    }
-                    if( col > 35) break;
-                }
-            }
-            System.out.println("Last day of the month detected: " + lastDayOfMonth);
-            System.out.println("First day of the weekend detected: " + firstDayOfWeekend);
             for (int rowIndex = 0; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
                 if (row == null) break;
@@ -359,6 +332,7 @@ public class HelloApplication extends Application {
                 name = name.toLowerCase();
                 //magazin = magazin.toLowerCase();
                 for( Holiday holiday : holidays) {
+
                     if (holiday.getName().toLowerCase().equals(name)) {
                         // we found a match, we can modify the row
                         // now based on the reason of the holiday, we do color the row from the mainSheet ( at that specific employee, from the first day to the last day)
@@ -367,6 +341,7 @@ public class HelloApplication extends Application {
                         String reason = holiday.getReason();
 
                         XSSFColor colorBefore = (XSSFColor) headerRow.getCell(firstDay + 2).getCellStyle().getFillForegroundColorColor(); // two days before the first day of the holiday
+                        XSSFColor colorBefore2 = (XSSFColor) headerRow.getCell(firstDay + 3).getCellStyle().getFillForegroundColorColor(); // two days before the first day of the holiday
                         if(colorBefore != null){
                             String hexColorBefore = colorBefore.getARGBHex();
                             String rgbHexBefore = hexColorBefore.substring(2, 8); // remove alpha channel
@@ -380,7 +355,7 @@ public class HelloApplication extends Application {
                             if (i < 1 || i > 31) break;
 
                             int colIndex = i + 4; // because we start from column F (index 5)
-                            if (colIndex >= row.getLastCellNum()) continue; // skip if column index is out of bounds
+                            if (colIndex >= row.getLastCellNum()) break; // skip if column index is out of bounds
 
                             Cell cell = row.getCell(colIndex);
                             if (cell == null) {
