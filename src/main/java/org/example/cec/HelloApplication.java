@@ -15,6 +15,8 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -283,8 +285,7 @@ public class HelloApplication extends Application {
    private int daysInMonthCalculate(File mainSheet) {
        int lastDayOfMonth = -1;
        try (FileInputStream fis = new FileInputStream(mainSheet);
-            Workbook workbook = new XSSFWorkbook(fis)) {
-
+            Workbook workbook = WorkbookFactory.create(fis)) { // Updated to use WorkbookFactory.create
            Sheet sheet = workbook.getSheetAt(0);
            Row headerRow = sheet.getRow(3);
            if (headerRow != null) {
@@ -300,7 +301,7 @@ public class HelloApplication extends Application {
                    if( col > 34 ) return lastDayOfMonth;
                }
            }
-       } catch (IOException e) {
+       } catch (IOException e) { // Added InvalidFormatException
            e.printStackTrace();
        }
        return lastDayOfMonth;
@@ -315,7 +316,7 @@ public class HelloApplication extends Application {
 
         // now we do have the holiday data, we can modify the mainSheet
         try (FileInputStream fis = new FileInputStream(mainSheet);
-             Workbook workbook = new XSSFWorkbook(fis)) {
+             Workbook workbook = WorkbookFactory.create(fis)) { // Updated to use WorkbookFactory.create
 
 
 
@@ -456,7 +457,7 @@ public class HelloApplication extends Application {
 
             System.out.println("Main sheet updated with holidays successfully!");
 
-        } catch (IOException e) {
+        } catch (IOException e) { // Added InvalidFormatException
             e.printStackTrace();
         }
 
@@ -468,7 +469,7 @@ public class HelloApplication extends Application {
         String filePath = holidaysSheet.getAbsolutePath();
 
         try (FileInputStream fis = new FileInputStream(new File(filePath));
-             Workbook workbook = new XSSFWorkbook(fis)) {
+             Workbook workbook = WorkbookFactory.create(fis)) { // Updated to use WorkbookFactory.create
 
             Sheet sheet = workbook.getSheetAt(0);
             System.out.println(sheet.getSheetName() );
@@ -513,7 +514,7 @@ public class HelloApplication extends Application {
 
             System.out.println("Excel file modified successfully!");
 
-        } catch (IOException e) {
+        } catch (IOException e) { // Added InvalidFormatException
             e.printStackTrace();
         }
 
@@ -580,7 +581,7 @@ public class HelloApplication extends Application {
 
     private File WeekendModifyEmployee(File mainSheet, String employeeName, int shifts[], int[] pos){
         try (FileInputStream fis = new FileInputStream(mainSheet);
-             Workbook workbook = new XSSFWorkbook(fis)) {
+             Workbook workbook = WorkbookFactory.create(fis)) { // Updated to use WorkbookFactory.create
 
             Sheet sheet = workbook.getSheetAt(0);
             for (int rowIndex = 0; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
@@ -638,7 +639,7 @@ public class HelloApplication extends Application {
 
 
 
-        } catch (IOException e) {
+        } catch (IOException e) { // Added InvalidFormatException
             e.printStackTrace();
         }
         return mainSheet;
@@ -659,7 +660,7 @@ public class HelloApplication extends Application {
 
     private Map< String, List<Employee>> InitialiseWeekendList(File weekendSheet) {
         try (FileInputStream fis = new FileInputStream(weekendSheet);
-             Workbook workbook = new XSSFWorkbook(fis)) {
+             Workbook workbook = WorkbookFactory.create(fis)) { // Updated to use WorkbookFactory.create
 
             Sheet sheet = workbook.getSheetAt(0);
             Map<String, List<Employee>> weekendEmployees = new HashMap<>();
@@ -699,7 +700,7 @@ public class HelloApplication extends Application {
 
             return weekendEmployees;
 
-        } catch (IOException e) {
+        } catch (IOException e) { // Added InvalidFormatException
             e.printStackTrace();
         }
         return new HashMap<>(); // return an empty map if there was an error
@@ -911,3 +912,4 @@ public class HelloApplication extends Application {
     }
 
 }
+
