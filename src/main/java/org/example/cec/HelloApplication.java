@@ -328,7 +328,7 @@ public class HelloApplication extends Application {
                 Row row = sheet.getRow(rowIndex);
                 if (row == null) break;
                 String name = row.getCell(2).getStringCellValue();
-                String magazin = row.getCell(1).getStringCellValue();
+                if (row.getCell(2) == null || name == null || name.isEmpty()) return mainSheet;
                 name = name.toLowerCase();
                 //magazin = magazin.toLowerCase();
                 for( Holiday holiday : holidays) {
@@ -339,6 +339,8 @@ public class HelloApplication extends Application {
                         int firstDay = holiday.getFirstDay();
                         int lastDay = holiday.getLastDay();
                         String reason = holiday.getReason();
+
+                        System.out.println(name.toLowerCase());
 
 
 
