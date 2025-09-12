@@ -327,8 +327,9 @@ public class HelloApplication extends Application {
             for (int rowIndex = 0; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
                 if (row == null) break;
-                String name = row.getCell(2).getStringCellValue();
-                if (row.getCell(2) == null || name == null || name.isEmpty()) return mainSheet;
+                Cell nameCell = row.getCell(2);
+                String name = (nameCell != null) ? nameCell.getStringCellValue() : null;
+                if (name == null || name.isEmpty()) break;
                 name = name.toLowerCase();
                 //magazin = magazin.toLowerCase();
                 for( Holiday holiday : holidays) {
@@ -411,6 +412,11 @@ public class HelloApplication extends Application {
                                 newStyle.setFillForegroundColor(IndexedColors.ORANGE.getIndex());
                             } else if (reason.equals("demisie")) {
                                 newStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
+                                Cell demisieCell = row.getCell(2);
+                                CellStyle demisieStyle = row.getSheet().getWorkbook().createCellStyle();
+                                demisieStyle.cloneStyleFrom(demisieCell.getCellStyle());
+                                demisieStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
+                                demisieCell.setCellStyle(demisieStyle);
                             }
                             newStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
                             cell.setCellStyle(newStyle);
