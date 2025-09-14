@@ -574,7 +574,8 @@ public class HelloApplication extends Application {
             for (int rowIndex = 0; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
                 if (row == null) break;
-                String name = row.getCell(2).getStringCellValue();
+                String name = (row.getCell(2) != null) ? row.getCell(2).getStringCellValue() : "";
+                if (name == null || name.isEmpty()) break;
                 name = name.toUpperCase();
                 if (name.equals(employeeName)) {
                     // we found the employee, now we can modify the shifts
