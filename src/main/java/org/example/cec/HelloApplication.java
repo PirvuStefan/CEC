@@ -584,7 +584,7 @@ public class HelloApplication extends Application {
         }
 
 
-
+        System.out.println("Main sheet updated with weekend shifts successfully!");
         return mainSheet;
     }
 
@@ -605,13 +605,13 @@ public class HelloApplication extends Application {
                         if (shifts[i] == 1) {
                             int day = pos[i];
                             int colIndex = day + 4; // because we start from column F (index 5)
-                            System.out.println("Modifying shift for " + employeeName + " on day " + day + " at column index " + colIndex + " with shift type " + whatDay(day, pos));
+
 
                             if( daysInMonth == 0 ) daysInMonth = daysInMonthCalculate(mainSheet);
 
                             if( whatDay(day, pos).equals("duminica") && checkColor(row.getCell(colIndex + 1 )) && checkColor(row.getCell(colIndex - 2)) ) continue;
                             if( whatDay(day, pos).equals("sambata") && checkColor(row.getCell(colIndex - 1 )) && checkColor(row.getCell(colIndex + 2)) ) continue;
-
+                            System.out.println("Modifying shift for " + employeeName + " on day " + day + " at column index " + colIndex + " with shift type " + whatDay(day, pos));
 
 
 
