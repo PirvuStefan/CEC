@@ -87,6 +87,7 @@ public class HelloApplication extends Application {
                 }
                 showAlert("Fisierul principal a fost modificat cu succes folosind fisierul de weekend!");
                 resetStaticVariables();
+                clearFileSelections(fileSelectors)
                 return;
 
             }
@@ -102,6 +103,7 @@ public class HelloApplication extends Application {
                 }
                 showAlert("Fisierul principal a fost modificat cu succes folosind fisierul de concedii!");
                 resetStaticVariables();
+                clearFileSelections(fileSelectors);
                 return;
             }
 
@@ -118,6 +120,7 @@ public class HelloApplication extends Application {
 
             showAlert("Fisierul principal a fost modificat cu succes folosind ambele fisiere!");
             resetStaticVariables();
+            clearFileSelections(fileSelectors);
 
 
 
@@ -139,6 +142,25 @@ public class HelloApplication extends Application {
         stage.show();
 
         instructionsButton.setOnAction(e -> stage.setScene(createInstructionsScene(stage, mainScene))); // Redirect to instructions page
+    }
+
+    private void clearFileSelections(VBox fileSelectors) {
+       for (javafx.scene.Node node : fileSelectors.getChildren()) {
+           if (node instanceof HBox) {
+               HBox hbox = (HBox) node;
+               for (javafx.scene.Node child : hbox.getChildren()) {
+                   if (child instanceof TextField) {
+                       ((TextField) child).clear();
+                   }
+               }
+           }
+           if (node instanceof TextField) {
+               ((TextField) node).clear();
+           }
+       }
+        mainSheet = null;
+        weekendSheet = null;
+        holidaysSheet = null;
     }
 
     private Scene createInstructionsScene(Stage stage, Scene mainScene) {
