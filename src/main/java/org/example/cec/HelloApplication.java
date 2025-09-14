@@ -87,7 +87,7 @@ public class HelloApplication extends Application {
                 }
                 showAlert("Fisierul principal a fost modificat cu succes folosind fisierul de weekend!");
                 resetStaticVariables();
-                clearFileSelections(fileSelectors)
+                clearFileSelections(fileSelectors);
                 return;
 
             }
