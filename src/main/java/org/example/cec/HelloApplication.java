@@ -609,8 +609,14 @@ public class HelloApplication extends Application {
 
                             if( daysInMonth == 0 ) daysInMonth = daysInMonthCalculate(mainSheet);
 
-                            if( whatDay(day, pos).equals("duminica") && checkColor(row.getCell(colIndex + 1 )) && checkColor(row.getCell(colIndex - 2)) ) continue;
-                            if( whatDay(day, pos).equals("sambata") && checkColor(row.getCell(colIndex - 1 )) && checkColor(row.getCell(colIndex + 2)) ) continue;
+//                            if( whatDay(day, pos).equals("duminica") && checkColor(row.getCell(colIndex + 1 )) && checkColor(row.getCell(colIndex - 2)) ){
+//                                System.out.println("Skipping modification for " + employeeName + " on day " + day + " at column index " + colIndex + " because adjacent days ");
+//                                continue;
+//                            }
+//                            if( whatDay(day, pos).equals("sambata") && checkColor(row.getCell(colIndex - 1 )) && checkColor(row.getCell(colIndex + 2)) ){
+//                                System.out.println("Skipping modification for " + employeeName + " on day " + day + " at column index " + colIndex + " because adjacent ");
+//                                continue;
+//                            }   to do : fix
                             System.out.println("Modifying shift for " + employeeName + " on day " + day + " at column index " + colIndex + " with shift type " + whatDay(day, pos));
 
 
