@@ -418,7 +418,7 @@ public class HelloApplication extends Application {
                             }
                             if(headerRow.getCell(colIndex + 2) != null && rgbHex.equals("#FFFF00")) {
                                 // if the cell is a weekend day, we skip it
-                                if(headerRow.getCell(colIndex + 2).getNumericCellValue() > 0 ) headerRow.getCell(colIndex + 2).setCellValue("");
+                                headerRow.getCell(colIndex + 2).setCellValue("");
                             }
 
                             // Set the cell value to the reason
