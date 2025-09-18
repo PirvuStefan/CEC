@@ -57,16 +57,43 @@ public class HelloApplication extends Application {
         fileSelectors.setPadding(new Insets(20));
         fileSelectors.setAlignment(Pos.CENTER);
 
+
+
+        // Add input for "How many days are in the month?"
+        Label daysLabel = new Label("Cate zile sunt in luna asta?");
+        daysLabel.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
+        TextField daysInput = new TextField();
+        daysInput.setPromptText("numarul de zile (e.g. 30)");
+        daysInput.setStyle("-fx-background-radius: 8; -fx-background-color: white;");
+        daysInput.textProperty().addListener((obs, oldVal, newVal) -> {
+            try {
+                int val = Integer.parseInt(newVal.trim());
+                if (val >= 1 && val <= 31) {
+                    daysInMonth = val;
+                }
+            } catch (NumberFormatException ignored) {
+                showAlert("Te rog introdu un numar valid intre 1 si 31 pentru zilele din luna!");
+                daysInput.clear();
+            }
+        });
+        HBox daysBox = new HBox(10, daysLabel, daysInput);
+        daysBox.setAlignment(Pos.CENTER);
+
         fileSelectors.getChildren().addAll(
             createFileSelector("Fisierul Principal", file -> mainSheet = file),
             createFileSelector("Fisierul Weekend", file -> weekendSheet = file),
             createFileSelector("Fisierul Vacante", file -> holidaysSheet = file)
         );
+        fileSelectors.getChildren().add(daysBox);
 
         Button processButton = new Button("Proceseaza Datele");
         processButton.setPrefWidth(200);
         styleProcessButton(processButton);
         processButton.setOnAction(e -> {
+            if( daysInMonth == 0 ){
+                showAlert("Te rog introdu numarul de zile din luna!");
+                return;
+            }
             if (weekendSheet == null && holidaysSheet == null) {
                 showAlert("Te rog selecteaza toate fisierele necesare!");
                 return;
@@ -304,30 +331,7 @@ public class HelloApplication extends Application {
         alert.showAndWait();
     }
 
-   private int daysInMonthCalculate(File mainSheet) {
-       int lastDayOfMonth = -1;
-       try (FileInputStream fis = new FileInputStream(mainSheet);
-            Workbook workbook = WorkbookFactory.create(fis)) { // Updated to use WorkbookFactory.create
-           Sheet sheet = workbook.getSheetAt(0);
-           Row headerRow = sheet.getRow(3);
-           if (headerRow != null) {
-               for (int col = 5; col < 40; col++) {
-                   if (headerRow.getCell(col) != null && headerRow.getCell(col).getCellType() == CellType.NUMERIC) {
-                       int value = (int) headerRow.getCell(col).getNumericCellValue();
-                       if (value >= 1 && value <= 31) {
-                           lastDayOfMonth = value;
-                       }
-                       else return lastDayOfMonth;
-                   }
-                   else return lastDayOfMonth;
-                   if( col > 34 ) return lastDayOfMonth;
-               }
-           }
-       } catch (IOException e) { // Added InvalidFormatException
-           e.printStackTrace();
-       }
-       return lastDayOfMonth;
-   }
+
 
 
     private File HolidayModify(File mainSheet, File holidaysSheet) {
@@ -444,7 +448,7 @@ public class HelloApplication extends Application {
                             cell.setCellStyle(newStyle);
                         }
 
-                        daysInMonth = daysInMonthCalculate(mainSheet);
+
                         System.out.println("Days in month: " + daysInMonth);
 //                        if(reason.equals("materniate"))
 //                            row.getCell(daysInMonth + 6).setCellValue(getValueint(row.getCell(daysInMonth + 6)) + (lastDay - firstDay + 1)); // add the number of days of maternity leave to the maternity leave column
@@ -608,7 +612,7 @@ public class HelloApplication extends Application {
                             int colIndex = day + 4; // because we start from column F (index 5)
 
 
-                            if( daysInMonth == 0 ) daysInMonth = daysInMonthCalculate(mainSheet);
+
                             System.out.println("Days in month: " + daysInMonth);
 
 //                            if( whatDay(day, pos).equals("duminica") && checkColor(row.getCell(colIndex + 1 )) && checkColor(row.getCell(colIndex - 2)) ){
@@ -940,4 +944,3 @@ public class HelloApplication extends Application {
     }
 
 }
-
