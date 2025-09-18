@@ -444,11 +444,12 @@ public class HelloApplication extends Application {
                             cell.setCellStyle(newStyle);
                         }
 
-                     //   daysInMonth = daysInMonthCalculate(mainSheet);
+                        daysInMonth = daysInMonthCalculate(mainSheet);
+                        System.out.println("Days in month: " + daysInMonth);
 //                        if(reason.equals("materniate"))
-//                            row.getCell(daysInMonth + 6).setCellValue(row.getCell(daysInMonth + 6).getNumericCellValue() + (lastDay - firstDay + 1)); // add the number of days of maternity leave to the maternity leave column
+//                            row.getCell(daysInMonth + 6).setCellValue(getValueint(row.getCell(daysInMonth + 6)) + (lastDay - firstDay + 1)); // add the number of days of maternity leave to the maternity leave column
 //                        if(reason.equals("concediu"))
-//                           row.getCell(daysInMonth + 6).setCellValue(row.getCell(daysInMonth + 6).getNumericCellValue() + (lastDay - firstDay + 1));
+//                           row.getCell(daysInMonth + 6).setCellValue(getValueint(row.getCell(daysInMonth + 6)) + (lastDay - firstDay + 1));
 
                     }
                 }
@@ -608,6 +609,7 @@ public class HelloApplication extends Application {
 
 
                             if( daysInMonth == 0 ) daysInMonth = daysInMonthCalculate(mainSheet);
+                            System.out.println("Days in month: " + daysInMonth);
 
 //                            if( whatDay(day, pos).equals("duminica") && checkColor(row.getCell(colIndex + 1 )) && checkColor(row.getCell(colIndex - 2)) ){
 //                                System.out.println("Skipping modification for " + employeeName + " on day " + day + " at column index " + colIndex + " because adjacent days ");
@@ -925,6 +927,16 @@ public class HelloApplication extends Application {
         WeekendShift.size = 0;
         WeekendShift.pos = new int[32];
         daysInMonth = 0;
+    }
+
+    private String addValue(String s, int val) {
+        if (s.isEmpty()) return Integer.toString(val);
+        try {
+            int sum = Integer.parseInt(s) + val;
+            return Integer.toString(sum);
+        } catch (NumberFormatException e) {
+            return s + " + " + val;
+        }
     }
 
 }
