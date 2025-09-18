@@ -716,7 +716,7 @@ public class HelloApplication extends Application {
                     weekendEmployees.put(magazin, new ArrayList<>(employees));
                     employees.clear();
                     break;
-                }
+                }// if the next row is empty, we stop the process
 
             }
 
