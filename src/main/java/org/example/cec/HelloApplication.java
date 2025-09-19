@@ -511,11 +511,11 @@ public class HelloApplication extends Application {
                 String lastDay = period.split("\\*")[1].trim();
                 String reason = row.getCell(3).getStringCellValue();
                 reason = switch (reason) {
-                    case "co" -> "concediu";
-                    case "m" -> "maternitate";
-                    case "cm" -> "medical";
-                    case "abs" -> "absenta";
-                    case "dem" -> "demisie";
+                    case "co", "CO" -> "concediu";
+                    case "m", "M" -> "maternitate";
+                    case "cm", "CM" -> "medical";
+                    case "abs", "ABS" -> "absenta";
+                    case "dem", "DEM" -> "demisie";
                     default -> "concediu";
                 };
                 Holiday holiday = new Holiday(Integer.parseInt(firstDay), Integer.parseInt(lastDay), reason, name, magazin);
