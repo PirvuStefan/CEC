@@ -28,6 +28,7 @@ public class WeekendShift {
             Sheet sheet = workbook.getSheetAt(0);
             Row row = sheet.getRow(1);
             while (row.getCell(count + 3) != null) {
+                if( isColorRed(row.getCell(count + 3))) continue;
                 pos[count++] = getValueint(row, count + 3);
                 if( count > 15) break;
             }
@@ -69,6 +70,23 @@ public class WeekendShift {
         }
         return 0; // sau altă valoare implicită
 
+    }
+
+    private boolean isColorRed(Cell cell) {
+        if (cell == null) return false;
+        CellStyle style = cell.getCellStyle();
+        if (style == null) return false;
+        Color color = style.getFillForegroundColorColor();
+        if (color == null) return false;
+        // For XSSFColor (used in .xlsx), check RGB
+        if (color instanceof org.apache.poi.xssf.usermodel.XSSFColor) {
+            org.apache.poi.xssf.usermodel.XSSFColor xssfColor = (org.apache.poi.xssf.usermodel.XSSFColor) color;
+            byte[] rgb = xssfColor.getRGB();
+            if (rgb != null && rgb[0] > 200 && rgb[1] < 100 && rgb[2] < 100) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
