@@ -560,27 +560,19 @@ public class HelloApplication extends Application {
             System.out.print("----------------------\n");
             List < Employee > employees = weekendEmployees.get(magazin);
             
-            boolean[] workedSaturday = new boolean[employees.size()];
-            int[] numberOfShifts = new int[employees.size()];
-            for( int i = 0; i < employees.size(); i++){
-                workedSaturday[i] = employees.get(i).hasWorkedSaturday;
-                numberOfShifts[i] = employees.get(i).numberOfShifts;
-            }
+
+
+            int[][] x = new int[employees.size()][WeekendShift.size];
+
+
             for( Employee employee : employees){
                 System.out.println("Employee: " + employee.name + ", Shifts: " + employee.numberOfShifts + ", Has Worked Saturday: " + employee.hasWorkedSaturday);
                 for( int i = 0; i < WeekendShift.size; i++){
                     System.out.println("Shift day " + (i+1) + ": " + WeekendShift.pos[i]);
                 }
             }
-            int[][] x = new int[employees.size()][WeekendShift.size];
-             x = generateShift(x, workedSaturday, numberOfShifts, WeekendShift.pos);
-             for(int i = 0; i < x.length; i++){
-                 for(int j = 0; j < x[i].length; j++){
-                     System.out.print(x[i][j] + " ");
-                 }
-                 System.out.print(workedSaturday[i] + "\n");
-             }
-            System.out.print("----------------------\n");
+
+
 
             for( int i = 0; i < employees.size(); i++){
                mainSheet = WeekendModifyEmployee(mainSheet, employees.get(i).name.toUpperCase(), x[i], WeekendShift.pos);
@@ -811,7 +803,45 @@ public class HelloApplication extends Application {
         ));
     }
 
-    private int[][] generateShift(int[][] x, boolean[] workedSaturday, int[] numberOfShifts, int[] pos){
+    private int[][] generateShiftEmployees(List < Employee > employees, int[] pos, File weekendSheet){
+        int[][] x = new int[employees.size()][WeekendShift.size];
+        try {
+            FileInputStream fis = new FileInputStream(weekendSheet);
+            Workbook workbook = WorkbookFactory.create(fis); // Updated to use WorkbookFactory.create
+            Sheet sheet = workbook.getSheetAt(0);
+
+            for( int i = 2; i <= sheet.getLastRowNum(); i++){
+                Row row = sheet.getRow(i);
+                if( row == null ) break;
+                String name = row.getCell(1).getStringCellValue();
+                if( name == null || name.isEmpty() ) break;
+                name = name.toLowerCase();
+                for( int j = 0; j < employees.size(); j++){
+                    if( employees.get(j).name.toLowerCase().equals(name)){
+                        int nr = 0;
+                        for (int k = 2; k < 30; k++) {
+                            if (row.getCell(k) != null && "X".equals(row.getCell(k).getStringCellValue())) x[j][nr++] = 1;
+                            else x[j][nr++] = 0;
+                        }
+
+                    }
+                }
+            }
+
+            fis.close();
+            workbook.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+
+
+    }
+
+    private int[][] generateShift1(int[][] x, boolean[] workedSaturday, int[] numberOfShifts, int[] pos){
 
        // x[0] = generateFirstOne(workedSaturday[0], numberOfShifts[0], pos); // the first one is associated random to not be repetitive
         // do not generate the first one, might  be redundant
