@@ -1,6 +1,7 @@
 package org.example.cec;
 
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
@@ -28,7 +29,7 @@ public class WeekendShift {
             Sheet sheet = workbook.getSheetAt(0);
             Row row = sheet.getRow(1);
             while (row.getCell(count + 3) != null) {
-                if( isColorRed(row.getCell(count + 3))) continue;
+                if(!checkColor(row.getCell(count + 3))) continue;
                 pos[count++] = getValueint(row, count + 3);
                 if( count > 15) break;
             }
@@ -72,19 +73,17 @@ public class WeekendShift {
 
     }
 
-    private boolean isColorRed(Cell cell) {
-        Color color = style.getFillForegroundColorColor();
-        if (color == null) return false;
-        // For XSSFColor (used in .xlsx), check RGB
-        if (color instanceof org.apache.poi.xssf.usermodel.XSSFColor) {
-            org.apache.poi.xssf.usermodel.XSSFColor xssfColor = (org.apache.poi.xssf.usermodel.XSSFColor) color;
-            byte[] rgb = xssfColor.getRGB();
-            // White is [255, 255, 255]
-            if (rgb != null && !(rgb[0] == (byte)255 && rgb[1] == (byte)255 && rgb[2] == (byte)255)) {
-                return true;
-            }
+    private boolean checkColor( Cell cell ){
+        String s;
+        if( cell == null ) s =  "#FFFFFF";
+        XSSFColor color = (XSSFColor) cell.getCellStyle().getFillForegroundColorColor();
+        String rgbHex = "#FFFFFF"; // default white color
+        if(color != null){
+            String hexColor = color.getARGBHex();
+            rgbHex = hexColor.substring(2, 8); // remove alpha channel
+            rgbHex = "#" + rgbHex.toUpperCase();
         }
-        return false;
+        return rgbHex.equals("#FFFFFF");
     }
 
 
