@@ -30,6 +30,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Collections.swap;
+
 public class HelloApplication extends Application {
 
     private File mainSheet;
@@ -512,8 +514,8 @@ public class HelloApplication extends Application {
                 String reason = row.getCell(3).getStringCellValue();
                 reason = switch (reason) {
                     case "co", "CO" -> "concediu";
-                    case "m", "M" -> "maternitate";
-                    case "cm", "CM" -> "medical";
+                    //case "m", "M" -> "maternitate";
+                    case "cm", "m", "CM", "M" -> "medical";
                     case "abs", "ABS" -> "absenta";
                     case "dem", "DEM" -> "demisie";
                     default -> "concediu";
