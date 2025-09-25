@@ -829,7 +829,7 @@ public class HelloApplication extends Application {
                             if(row.getCell(k) == null ) break;
                             if(!checkColor(checkRow.getCell(k))) continue; // if the cell is red, we skip it
                             if( nr == WeekendShift.size ) break;
-                            if (row.getCell(k) != null && "X".equals(row.getCell(k).getStringCellValue())) x[j][nr++] = 1;
+                            if (row.getCell(k) != null && ( "x".equals(row.getCell(k).getStringCellValue()) || "X".equals(row.getCell(k).getStringCellValue()) ) ) x[j][nr++] = 1;
                             else x[j][nr++] = 0;
                         }
 
