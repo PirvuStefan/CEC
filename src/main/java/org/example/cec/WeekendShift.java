@@ -15,7 +15,7 @@ public class WeekendShift {
     public void initialiseDays(int size){
 
         WeekendShift.size = size;
-        System.out.print(size + " Marimea : ");
+        System.out.print("Marimea : " + size);
         work = new boolean[size];
         for(int i = 0; i < size; i++) work[i] = false;
 
@@ -23,14 +23,19 @@ public class WeekendShift {
 
     public void initialiseSize(File weekendFile) {
         int count = 0;
+        int position = 0;
         pos = new int[32];
         try (FileInputStream fis = new FileInputStream(weekendFile)) {
             Workbook workbook = new XSSFWorkbook(fis);
             Sheet sheet = workbook.getSheetAt(0);
             Row row = sheet.getRow(1);
-            while (row.getCell(count + 3) != null) {
-                if(!checkColor(row.getCell(count + 3))) continue;
-                pos[count++] = getValueint(row, count + 3);
+            while (row.getCell(count + 2) != null) {
+
+                if(!checkColor(row.getCell(count + 2))){
+                    System.out.println("NU E ALB " + getValueint(row, count + 2) ) ;
+                }
+                else pos[position++] = getValueint(row, count + 2);
+                count++;
                 if( count > 15) break;
             }
 
@@ -43,7 +48,7 @@ public class WeekendShift {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        size = count - 2;
+        size = position - 2;
         System.out.println("SA VEDEM");
         for(int i = 0; i < size + 2; i++) {
 

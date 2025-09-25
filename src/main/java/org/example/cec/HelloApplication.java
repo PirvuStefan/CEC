@@ -548,6 +548,7 @@ public class HelloApplication extends Application {
 
         WeekendShift test = new WeekendShift();
         test.initialiseSize(weekendSheet); // to set the size of the weekend shift ( static variable);
+        System.out.println("Weekend size: " + WeekendShift.size);
         weekendEmployees = InitialiseWeekendList(weekendSheet);
         if( weekendEmployees.isEmpty()){
             System.out.println("Eroare la initializarea listei de angajati pentru weekend!");
@@ -693,8 +694,8 @@ public class HelloApplication extends Application {
                 String name = row.getCell(1).getStringCellValue();
                 if(!row.getCell(0).getStringCellValue().isEmpty()) magazin = row.getCell(0).getStringCellValue();
 
-                int numberOfShifts = (int) row.getCell(2).getNumericCellValue();
-                int hasWorkedSaturday = (int) row.getCell(3).getNumericCellValue(); // assuming the hasWorkedSaturday is in the fourth cell (index 3) of the row
+                int numberOfShifts = 0;
+                int hasWorkedSaturday = 0; // assuming the hasWorkedSaturday is in the fourth cell (index 3) of the row
 
 
 
@@ -702,7 +703,6 @@ public class HelloApplication extends Application {
                 WeekendShift shift = new WeekendShift();
                 shift.initialiseDays(WeekendShift.size);
                 Employee employee = new Employee(name, numberOfShifts, shift);
-                if(hasWorkedSaturday != 0) employee.hasWorked(true);
                 employees.add(employee);
                 if(!nextRow.getCell(0).getStringCellValue().isEmpty()) {
                     weekendEmployees.put(magazin, new ArrayList<>(employees));
