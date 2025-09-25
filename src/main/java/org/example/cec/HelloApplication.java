@@ -818,6 +818,7 @@ public class HelloApplication extends Application {
                 Row row = sheet.getRow(i);
                 if( row == null ) break;
                 String name = row.getCell(1).getStringCellValue();
+                System.out.println(name);
                 if( name == null || name.isEmpty() ) break;
                 name = name.toLowerCase();
                 for( int j = 0; j < employees.size(); j++){
