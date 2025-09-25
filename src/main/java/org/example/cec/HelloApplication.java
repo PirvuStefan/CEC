@@ -544,6 +544,7 @@ public class HelloApplication extends Application {
     private File WeekendModify(File mainSheet, File weekendSheet){
 
         Map< String , List<Employee> > weekendEmployees;
+        System.out.println("Modifying main sheet with weekend shifts...");
 
         WeekendShift test = new WeekendShift();
         test.initialiseSize(weekendSheet); // to set the size of the weekend shift ( static variable);
@@ -675,6 +676,7 @@ public class HelloApplication extends Application {
     }
 
     private Map< String, List<Employee>> InitialiseWeekendList(File weekendSheet) {
+        System.out.println("Initialising weekend employees from file: " + weekendSheet.getAbsolutePath());
         try (FileInputStream fis = new FileInputStream(weekendSheet);
              Workbook workbook = WorkbookFactory.create(fis)) { // Updated to use WorkbookFactory.create
 

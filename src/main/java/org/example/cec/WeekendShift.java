@@ -35,7 +35,7 @@ public class WeekendShift {
             }
 
 
-                // +4 deoarece primele 4 coloane sunt magazin, nume, numarul de shift uri si daca a lucrat sambata in luna precedenta
+
 
 
 
