@@ -814,6 +814,7 @@ public class HelloApplication extends Application {
             Workbook workbook = WorkbookFactory.create(fis); // Updated to use WorkbookFactory.create
             Sheet sheet = workbook.getSheetAt(0);
 
+            Row checkRow = sheet.getRow(1);
             for( int i = 2; i <= sheet.getLastRowNum(); i++){
                 Row row = sheet.getRow(i);
                 if( row == null ) break;
@@ -826,13 +827,21 @@ public class HelloApplication extends Application {
                         int nr = 0;
                         for (int k = 2; k < 30; k++) {
                             if(row.getCell(k) == null ) break;
-                            if(!checkColor(row.getCell(k))) continue; // if the cell is red, we skip it
+                            if(!checkColor(checkRow.getCell(k))) continue; // if the cell is red, we skip it
                             if( nr == WeekendShift.size ) break;
                             if (row.getCell(k) != null && "X".equals(row.getCell(k).getStringCellValue())) x[j][nr++] = 1;
                             else x[j][nr++] = 0;
                         }
 
                     }
+                }
+
+                for(int j = 0;j< employees.size(); j++){
+                    System.out.print("Employee: " + employees.get(j).name + " -> ");
+                    for(int k = 0; k < WeekendShift.size; k++){
+                        System.out.print(x[j][k] + " ");
+                    }
+                    System.out.println();
                 }
             }
 
