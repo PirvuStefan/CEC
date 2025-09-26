@@ -611,14 +611,14 @@ public class HelloApplication extends Application {
 
                             System.out.println("Days in month: " + daysInMonth);
 
-//                            if( whatDay(day, pos).equals("duminica") && checkColor(row.getCell(colIndex + 1 )) && checkColor(row.getCell(colIndex - 2)) ){
-//                                System.out.println("Skipping modification for " + employeeName + " on day " + day + " at column index " + colIndex + " because adjacent days ");
-//                                continue;
-//                            }
-//                            if( whatDay(day, pos).equals("sambata") && checkColor(row.getCell(colIndex - 1 )) && checkColor(row.getCell(colIndex + 2)) ){
-//                                System.out.println("Skipping modification for " + employeeName + " on day " + day + " at column index " + colIndex + " because adjacent ");
-//                                continue;
-//                            }   to do : fix
+                            if( whatDay(day, pos).equals("duminica") && checkColor(row.getCell(colIndex + 1 )) && checkColor(row.getCell(colIndex - 2)) ){
+                                System.out.println("Skipping modification for " + employeeName + " on day " + day + " at column index " + colIndex + " because adjacent days ");
+                                continue;
+                            }
+                            if( whatDay(day, pos).equals("sambata") && checkColor(row.getCell(colIndex - 1 )) && checkColor(row.getCell(colIndex + 2)) ){
+                                System.out.println("Skipping modification for " + employeeName + " on day " + day + " at column index " + colIndex + " because adjacent ");
+                                continue;
+                            }
                             System.out.println("Modifying shift for " + employeeName + " on day " + day + " at column index " + colIndex + " with shift type " + whatDay(day, pos));
 
 
@@ -675,6 +675,8 @@ public class HelloApplication extends Application {
         }
         return rgbHex.equals("#FFFFFF");
     }
+
+
 
     private Map< String, List<Employee>> InitialiseWeekendList(File weekendSheet) {
         System.out.println("Initialising weekend employees from file: " + weekendSheet.getAbsolutePath());
