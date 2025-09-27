@@ -602,8 +602,10 @@ public class HelloApplication extends Application {
                 name = name.toUpperCase();
                 if (name.equals(employeeName)) {
                     // we found the employee, now we can modify the shifts
+                    int count = 0;
                     for (int i = 0; i < shifts.length; i++) {
                         if (shifts[i] == 1) {
+                            count++;
                             int day = pos[i];
                             int colIndex = day + 4; // because we start from column F (index 5)
 
@@ -646,6 +648,9 @@ public class HelloApplication extends Application {
 
                         }
                     }
+                    if(count < 4) row.getCell(daysInMonth + 9).setCellValue( 8 * count );
+                    else row.getCell(daysInMonth + 9).setCellValue(32);
+
                     System.out.println("Main sheet updated with weekend shifts successfully! " + employeeName);break; // exit the loop after modifying the employee
 
                 }
