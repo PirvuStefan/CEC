@@ -24,7 +24,9 @@ A JavaFX desktop application for processing and modifying Excel sheets related t
 ## Setup
 
 1. Clone the repository
-   git clone https://github.com/PirvuStefan/CEC.git
-2. Install dependencies:
+  ```
+  git clone https://github.com/PirvuStefan/CEC.git
+  ```
+3. Install dependencies:
    - JavaFX: Add to your `pom.xml` as shown in the project files.
    - Apache POI: Already included for Excel processing.
