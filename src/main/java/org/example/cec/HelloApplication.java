@@ -565,8 +565,9 @@ public class HelloApplication extends Application {
             List < Employee > employees = weekendEmployees.get(magazin);
             
 
+            int[][] y = new int[employees.size()][WeekendShift.sarbatoriSize];
+            int[][] x = generateShiftEmployees(employees, WeekendShift.pos, weekendSheet, y);
 
-            int[][] x = generateShiftEmployees(employees, WeekendShift.pos, weekendSheet);
 
 
             for( Employee employee : employees){
@@ -579,7 +580,7 @@ public class HelloApplication extends Application {
 
 
             for( int i = 0; i < employees.size(); i++){
-               mainSheet = WeekendModifyEmployee(mainSheet, employees.get(i).name.toUpperCase(), x[i], WeekendShift.pos);
+               mainSheet = WeekendModifyEmployee(mainSheet, employees.get(i).name.toUpperCase(), x[i], WeekendShift.pos, y[i], WeekendShift.sarbatoare);
             }
 
         }
@@ -589,7 +590,8 @@ public class HelloApplication extends Application {
         return mainSheet;
     }
 
-    private File WeekendModifyEmployee(File mainSheet, String employeeName, int shifts[], int[] pos){
+
+    private File WeekendModifyEmployee(File mainSheet, String employeeName, int shifts[], int[] pos, int shiftsSarbatori[], int[] sarb) {
         try (FileInputStream fis = new FileInputStream(mainSheet);
              Workbook workbook = WorkbookFactory.create(fis)) { // Updated to use WorkbookFactory.create
 
@@ -603,6 +605,7 @@ public class HelloApplication extends Application {
                 if (name.equals(employeeName)) {
                     // we found the employee, now we can modify the shifts
                     int count = 0;
+                    int sarbatoriCount = 0;
                     for (int i = 0; i < shifts.length; i++) {
                         if (shifts[i] == 1) {
                             count++;
@@ -613,14 +616,14 @@ public class HelloApplication extends Application {
 
                             System.out.println("Days in month: " + daysInMonth);
 
-                            if( whatDay(day, pos).equals("duminica") && checkColor(row.getCell(colIndex + 1 )) && checkColor(row.getCell(colIndex - 2)) ){
-                                System.out.println("Skipping modification for " + employeeName + " on day " + day + " at column index " + colIndex + " because adjacent days ");
-                                continue;
-                            }
-                            if( whatDay(day, pos).equals("sambata") && checkColor(row.getCell(colIndex - 1 )) && checkColor(row.getCell(colIndex + 2)) ){
-                                System.out.println("Skipping modification for " + employeeName + " on day " + day + " at column index " + colIndex + " because adjacent ");
-                                continue;
-                            }
+//                            if( whatDay(day, pos).equals("duminica") && checkColor(row.getCell(colIndex + 1 )) && checkColor(row.getCell(colIndex - 2)) ){
+//                                System.out.println("Skipping modification for " + employeeName + " on day " + day + " at column index " + colIndex + " because adjacent days ");
+//                                continue;
+//                            }
+//                            if( whatDay(day, pos).equals("sambata") && checkColor(row.getCell(colIndex - 1 )) && checkColor(row.getCell(colIndex + 2)) ){
+//                                System.out.println("Skipping modification for " + employeeName + " on day " + day + " at column index " + colIndex + " because adjacent ");
+//                                continue;
+//                            }
                             System.out.println("Modifying shift for " + employeeName + " on day " + day + " at column index " + colIndex + " with shift type " + whatDay(day, pos));
 
 
@@ -648,8 +651,20 @@ public class HelloApplication extends Application {
 
                         }
                     }
+
+                    for(int i = 0; i < shiftsSarbatori.length; i++){
+                        if( shiftsSarbatori[i] == 1 ){
+                            int day = sarb[i];
+                            int colIndex = day + 4;
+                            if( colIndex >= row.getLastCellNum() ) break; // skip if column index is out of bounds
+                            sarbatoriCount++;
+                            row.getCell(colIndex).setCellValue(8);
+                        }
+                    }
                     if(count < 4) row.getCell(daysInMonth + 9).setCellValue( 8 * count );
                     else row.getCell(daysInMonth + 9).setCellValue(32);
+                    if(sarbatoriCount < 4) row.getCell(daysInMonth + 10).setCellValue( 8 * count );
+                    else row.getCell(daysInMonth + 10).setCellValue(32);
 
                     System.out.println("Main sheet updated with weekend shifts successfully! " + employeeName);break; // exit the loop after modifying the employee
 
@@ -814,7 +829,7 @@ public class HelloApplication extends Application {
         ));
     }
 
-    private int[][] generateShiftEmployees(List < Employee > employees, int[] pos, File weekendSheet){
+    private int[][] generateShiftEmployees(List < Employee > employees, int[] pos, File weekendSheet, int y[][]){
         int[][] x = new int[employees.size()][WeekendShift.size];
         try {
             FileInputStream fis = new FileInputStream(weekendSheet);
@@ -832,12 +847,17 @@ public class HelloApplication extends Application {
                 for( int j = 0; j < employees.size(); j++){
                     if( employees.get(j).name.toLowerCase().equals(name)){
                         int nr = 0;
+                        int hol = 0;
                         for (int k = 2; k < 30; k++) {
                             if(row.getCell(k) == null ) break;
-                            if(!checkColor(checkRow.getCell(k))) continue; // if the cell is red, we skip it
-                            if( nr == WeekendShift.size ) break;
+                            if(!checkColor(checkRow.getCell(k))){
+                                if(row.getCell(k).getNumericCellValue() == 0) y[j][hol++] = 1;
+                                else y[j][hol++] = 0;
+                                continue; // if the cell is red, we skip it
+                            }
                             if (row.getCell(k) != null && ( "x".equals(row.getCell(k).getStringCellValue()) || "X".equals(row.getCell(k).getStringCellValue()) ) ) x[j][nr++] = 1;
                             else x[j][nr++] = 0;
+                            if( nr == WeekendShift.size && hol == WeekendShift.sarbatoriSize ) break;
                         }
 
                     }
