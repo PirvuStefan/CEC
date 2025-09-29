@@ -570,12 +570,7 @@ public class HelloApplication extends Application {
 
 
 
-            for( Employee employee : employees){
-                System.out.println("Employee: " + employee.name + ", Shifts: " + employee.numberOfShifts + ", Has Worked Saturday: " + employee.hasWorkedSaturday);
-                for( int i = 0; i < WeekendShift.size; i++){
-                    System.out.println("Shift day " + (i+1) + ": " + WeekendShift.pos[i]);
-                }
-            }
+
 
 
 
@@ -851,7 +846,8 @@ public class HelloApplication extends Application {
                         for (int k = 2; k < 30; k++) {
                             if(row.getCell(k) == null ) break;
                             if(!checkColor(checkRow.getCell(k))){
-                                if(row.getCell(k).getNumericCellValue() == 0) y[j][hol++] = 1;
+
+                                if(row.getCell(k).getNumericCellValue() == 0.0) y[j][hol++] = 1;
                                 else y[j][hol++] = 0;
                                 continue; // if the cell is red, we skip it
                             }
@@ -861,15 +857,24 @@ public class HelloApplication extends Application {
                         }
 
                     }
+
+
                 }
 
-                for(int j = 0;j< employees.size(); j++){
-                    System.out.print("Employee: " + employees.get(j).name + " -> ");
-                    for(int k = 0; k < WeekendShift.size; k++){
-                        System.out.print(x[j][k] + " ");
-                    }
-                    System.out.println();
+
+
+            }
+
+            for(int j = 0;j< employees.size(); j++){
+                System.out.print("Employee: " + employees.get(j).name + " -> ");
+                for(int k = 0; k < WeekendShift.size; k++){
+                    System.out.print(x[j][k] + " ");
                 }
+                System.out.println();
+                for(int k = 0; k < WeekendShift.sarbatoriSize; k++){
+                    System.out.print(y[j][k] + " ");
+                }
+                System.out.println();
             }
 
             fis.close();
