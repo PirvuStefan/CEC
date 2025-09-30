@@ -836,7 +836,6 @@ public class HelloApplication extends Application {
                 Row row = sheet.getRow(i);
                 if( row == null ) break;
                 String name = row.getCell(1).getStringCellValue();
-                System.out.println(name);
                 if( name == null || name.isEmpty() ) break;
                 name = name.toLowerCase();
                 for( int j = 0; j < employees.size(); j++){
@@ -847,9 +846,10 @@ public class HelloApplication extends Application {
                             if(row.getCell(k) == null ) break;
                             if(!checkColor(checkRow.getCell(k))){
 
-                                if(row.getCell(k).getNumericCellValue() == 0.0) y[j][hol++] = 1;
-                                else y[j][hol++] = 0;
-                                continue; // if the cell is red, we skip it
+                                System.out.println(employees.get(j).name +" sa vad " + row.getCell(k).getNumericCellValue());
+                               if (row.getCell(k).getCellType() == CellType.BLANK) y[j][hol++] = 0;
+                               else y[j][hol++] = 1;
+                               continue; // if the cell is red, we skip it
                             }
                             if (row.getCell(k) != null && ( "x".equals(row.getCell(k).getStringCellValue()) || "X".equals(row.getCell(k).getStringCellValue()) ) ) x[j][nr++] = 1;
                             else x[j][nr++] = 0;
