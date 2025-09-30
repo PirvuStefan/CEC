@@ -656,10 +656,11 @@ public class HelloApplication extends Application {
                             row.getCell(colIndex).setCellValue(8);
                         }
                     }
-                    if(count < 4) row.getCell(daysInMonth + 9).setCellValue( 8 * count );
-                    else row.getCell(daysInMonth + 9).setCellValue(32);
-                    if(sarbatoriCount < 4) row.getCell(daysInMonth + 10).setCellValue( 8 * count );
-                    else row.getCell(daysInMonth + 10).setCellValue(32);
+//                    System.out.println(daysInMonth + " " + count + " " + sarbatoriCount);
+                    if(count < 4) row.getCell(daysInMonth + 13).setCellValue( 8 * count );
+                    else row.getCell(daysInMonth + 13).setCellValue(32);
+                    if(sarbatoriCount < 4) row.getCell(daysInMonth + 14).setCellValue( 8 * sarbatoriCount );
+                    else row.getCell(daysInMonth + 14).setCellValue(32);
 
                     System.out.println("Main sheet updated with weekend shifts successfully! " + employeeName);break; // exit the loop after modifying the employee
 
