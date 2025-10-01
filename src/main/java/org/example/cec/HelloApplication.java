@@ -712,21 +712,27 @@ public class HelloApplication extends Application {
                 String name = row.getCell(1).getStringCellValue();
                 if(!row.getCell(0).getStringCellValue().isEmpty()) magazin = row.getCell(0).getStringCellValue();
 
-                int numberOfShifts = 0;
-                int hasWorkedSaturday = 0; // assuming the hasWorkedSaturday is in the fourth cell (index 3) of the row
 
 
 
 
                 WeekendShift shift = new WeekendShift();
                 shift.initialiseDays(WeekendShift.size);
+                int numberOfShifts = 0;
+                for(int i = 0 ; i < WeekendShift.size; i++){
+                    Cell cell = row.getCell(i + 2);
+                    if(cell == null) break;
+                    else if(cell.getCellType() == CellType.STRING){
+                        if(cell.getStringCellValue().equals("X") || cell.getStringCellValue().equals("x")) numberOfShifts++;
+                    }
+                }
                 Employee employee = new Employee(name, numberOfShifts, shift);
                 employees.add(employee);
                 if(!nextRow.getCell(0).getStringCellValue().isEmpty()) {
                     weekendEmployees.put(magazin, new ArrayList<>(employees));
                     employees.clear();
                 }
-                if(nextRow.getCell(1).getStringCellValue().isEmpty()){
+                if(nextRow.getCell(1).getStringCellValue().isEmpty()) {
                     weekendEmployees.put(magazin, new ArrayList<>(employees));
                     employees.clear();
                     break;
