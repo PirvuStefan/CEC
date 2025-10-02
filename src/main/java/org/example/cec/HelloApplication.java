@@ -563,10 +563,15 @@ public class HelloApplication extends Application {
             System.out.println("Magazin: " + magazin);
             System.out.print("----------------------\n");
             List < Employee > employees = weekendEmployees.get(magazin);
+            int[] numberOfShifts = new int[employees.size()];
+            for( int i = 0; i < employees.size(); i++) numberOfShifts[i] = employees.get(i).numberOfShifts;
+
             
 
             int[][] y = new int[employees.size()][WeekendShift.sarbatoriSize];
-            int[][] x = generateShiftEmployees(employees, WeekendShift.pos, weekendSheet, y);
+            int[][] x = new int[employees.size()][WeekendShift.size];
+            x = generateShift1(x, numberOfShifts, WeekendShift.pos); // generate the shifts for the employees
+            y = generateShiftEmployeesHolidays( employees, weekendSheet); // generate the holidays for the employees
 
 
 
@@ -596,7 +601,9 @@ public class HelloApplication extends Application {
                 if (row == null) break;
                 String name = (row.getCell(2) != null) ? row.getCell(2).getStringCellValue() : "";
                 if (name == null || name.isEmpty()) break;
-                name = name.toUpperCase();
+                name = name.trim().toUpperCase();
+                if (name.isEmpty()) break;
+                employeeName = employeeName.trim().toUpperCase();
                 if (name.equals(employeeName)) {
                     // we found the employee, now we can modify the shifts
                     int count = 0;
@@ -726,6 +733,7 @@ public class HelloApplication extends Application {
                         if(cell.getStringCellValue().equals("X") || cell.getStringCellValue().equals("x")) numberOfShifts++;
                     }
                 }
+                System.out.println(name + " has " + numberOfShifts + " shifts.");
                 Employee employee = new Employee(name, numberOfShifts, shift);
                 employees.add(employee);
                 if(!nextRow.getCell(0).getStringCellValue().isEmpty()) {
@@ -831,8 +839,8 @@ public class HelloApplication extends Application {
         ));
     }
 
-    private int[][] generateShiftEmployees(List < Employee > employees, int[] pos, File weekendSheet, int y[][]){
-        int[][] x = new int[employees.size()][WeekendShift.size];
+    private int[][] generateShiftEmployeesHolidays(List < Employee > employees, File weekendSheet){
+        int[][] y = new int[employees.size()][WeekendShift.sarbatoriSize];
         try {
             FileInputStream fis = new FileInputStream(weekendSheet);
             Workbook workbook = WorkbookFactory.create(fis); // Updated to use WorkbookFactory.create
@@ -847,7 +855,6 @@ public class HelloApplication extends Application {
                 name = name.toLowerCase();
                 for( int j = 0; j < employees.size(); j++){
                     if( employees.get(j).name.toLowerCase().equals(name)){
-                        int nr = 0;
                         int hol = 0;
                         for (int k = 2; k < 30; k++) {
                             if(row.getCell(k) == null ) break;
@@ -856,11 +863,8 @@ public class HelloApplication extends Application {
                                 System.out.println(employees.get(j).name +" sa vad " + row.getCell(k).getNumericCellValue());
                                if (row.getCell(k).getCellType() == CellType.BLANK) y[j][hol++] = 0;
                                else y[j][hol++] = 1;
-                               continue; // if the cell is red, we skip it
                             }
-                            if (row.getCell(k) != null && ( "x".equals(row.getCell(k).getStringCellValue()) || "X".equals(row.getCell(k).getStringCellValue()) ) ) x[j][nr++] = 1;
-                            else x[j][nr++] = 0;
-                            if( nr == WeekendShift.size && hol == WeekendShift.sarbatoriSize ) break;
+                            if( hol == WeekendShift.sarbatoriSize ) break;
                         }
 
                     }
@@ -874,9 +878,6 @@ public class HelloApplication extends Application {
 
             for(int j = 0;j< employees.size(); j++){
                 System.out.print("Employee: " + employees.get(j).name + " -> ");
-                for(int k = 0; k < WeekendShift.size; k++){
-                    System.out.print(x[j][k] + " ");
-                }
                 System.out.println();
                 for(int k = 0; k < WeekendShift.sarbatoriSize; k++){
                     System.out.print(y[j][k] + " ");
@@ -890,19 +891,19 @@ public class HelloApplication extends Application {
             e.printStackTrace();
         }
 
-        return x;
+        return y;
 
 
 
 
     }
 
-    private int[][] generateShift1(int[][] x, boolean[] workedSaturday, int[] numberOfShifts, int[] pos){
+    private int[][] generateShift1(int[][] x, int[] numberOfShifts, int[] pos){
 
        // x[0] = generateFirstOne(workedSaturday[0], numberOfShifts[0], pos); // the first one is associated random to not be repetitive
         // do not generate the first one, might  be redundant
         for(int i = 0; i < x.length ; i++){
-            x[i] = generateLine(x, i, workedSaturday, numberOfShifts, pos);
+            x[i] = generateLine(x, i, numberOfShifts, pos);
         }
 
 
@@ -943,7 +944,7 @@ public class HelloApplication extends Application {
           return x;
     }
 
-    private int[] generateLine(int[][] x, int lineIndex, boolean[] workedSaturday, int[] numberOfShifts, int[] pos) {
+    private int[] generateLine(int[][] x, int lineIndex, int[] numberOfShifts, int[] pos) {
         int[] v = new int[WeekendShift.size];
         int minim = calculateMin(x, lineIndex); // calculate the minimum number of shifts assigned to any day so far
         int tries = 0;
@@ -961,7 +962,7 @@ public class HelloApplication extends Application {
                 }
 
                 if (count == minim) {
-                    if (i == 0 && whatDay(pos[i], pos).equals("duminicaF") && !workedSaturday[lineIndex] && v[i] == 0)  // if is the first day of the month and is a sunday and he worked last saturday, he cannot work this sunday
+                    if (i == 0 && whatDay(pos[i], pos).equals("duminicaF") && v[i] == 0)  // if is the first day of the month and is a sunday and he worked last saturday, he cannot work this sunday
                     {
                         v[i] = 1;
                         if (--numberOfShifts[lineIndex] == 0) return v;
