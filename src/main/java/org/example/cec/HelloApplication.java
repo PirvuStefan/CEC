@@ -709,7 +709,7 @@ public class HelloApplication extends Application {
                     if (cell == null) {
                         cell = row.createCell(colIndex, CellType.STRING);
                     }
-                    cell.setCellValue("8"); // set the cell value to 8 (daily shift)
+                    if(checkColor(cell)) cell.setCellValue("8"); // set the cell value to 8 (daily shift)
                 }
 
 
