@@ -620,13 +620,13 @@ public class HelloApplication extends Application {
                             int day = pos[i];
                             int colIndex = day + 4; // because we start from column F (index 5)
 
-
+                            boolean skip = false;
 
                             System.out.println("Days in month: " + daysInMonth);
 
                             if( whatDay(day, pos).equals("sambata") ){
 
-                                boolean skip = false;
+
 
                                 for(int j = 0; j < WeekendShift.sarbatoriSize; j++){
                                     if (WeekendShift.sarbatoare[j] == day + 2 && day + 2 >= daysInMonth) {
@@ -636,8 +636,22 @@ public class HelloApplication extends Application {
                                     }
                                 }
 
+                                if(!checkColor(row.getCell(colIndex + 2)) && day + 2 <= daysInMonth) skip = true; // if the cell is not white, we skip it
+
 
                             }
+                            if(skip) continue;
+                            if( whatDay(day, pos).equals("duminica")){
+                                for(int j = 0; j < WeekendShift.sarbatoriSize; j++){
+                                    if (WeekendShift.sarbatoare[j] == day && day >= daysInMonth) {
+                                        // if the sunday is a holiday, we skip it
+                                        skip = true;
+                                        break;
+                                    }
+                                }
+                                if(!checkColor(row.getCell(colIndex - 2)) && day - 2 >= 1) skip = true; // if the cell is not white, we skip it
+                            }
+                            if(skip) continue;
                             System.out.println("Modifying shift for " + employeeName + " on day " + day + " at column index " + colIndex + " with shift type " + whatDay(day, pos));
 
 
