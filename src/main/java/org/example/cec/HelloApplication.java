@@ -882,7 +882,10 @@ public class HelloApplication extends Application {
             String magazin = "";
             List < Employee > employees = new ArrayList<>();
 
+
+
             for (int rowIndex = 2; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+                Row firstRow = sheet.getRow(2);
                 Row row = sheet.getRow(rowIndex);
                 Row nextRow = sheet.getRow(rowIndex + 1);
                 if (row == null) break;
@@ -897,9 +900,10 @@ public class HelloApplication extends Application {
                 WeekendShift shift = new WeekendShift();
                 shift.initialiseDays(WeekendShift.size);
                 int numberOfShifts = 0;
-                for(int i = 0 ; i < WeekendShift.size; i++){
+                for(int i = 0 ; i < 30; i++){
                     Cell cell = row.getCell(i + 2);
                     if(cell == null) break;
+                    if( !checkColor(cell) ) continue;
                     else if(cell.getCellType() == CellType.STRING){
                         if(cell.getStringCellValue().equals("X") || cell.getStringCellValue().equals("x")) numberOfShifts++;
                     }
@@ -907,7 +911,7 @@ public class HelloApplication extends Application {
                 System.out.println(name + " has " + numberOfShifts + " shifts.");
                 Employee employee = new Employee(name, numberOfShifts, shift);
                 employees.add(employee);
-                if(!nextRow.getCell(0).getStringCellValue().isEmpty()) {
+                if(!nextRow.getCell(0).getStringCellValue().isEmpty() || nextRow.getCell(0).getStringCellValue() == null || !nextRow.getCell(0).getStringCellValue().equals(magazin)) {
                     weekendEmployees.put(magazin, new ArrayList<>(employees));
                     employees.clear();
                 }
@@ -1189,6 +1193,8 @@ public class HelloApplication extends Application {
         WeekendShift.size = 0;
         WeekendShift.pos = new int[32];
         daysInMonth = 0;
+        WeekendShift.sarbatoriSize = 0;
+        WeekendShift.sarbatoare = new int[32];
     }
 
     private String addValue(String s, int val) {
