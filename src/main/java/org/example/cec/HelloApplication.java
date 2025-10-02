@@ -616,7 +616,6 @@ public class HelloApplication extends Application {
                     int sarbatoriCount = 0;
                     for (int i = 0; i < shifts.length; i++) {
                         if (shifts[i] == 1) {
-                            count++;
                             int day = pos[i];
                             int colIndex = day + 4; // because we start from column F (index 5)
 
@@ -679,6 +678,8 @@ public class HelloApplication extends Application {
 
                         }
                     }
+
+                    for(int i = 0; i < pos.length;i++) if( row.getCell(pos[i] + 4 ).getStringCellValue().equals("8") ) count++;
 
                     for(int i = 0; i < shiftsSarbatori.length; i++){
                         if( shiftsSarbatori[i] == 1 ){
