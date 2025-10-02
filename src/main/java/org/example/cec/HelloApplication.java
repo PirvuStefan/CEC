@@ -555,6 +555,8 @@ public class HelloApplication extends Application {
         }
         else System.out.println("Lista de angajati pentru weekend a fost initializata cu succes!");
 
+        if( testModify(mainSheet)) ModifyMainWithDaily(mainSheet);
+
         for( String magazin : weekendEmployees.keySet()){
 
 
@@ -593,6 +595,133 @@ public class HelloApplication extends Application {
 
 
         System.out.println("Main sheet updated with weekend shifts successfully!");
+        return mainSheet;
+    }
+
+    private boolean testModify(File mainsheet){
+
+        int count = 0;
+        int work = 0;
+        boolean ok = false;
+
+        try (FileInputStream fis = new FileInputStream(mainSheet);
+             Workbook workbook = WorkbookFactory.create(fis)) { // Updated to use WorkbookFactory.create
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            for (int rowIndex = 0; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+                Row row = sheet.getRow(rowIndex);
+                if (row == null) break;
+                String name = (row.getCell(2) != null) ? row.getCell(2).getStringCellValue() : "";
+                if (name == null || name.isEmpty()) break;
+                name = name.trim().toUpperCase();
+                if (name.isEmpty()) break;
+
+                for(int i = 1; i <= daysInMonth; i++){
+                    int colIndex = i + 4; // because we start from column F (index 5)
+                    if (colIndex >= row.getLastCellNum()) break; // skip if column index is out of bounds
+                    Cell cell = row.getCell(colIndex);
+                    boolean skip = false;
+                    for(int j = 0; j < WeekendShift.pos.length; j++){
+                        if( WeekendShift.pos[j] == i ) {
+                            // if the day is a weekend day, we skip it
+                            skip = true;
+                            break;
+                        }
+                    }
+                    for(int j = 0; j < WeekendShift.sarbatoriSize; j++){
+                        if( WeekendShift.sarbatoare[j] == i ) {
+                            // if the day is a holiday, we skip it
+                            skip = true;
+                            break;
+                        }
+                    }
+                    if(skip) continue;
+                    if (cell == null) {
+                        cell = row.createCell(colIndex, CellType.STRING);
+                    }
+                    if(cell.getStringCellValue().equals("8")){
+                        ok = true;
+                        break;
+                    }
+                }
+                if(ok) work++;
+                count++;
+                ok = false;
+
+
+
+
+            }
+
+            try (FileOutputStream fos = new FileOutputStream(mainSheet)) {
+                workbook.write(fos);
+            }
+
+            System.out.println("Main sheet updated with daily shifts successfully!");
+
+        } catch (IOException e) { // Added InvalidFormatException
+            e.printStackTrace();
+        }
+        if(count == 0 ) return true;
+        return count > 0 && ((double) work / count) <= 0.15;
+
+    }
+
+    private File ModifyMainWithDaily(File mainSheet){
+        try (FileInputStream fis = new FileInputStream(mainSheet);
+             Workbook workbook = WorkbookFactory.create(fis)) { // Updated to use WorkbookFactory.create
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            for (int rowIndex = 0; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+                Row row = sheet.getRow(rowIndex);
+                if (row == null) break;
+                String name = (row.getCell(2) != null) ? row.getCell(2).getStringCellValue() : "";
+                if (name == null || name.isEmpty()) break;
+                name = name.trim().toUpperCase();
+                if (name.isEmpty()) break;
+
+                for(int i = 1; i <= daysInMonth; i++){
+                    int colIndex = i + 4; // because we start from column F (index 5)
+                    if (colIndex >= row.getLastCellNum()) break; // skip if column index is out of bounds
+                    Cell cell = row.getCell(colIndex);
+                    boolean skip = false;
+                    for(int j = 0; j < WeekendShift.pos.length; j++){
+                        if( WeekendShift.pos[j] == i ) {
+                            // if the day is a weekend day, we skip it
+                            skip = true;
+                            break;
+                        }
+                    }
+                    for(int j = 0; j < WeekendShift.sarbatoriSize; j++){
+                        if( WeekendShift.sarbatoare[j] == i ) {
+                            // if the day is a holiday, we skip it
+                            skip = true;
+                            break;
+                        }
+                    }
+                    if(skip) continue;
+                    if (cell == null) {
+                        cell = row.createCell(colIndex, CellType.STRING);
+                    }
+                    cell.setCellValue("8"); // set the cell value to 8 (daily shift)
+                }
+
+
+
+
+            }
+
+            try (FileOutputStream fos = new FileOutputStream(mainSheet)) {
+                workbook.write(fos);
+            }
+
+            System.out.println("Main sheet updated with daily shifts successfully!");
+
+        } catch (IOException e) { // Added InvalidFormatException
+            e.printStackTrace();
+        }
         return mainSheet;
     }
 
