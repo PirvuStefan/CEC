@@ -568,13 +568,19 @@ public class HelloApplication extends Application {
 
             
 
-            int[][] y = new int[employees.size()][WeekendShift.sarbatoriSize];
+            int[][] y;
             int[][] x = new int[employees.size()][WeekendShift.size];
             x = generateShift1(x, numberOfShifts, WeekendShift.pos); // generate the shifts for the employees
             y = generateShiftEmployeesHolidays( employees, weekendSheet); // generate the holidays for the employees
 
 
-
+            for(int i = 0 ; i < x.length; i++){
+                System.out.println("Employee: " + employees.get(i).name + " , number of shifts: " + employees.get(i).numberOfShifts );
+                for(int j = 0; j < x[i].length; j++){
+                    System.out.print(x[i][j] + " ");
+                }
+                System.out.print("\n");
+            }
 
 
 
@@ -877,7 +883,7 @@ public class HelloApplication extends Application {
             }
 
             for(int j = 0;j< employees.size(); j++){
-                System.out.print("Employee: " + employees.get(j).name + " -> ");
+                System.out.print("Employee: " + employees.get(j).name);
                 System.out.println();
                 for(int k = 0; k < WeekendShift.sarbatoriSize; k++){
                     System.out.print(y[j][k] + " ");
