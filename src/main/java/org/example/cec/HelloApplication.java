@@ -545,7 +545,6 @@ public class HelloApplication extends Application {
 
         Map< String , List<Employee> > weekendEmployees;
         System.out.println("Modifying main sheet with weekend shifts...");
-
         WeekendShift test = new WeekendShift();
         test.initialiseSize(weekendSheet); // to set the size of the weekend shift ( static variable);
         System.out.println("Weekend size: " + WeekendShift.size);
@@ -637,12 +636,17 @@ public class HelloApplication extends Application {
                         }
                     }
                     if(skip) continue;
-                    if (cell == null) {
-                        cell = row.createCell(colIndex, CellType.STRING);
-                    }
-                    if(cell.getStringCellValue().equals("8")){
-                        ok = true;
-                        break;
+                    if (cell != null) {
+                        String cellValue = "";
+                        if (cell.getCellType() == CellType.STRING) {
+                            cellValue = cell.getStringCellValue();
+                        } else if (cell.getCellType() == CellType.NUMERIC) {
+                            cellValue = String.valueOf((int) cell.getNumericCellValue());
+                        }
+                        if (cellValue.equals("8")) {
+                            ok = true;
+                            break;
+                        }
                     }
                 }
                 if(ok) work++;
@@ -808,7 +812,18 @@ public class HelloApplication extends Application {
                         }
                     }
 
-                    for(int i = 0; i < pos.length;i++) if( row.getCell(pos[i] + 4 ).getStringCellValue().equals("8") ) count++;
+                    for(int i = 0; i < pos.length; i++) {
+                        Cell shiftCell = row.getCell(pos[i] + 4);
+                        String cellValue = "";
+                        if (shiftCell != null) {
+                            if (shiftCell.getCellType() == CellType.STRING) {
+                                cellValue = shiftCell.getStringCellValue();
+                            } else if (shiftCell.getCellType() == CellType.NUMERIC) {
+                                cellValue = String.valueOf((int) shiftCell.getNumericCellValue());
+                            }
+                        }
+                        if (cellValue.equals("8")) count++;
+                    }
 
                     for(int i = 0; i < shiftsSarbatori.length; i++){
                         if( shiftsSarbatori[i] == 1 ){
