@@ -340,6 +340,8 @@ public class HelloApplication extends Application {
         List<Holiday> holidays;
         String filePath = holidaysSheet.getAbsolutePath();
 
+        if(testModify(mainSheet)) ModifyMainWithDaily(mainSheet);
+
         holidays = InitialiseHolidaysList(holidaysSheet);
 
         // now we do have the holiday data, we can modify the mainSheet
@@ -351,6 +353,7 @@ public class HelloApplication extends Application {
             Sheet sheet = workbook.getSheetAt(0);
             // Go to row 3 (index 3, since it's 0-based), starting from column F (index 5), and find the last column with an integer (day of month)
             Row headerRow = sheet.getRow(3);
+            Row first = sheet.getRow(0);
 
             for (int rowIndex = 0; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
@@ -452,10 +455,35 @@ public class HelloApplication extends Application {
 
 
                         System.out.println("Days in month: " + daysInMonth);
-//                        if(reason.equals("materniate"))
-//                            row.getCell(daysInMonth + 6).setCellValue(getValueint(row.getCell(daysInMonth + 6)) + (lastDay - firstDay + 1)); // add the number of days of maternity leave to the maternity leave column
-//                        if(reason.equals("concediu"))
-//                           row.getCell(daysInMonth + 6).setCellValue(getValueint(row.getCell(daysInMonth + 6)) + (lastDay - firstDay + 1));
+//                        if( reason.equals("concediu") ){
+//                            String awayCellValue = "";
+//                            Cell awayCell = row.getCell(daysInMonth + 7);
+//                            if (awayCell == null) {
+//                                awayCell = row.createCell(daysInMonth + 7, CellType.STRING);
+//                            }
+//                            if (awayCell.getCellType() == CellType.STRING) {
+//                                awayCellValue = awayCell.getStringCellValue().trim();
+//                                if (awayCellValue.isEmpty()) {
+//                                    awayCellValue = Integer.toString(lastDay - firstDay + 1);
+//                                } else {
+//                                    try {
+//                                        int current = Integer.parseInt(awayCellValue);
+//                                        awayCellValue = Integer.toString(current + (lastDay - firstDay + 1));
+//                                    } catch (NumberFormatException e) {
+//                                        awayCellValue = awayCellValue + " + " + (lastDay - firstDay + 1);
+//                                    }
+//                                }
+//                            } else if (awayCell.getCellType() == CellType.NUMERIC) {
+//                                int current = (int) awayCell.getNumericCellValue();
+//                                awayCellValue = Integer.toString(current + (lastDay - firstDay + 1));
+//                            } else {
+//                                awayCellValue = Integer.toString(lastDay - firstDay + 1);
+//                            }
+//                            System.out.println(" asta e " + row.getCell(daysInMonth + 7).getStringCellValue());
+//                            row.getCell(daysInMonth + 7).setCellValue(awayCellValue);
+//
+//                        }
+
 
                     }
                 }
@@ -621,21 +649,9 @@ public class HelloApplication extends Application {
                     if (colIndex >= row.getLastCellNum()) break; // skip if column index is out of bounds
                     Cell cell = row.getCell(colIndex);
                     boolean skip = false;
-                    for(int j = 0; j < WeekendShift.pos.length; j++){
-                        if( WeekendShift.pos[j] == i ) {
-                            // if the day is a weekend day, we skip it
-                            skip = true;
-                            break;
-                        }
-                    }
-                    for(int j = 0; j < WeekendShift.sarbatoriSize; j++){
-                        if( WeekendShift.sarbatoare[j] == i ) {
-                            // if the day is a holiday, we skip it
-                            skip = true;
-                            break;
-                        }
-                    }
-                    if(skip) continue;
+                    boolean b = checkColor(cell);
+                    if(!b) continue;
+
                     if (cell != null) {
                         String cellValue = "";
                         if (cell.getCellType() == CellType.STRING) {
@@ -690,26 +706,12 @@ public class HelloApplication extends Application {
                     int colIndex = i + 4; // because we start from column F (index 5)
                     if (colIndex >= row.getLastCellNum()) break; // skip if column index is out of bounds
                     Cell cell = row.getCell(colIndex);
-                    boolean skip = false;
-                    for(int j = 0; j < WeekendShift.pos.length; j++){
-                        if( WeekendShift.pos[j] == i ) {
-                            // if the day is a weekend day, we skip it
-                            skip = true;
-                            break;
-                        }
-                    }
-                    for(int j = 0; j < WeekendShift.sarbatoriSize; j++){
-                        if( WeekendShift.sarbatoare[j] == i ) {
-                            // if the day is a holiday, we skip it
-                            skip = true;
-                            break;
-                        }
-                    }
-                    if(skip) continue;
+                    if(!checkColor(cell)) continue; // if the cell is not white, we skip it
+
                     if (cell == null) {
                         cell = row.createCell(colIndex, CellType.STRING);
                     }
-                    if(checkColor(cell)) cell.setCellValue("8"); // set the cell value to 8 (daily shift)
+                    cell.setCellValue("8"); // set the cell value to 8 (daily shift)
                 }
 
 
@@ -891,6 +893,7 @@ public class HelloApplication extends Application {
                 if (row == null) break;
 
                 String name = row.getCell(1).getStringCellValue();
+                if( name == null || name.isEmpty() ) break;
                 if(!row.getCell(0).getStringCellValue().isEmpty()) magazin = row.getCell(0).getStringCellValue();
 
 
@@ -903,7 +906,7 @@ public class HelloApplication extends Application {
                 for(int i = 0 ; i < 30; i++){
                     Cell cell = row.getCell(i + 2);
                     if(cell == null) break;
-                    if( !checkColor(cell) ) continue;
+                    if( !checkColor(firstRow.getCell(i)) ) continue;
                     else if(cell.getCellType() == CellType.STRING){
                         if(cell.getStringCellValue().equals("X") || cell.getStringCellValue().equals("x")) numberOfShifts++;
                     }
@@ -915,7 +918,7 @@ public class HelloApplication extends Application {
                     weekendEmployees.put(magazin, new ArrayList<>(employees));
                     employees.clear();
                 }
-                if(nextRow.getCell(1).getStringCellValue().isEmpty()) {
+                else if(nextRow.getCell(1).getStringCellValue().isEmpty() ) {
                     weekendEmployees.put(magazin, new ArrayList<>(employees));
                     employees.clear();
                     break;
@@ -1035,7 +1038,7 @@ public class HelloApplication extends Application {
                             if(row.getCell(k) == null ) break;
                             if(!checkColor(checkRow.getCell(k))){
 
-                                System.out.println(employees.get(j).name +" sa vad " + row.getCell(k).getNumericCellValue());
+
                                if (row.getCell(k).getCellType() == CellType.BLANK) y[j][hol++] = 0;
                                else y[j][hol++] = 1;
                             }
