@@ -763,7 +763,7 @@ public class HelloApplication extends Application {
 
 
                                 for(int j = 0; j < WeekendShift.sarbatoriSize; j++){
-                                    if (WeekendShift.sarbatoare[j] == day + 2 && day + 2 >= daysInMonth) {
+                                    if (WeekendShift.sarbatoare[j] == day + 2 && day + 2 <= daysInMonth) {
                                         // if the saturday is a holiday, we skip it
                                         skip = true;
                                         break;
@@ -774,11 +774,10 @@ public class HelloApplication extends Application {
 
 
                             }
-                            if(skip) continue;
-                            if( whatDay(day, pos).equals("duminica")){
+                            else if( whatDay(day, pos).equals("duminica")){
                                 for(int j = 0; j < WeekendShift.sarbatoriSize; j++){
-                                    if (WeekendShift.sarbatoare[j] == day && day >= daysInMonth) {
-                                        // if the sunday is a holiday, we skip it
+                                    if (WeekendShift.sarbatoare[j] == day - 2 && day - 2 >= 1){
+
                                         skip = true;
                                         break;
                                     }
