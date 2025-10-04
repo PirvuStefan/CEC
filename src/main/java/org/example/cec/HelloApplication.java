@@ -890,6 +890,8 @@ public class HelloApplication extends Application {
                 Row row = sheet.getRow(rowIndex);
                 Row nextRow = sheet.getRow(rowIndex + 1);
                 if (row == null) break;
+                // every type of this document should end with 2 empty rows in order to work
+                if( nextRow == null ) break;
 
                 String name = row.getCell(1).getStringCellValue();
                 if( name == null || name.isEmpty() ) break;
