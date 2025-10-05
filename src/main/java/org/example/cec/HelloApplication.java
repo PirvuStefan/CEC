@@ -891,7 +891,6 @@ public class HelloApplication extends Application {
                 Row nextRow = sheet.getRow(rowIndex + 1);
                 if (row == null) break;
                 // every type of this document should end with 2 empty rows in order to work
-                if( nextRow == null ) break;
 
                 String name = row.getCell(1).getStringCellValue();
                 if( name == null || name.isEmpty() ) break;
@@ -915,15 +914,15 @@ public class HelloApplication extends Application {
                 System.out.println(name + " has " + numberOfShifts + " shifts.");
                 Employee employee = new Employee(name, numberOfShifts, shift);
                 employees.add(employee);
-                if(!nextRow.getCell(0).getStringCellValue().isEmpty() || nextRow.getCell(0).getStringCellValue() == null || !nextRow.getCell(0).getStringCellValue().equals(magazin)) {
-                    weekendEmployees.put(magazin, new ArrayList<>(employees));
-                    employees.clear();
-                }
-                else if(nextRow.getCell(1).getStringCellValue().isEmpty() ) {
+                if( nextRow.getCell(0).getStringCellValue().isEmpty() && nextRow.getCell(1).getStringCellValue().isEmpty()){
                     weekendEmployees.put(magazin, new ArrayList<>(employees));
                     employees.clear();
                     break;
-                }// if the next row is empty, we stop the process
+                }
+                if(!nextRow.getCell(0).getStringCellValue().isEmpty() ) {
+                    weekendEmployees.put(magazin, new ArrayList<>(employees));
+                    employees.clear();
+                }
 
             }
 
