@@ -455,34 +455,89 @@ public class HelloApplication extends Application {
 
 
                         System.out.println("Days in month: " + daysInMonth);
-//                        if( reason.equals("concediu") ){
-//                            String awayCellValue = "";
-//                            Cell awayCell = row.getCell(daysInMonth + 7);
-//                            if (awayCell == null) {
-//                                awayCell = row.createCell(daysInMonth + 7, CellType.STRING);
-//                            }
-//                            if (awayCell.getCellType() == CellType.STRING) {
-//                                awayCellValue = awayCell.getStringCellValue().trim();
-//                                if (awayCellValue.isEmpty()) {
-//                                    awayCellValue = Integer.toString(lastDay - firstDay + 1);
-//                                } else {
-//                                    try {
-//                                        int current = Integer.parseInt(awayCellValue);
-//                                        awayCellValue = Integer.toString(current + (lastDay - firstDay + 1));
-//                                    } catch (NumberFormatException e) {
-//                                        awayCellValue = awayCellValue + " + " + (lastDay - firstDay + 1);
-//                                    }
-//                                }
-//                            } else if (awayCell.getCellType() == CellType.NUMERIC) {
-//                                int current = (int) awayCell.getNumericCellValue();
-//                                awayCellValue = Integer.toString(current + (lastDay - firstDay + 1));
-//                            } else {
-//                                awayCellValue = Integer.toString(lastDay - firstDay + 1);
-//                            }
-//                            System.out.println(" asta e " + row.getCell(daysInMonth + 7).getStringCellValue());
-//                            row.getCell(daysInMonth + 7).setCellValue(awayCellValue);
-//
-//                        }
+                        if( reason.equals("concediu") ){
+                            String awayCellValue = "";
+                            Cell awayCell = row.getCell(daysInMonth + 11);
+                            if (awayCell == null) {
+                                awayCell = row.createCell(daysInMonth + 11, CellType.STRING);
+                            }
+                            if (awayCell.getCellType() == CellType.STRING) {
+                                awayCellValue = awayCell.getStringCellValue().trim();
+                                if (awayCellValue.isEmpty()) {
+                                    awayCellValue = Integer.toString(lastDay - firstDay + 1);
+                                } else {
+                                    try {
+                                        int current = Integer.parseInt(awayCellValue);
+                                        awayCellValue = Integer.toString(current + (lastDay - firstDay + 1));
+                                    } catch (NumberFormatException e) {
+                                        awayCellValue = awayCellValue + " + " + (lastDay - firstDay + 1);
+                                    }
+                                }
+                            } else if (awayCell.getCellType() == CellType.NUMERIC) {
+                                int current = (int) awayCell.getNumericCellValue();
+                                awayCellValue = Integer.toString(current + (lastDay - firstDay + 1));
+                            } else {
+                                awayCellValue = Integer.toString(lastDay - firstDay + 1);
+                            }
+
+                            for(int i = firstDay; i <= lastDay; i++){
+                                //for this one we do not neeed to count the weekend days here or the holidays
+                                if( i < 1 || i > 31 ) break;
+                                int colIndex = i + 4; // because we start from column F (index 5)
+                                if (colIndex >= row.getLastCellNum()) break; // skip if column index is out of bounds
+                                Cell cell = row.getCell(colIndex);
+                                if( cell == null ) continue;
+
+                                    XSSFColor color = (XSSFColor) headerRow.getCell(colIndex).getCellStyle().getFillForegroundColorColor();
+                                    String rgbHex = "#FFFFFF"; // default white color
+                                    if (color != null) {
+                                        String hexColor = color.getARGBHex();
+                                        rgbHex = hexColor.substring(2, 8); // remove alpha channel
+                                        rgbHex = "#" + rgbHex.toUpperCase();
+                                    }
+                                    if (headerRow.getCell(colIndex) != null && rgbHex.equals("#FFFF00")) {
+                                        // if is yellow, we do not count it
+                                        try {
+                                            int current = Integer.parseInt(awayCellValue);
+                                            awayCellValue = Integer.toString(current - 1);
+                                        } catch (NumberFormatException e) {
+                                            // if we cannot parse it, we do nothing
+                                        }
+                                    }
+                                }
+
+                            System.out.println(" asta e " + row.getCell(daysInMonth + 11).getStringCellValue());
+                            row.getCell(daysInMonth + 11).setCellValue(awayCellValue);
+
+                        }
+                        else if( reason.equals("medical")){
+                            String medicalCellValue = "";
+                            Cell medicalCell = row.getCell(daysInMonth + 10);
+                            if (medicalCell == null) {
+                                medicalCell = row.createCell(daysInMonth + 10, CellType.STRING);
+                            }
+                            if (medicalCell.getCellType() == CellType.STRING) {
+                                medicalCellValue = medicalCell.getStringCellValue().trim();
+                                if (medicalCellValue.isEmpty()) {
+                                    medicalCellValue = Integer.toString(lastDay - firstDay + 1);
+                                } else {
+                                    try {
+                                        int current = Integer.parseInt(medicalCellValue);
+                                        medicalCellValue = Integer.toString(current + (lastDay - firstDay + 1));
+                                    } catch (NumberFormatException e) {
+                                        medicalCellValue = medicalCellValue + " + " + (lastDay - firstDay + 1);
+                                    }
+                                }
+                            } else if (medicalCell.getCellType() == CellType.NUMERIC) {
+                                int current = (int) medicalCell.getNumericCellValue();
+                                medicalCellValue = Integer.toString(current + (lastDay - firstDay + 1));
+                            } else {
+                                medicalCellValue = Integer.toString(lastDay - firstDay + 1);
+                            }
+
+                            System.out.println(" asta e " + row.getCell(daysInMonth + 10).getStringCellValue());
+                            row.getCell(daysInMonth + 10).setCellValue(medicalCellValue);
+                        }
 
 
                     }
