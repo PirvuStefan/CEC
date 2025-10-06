@@ -453,6 +453,57 @@ public class HelloApplication extends Application {
                             cell.setCellStyle(newStyle);
                         }
 
+                        if( reason.equals("demisie") ){
+
+
+                            for(int i = lastDay + 1; i<= daysInMonth; i++){
+
+                                int colIndex = i + 4; // because we start from column F (index 5)
+                                if (colIndex >= row.getLastCellNum()) break; // skip if column index is out of bounds
+
+                                Cell cell = row.getCell(colIndex);
+                                if (cell == null) {
+                                    cell = row.createCell(colIndex, CellType.STRING);
+                                }
+
+                                // Skip weekends
+                                XSSFColor color = (XSSFColor) headerRow.getCell(colIndex).getCellStyle().getFillForegroundColorColor();
+                                String rgbHex = "#FFFFFF"; // default white color
+                                if (color != null) {
+                                    String hexColor = color.getARGBHex();
+                                    rgbHex = hexColor.substring(2, 8); // remove alpha channel
+                                    rgbHex = "#" + rgbHex.toUpperCase();
+                                }
+                                if (headerRow.getCell(colIndex) != null && rgbHex.equals("#FFFF00")) {
+                                    cell.setCellValue("");// clear the cell value if it's weekend day bacause he got a holiday and he will not longer work that specific weekend shift if he is on holiday( holiday from 10 to 23 ,
+                                    // weekend is 12,13, he had a shift on Sunday, but the shift needs to be removed now since he got a holiday cannot work no anymore)
+                                    continue;
+                                }
+
+                                color = (XSSFColor) headerRow.getCell(colIndex + 2).getCellStyle().getFillForegroundColorColor();
+                                rgbHex = "#FFFFFF"; // default white color
+                                if (color != null) {
+                                    String hexColor = color.getARGBHex();
+                                    rgbHex = hexColor.substring(2, 8); // remove alpha channel
+                                    rgbHex = "#" + rgbHex.toUpperCase();
+                                }
+                                if(headerRow.getCell(colIndex + 2) != null && rgbHex.equals("#FFFF00")) {
+                                    // if the cell is a weekend day, we skip it
+                                    headerRow.getCell(colIndex + 2).setCellValue("");
+                                }
+
+                                // Set the cell value to the reason
+                                cell.setCellValue(""); // Clear the cell value by setting it to an empty string
+                                // Create a new cell style
+                                CellStyle newStyle = row.getSheet().getWorkbook().createCellStyle();
+                                newStyle.cloneStyleFrom(cell.getCellStyle());
+                                newStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
+                                newStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                                cell.setCellStyle(newStyle);
+
+                            }
+                        }
+
 
                         System.out.println("Days in month: " + daysInMonth);
                         if( reason.equals("concediu") ){
