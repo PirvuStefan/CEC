@@ -358,14 +358,14 @@ public class HelloApplication extends Application {
             for (int rowIndex = 0; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
                 if (row == null) break;
-                Cell nameCell = row.getCell(2);
-                String name = (nameCell != null) ? nameCell.getStringCellValue() : null;
+                String name = (row.getCell(2) != null) ? row.getCell(2).getStringCellValue().trim().toUpperCase() : null;
                 if (name == null || name.isEmpty()) break;
-                name = name.toLowerCase();
                 //magazin = magazin.toLowerCase();
                 for( Holiday holiday : holidays) {
 
-                    if (holiday.getName().toLowerCase().equals(name)) {
+                    String employeeNameNormalized = holiday.getName().trim().toUpperCase();
+
+                    if (name.equals(employeeNameNormalized)) {
                         // we found a match, we can modify the row
                         // now based on the reason of the holiday, we do color the row from the mainSheet ( at that specific employee, from the first day to the last day)
                         int firstDay = holiday.getFirstDay();
