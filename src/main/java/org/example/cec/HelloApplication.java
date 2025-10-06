@@ -363,6 +363,7 @@ public class HelloApplication extends Application {
                 //magazin = magazin.toLowerCase();
                 for( Holiday holiday : holidays) {
 
+
                     String employeeNameNormalized = holiday.getName().trim().toUpperCase();
 
                     if (name.equals(employeeNameNormalized)) {
