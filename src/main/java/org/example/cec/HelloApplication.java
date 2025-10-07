@@ -882,6 +882,28 @@ public class HelloApplication extends Application {
                     // we found the employee, now we can modify the shifts
                     int count = 0;
                     int sarbatoriCount = 0;
+                    int firstDay = 32;
+
+                    for(int i = 1; i <= daysInMonth; i++){
+                        Cell cell = row.getCell(i + 4);
+                        if (cell != null) {
+                            XSSFColor color = (XSSFColor) cell.getCellStyle().getFillForegroundColorColor();
+                            String rgbHex = "#FFFFFF"; // default white color
+                            if (color != null) {
+                                String hexColor = color.getARGBHex();
+                                rgbHex = hexColor.substring(2, 8); // remove alpha channel
+                                rgbHex = "#" + rgbHex.toUpperCase();
+                            }
+                            // Bluemarin (navy blue) is usually #000080
+                            if (rgbHex.equals("#002060") && cell.getCellType() == CellType.NUMERIC && cell.getNumericCellValue() == 8) {
+                                firstDay = i;
+                                // Add your logic here for bluemarin cells with value 8
+                            }
+                            else if(rgbHex.equals("#002060") && cell.getCellType() == CellType.STRING && cell.getStringCellValue().equals("8")){
+                                firstDay = i;
+                            }
+                        }
+                    }
                     for (int i = 0; i < shifts.length; i++) {
                         if (shifts[i] == 1) {
                             int day = pos[i];
@@ -890,6 +912,8 @@ public class HelloApplication extends Application {
                             boolean skip = false;
 
                             System.out.println("Days in month: " + daysInMonth);
+
+                            if( day < firstDay ) continue;
 
                             if( whatDay(day, pos).equals("sambata") ){
 
