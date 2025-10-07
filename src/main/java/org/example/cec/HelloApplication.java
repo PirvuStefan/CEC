@@ -1001,7 +1001,7 @@ public class HelloApplication extends Application {
             rgbHex = hexColor.substring(2, 8); // remove alpha channel
             rgbHex = "#" + rgbHex.toUpperCase();
         }
-        return rgbHex.equals("#FFFFFF");
+        return ( rgbHex.equals("#FFFFFF") || rgbHex.equals("#002060") ); // white or bluemarin
     }
 
 
