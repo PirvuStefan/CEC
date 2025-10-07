@@ -343,6 +343,7 @@ public class HelloApplication extends Application {
         if(testModify(mainSheet)) ModifyMainWithDaily(mainSheet);
 
         holidays = InitialiseHolidaysList(holidaysSheet);
+        System.out.println("Total holidays loaded: " + holidays.size());
 
         // now we do have the holiday data, we can modify the mainSheet
         try (FileInputStream fis = new FileInputStream(mainSheet);
@@ -611,7 +612,7 @@ public class HelloApplication extends Application {
         } catch (IOException e) { // Added InvalidFormatException
             e.printStackTrace();
         }
-
+        System.out.println("Holiday modification completed.");
         return mainSheet;
     }
 
@@ -629,7 +630,7 @@ public class HelloApplication extends Application {
                 Row row = sheet.getRow(rowIndex);
                 if (row == null) break;
 
-                String name = row.getCell(0).getStringCellValue();
+                String name = (row.getCell(0) != null && row.getCell(0).getCellType() == CellType.STRING) ? row.getCell(0).getStringCellValue() : null;
                 if( name == null || name.isEmpty() ) break;
                 System.out.println("Processing row " + (rowIndex + 1) + " for employee: " + name);
                 String magazin = row.getCell(1).getStringCellValue();
@@ -809,7 +810,30 @@ public class HelloApplication extends Application {
                 name = name.trim().toUpperCase();
                 if (name.isEmpty()) break;
 
-                for(int i = 1; i <= daysInMonth; i++){
+                int startDay = 0;
+
+                for(int i  = 1; i <= daysInMonth; i++){
+                    Cell cell = row.getCell(i + 4);
+                    if (cell != null) {
+                        XSSFColor color = (XSSFColor) cell.getCellStyle().getFillForegroundColorColor();
+                        String rgbHex = "#FFFFFF"; // default white color
+                        if (color != null) {
+                            String hexColor = color.getARGBHex();
+                            rgbHex = hexColor.substring(2, 8); // remove alpha channel
+                            rgbHex = "#" + rgbHex.toUpperCase();
+                        }
+                        // Bluemarin (navy blue) is usually #000080
+                        if (rgbHex.equals("#000080") && cell.getCellType() == CellType.NUMERIC && cell.getNumericCellValue() == 8) {
+                            startDay = i;
+                            // Add your logic here for bluemarin cells with value 8
+                        }
+                        else if(rgbHex.equals("#000080") && cell.getCellType() == CellType.STRING && cell.getStringCellValue().equals("8")){
+                            startDay = i;
+                        }
+                    }
+                }
+
+                for(int i = startDay + 1; i <= daysInMonth; i++){
                     int colIndex = i + 4; // because we start from column F (index 5)
                     if (colIndex >= row.getLastCellNum()) break; // skip if column index is out of bounds
                     Cell cell = row.getCell(colIndex);
