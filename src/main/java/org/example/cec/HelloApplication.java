@@ -823,11 +823,11 @@ public class HelloApplication extends Application {
                             rgbHex = "#" + rgbHex.toUpperCase();
                         }
                         // Bluemarin (navy blue) is usually #000080
-                        if (rgbHex.equals("#000080") && cell.getCellType() == CellType.NUMERIC && cell.getNumericCellValue() == 8) {
+                            if (rgbHex.equals("#002060") && cell.getCellType() == CellType.NUMERIC && cell.getNumericCellValue() == 8) {
                             startDay = i;
                             // Add your logic here for bluemarin cells with value 8
                         }
-                        else if(rgbHex.equals("#000080") && cell.getCellType() == CellType.STRING && cell.getStringCellValue().equals("8")){
+                        else if(rgbHex.equals("#002060") && cell.getCellType() == CellType.STRING && cell.getStringCellValue().equals("8")){
                             startDay = i;
                         }
                     }
@@ -844,6 +844,8 @@ public class HelloApplication extends Application {
                     }
                     cell.setCellValue("8"); // set the cell value to 8 (daily shift)
                 }
+
+                if(startDay > 0) System.out.println("Employee: " + name + " , start day: " + startDay);
 
 
 
