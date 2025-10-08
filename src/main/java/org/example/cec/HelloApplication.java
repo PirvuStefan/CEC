@@ -881,6 +881,7 @@ public class HelloApplication extends Application {
                 if (name.equals(employeeName)) {
                     // we found the employee, now we can modify the shifts
                     int count = 0;
+                    int nr = 0 ;
                     int sarbatoriCount = 0;
                     int firstDay = 32;
 
@@ -906,6 +907,7 @@ public class HelloApplication extends Application {
                     }
                     for (int i = 0; i < shifts.length; i++) {
                         if (shifts[i] == 1) {
+                            nr++;
                             int day = pos[i];
                             int colIndex = day + 4; // because we start from column F (index 5)
 
@@ -993,6 +995,62 @@ public class HelloApplication extends Application {
                         }
                     }
 //                    System.out.println(daysInMonth + " " + count + " " + sarbatoriCount);
+
+                    if ( count == 0 && nr > 0 ) {
+                        // if the count is 0, we do force a shift on the first available day after the firstDay,
+
+                        for(int j = 0; j < WeekendShift.size; j++){
+                            if( whatDay(WeekendShift.pos[j], pos).equals("sambata") ){
+                                if( WeekendShift.pos[j] >= firstDay ){
+                                    int colIndex = WeekendShift.pos[j] + 4;
+                                    if( colIndex >= row.getLastCellNum() ) break; // skip if column index is out of bounds
+                                    if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex + 2)) ){
+                                        row.getCell(colIndex).setCellValue(8);
+                                        count++;
+                                        break;
+                                    }
+                                }
+                            }
+                            else if( whatDay(WeekendShift.pos[j], pos).equals("duminica") ){
+                                if( WeekendShift.pos[j] >= firstDay ){
+                                    int colIndex = WeekendShift.pos[j] + 4;
+                                    if( colIndex >= row.getLastCellNum() ) break; // skip if column index is out of bounds
+                                    if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex - 2)) ){
+                                        row.getCell(colIndex).setCellValue(8);
+                                        count++;
+                                        break;
+                                    }
+                                }
+                           }
+                        }
+                    }
+                    if( count == 1 && nr > 3){
+                        // if the count is 1 and he has more than 3 shifts, we force another shift on the first available day after the firstDay
+                        for(int j = 0; j < WeekendShift.size; j++){
+                            if( whatDay(WeekendShift.pos[j], pos).equals("sambata") ){
+                                if( WeekendShift.pos[j] >= firstDay ){
+                                    int colIndex = WeekendShift.pos[j] + 4;
+                                    if( colIndex >= row.getLastCellNum() ) break; // skip if column index is out of bounds
+                                    if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex + 2)) ){
+                                        row.getCell(colIndex).setCellValue(8);
+                                        count++;
+                                        break;
+                                    }
+                                }
+                            }
+                            else if( whatDay(WeekendShift.pos[j], pos).equals("duminica") ){
+                                if( WeekendShift.pos[j] >= firstDay ){
+                                    int colIndex = WeekendShift.pos[j] + 4;
+                                    if( colIndex >= row.getLastCellNum() ) break; // skip if column index is out of bounds
+                                    if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex - 2)) ){
+                                        row.getCell(colIndex).setCellValue(8);
+                                        count++;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
                     if(count < 4) row.getCell(daysInMonth + 13).setCellValue( 8 * count );
                     else row.getCell(daysInMonth + 13).setCellValue(32);
                     if(sarbatoriCount < 4) row.getCell(daysInMonth + 14).setCellValue( 8 * sarbatoriCount );
