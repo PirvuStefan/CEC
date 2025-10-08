@@ -883,7 +883,7 @@ public class HelloApplication extends Application {
                     int count = 0;
                     int nr = 0 ;
                     int sarbatoriCount = 0;
-                    int firstDay = 32;
+                    int firstDay = 0;
 
                     for(int i = 1; i <= daysInMonth; i++){
                         Cell cell = row.getCell(i + 4);
