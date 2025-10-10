@@ -410,7 +410,7 @@ public class HelloApplication extends Application {
                                 rgbHex = hexColor.substring(2, 8); // remove alpha channel
                                 rgbHex = "#" + rgbHex.toUpperCase();
                             }
-                            if (headerRow.getCell(colIndex) != null && rgbHex.equals("#FFFF00")) {
+                            if (headerRow.getCell(colIndex) != null && (  rgbHex.equals("#FFFF00") || rgbHex.equals("#CC00FF") ) ) {
                                 cell.setCellValue("");// clear the cell value if it's weekend day bacause he got a holiday and he will not longer work that specific weekend shift if he is on holiday( holiday from 10 to 23 ,
                                 // weekend is 12,13, he had a shift on Sunday, but the shift needs to be removed now since he got a holiday cannot work no anymore)
                                 continue;
@@ -476,7 +476,7 @@ public class HelloApplication extends Application {
                                     rgbHex = hexColor.substring(2, 8); // remove alpha channel
                                     rgbHex = "#" + rgbHex.toUpperCase();
                                 }
-                                if (headerRow.getCell(colIndex) != null && rgbHex.equals("#FFFF00")) {
+                                if (headerRow.getCell(colIndex) != null && ( rgbHex.equals("#FFFF00") || rgbHex.equals("#CC00FF") )) {
                                     cell.setCellValue("");// clear the cell value if it's weekend day bacause he got a holiday and he will not longer work that specific weekend shift if he is on holiday( holiday from 10 to 23 ,
                                     // weekend is 12,13, he had a shift on Sunday, but the shift needs to be removed now since he got a holiday cannot work no anymore)
                                     continue;
