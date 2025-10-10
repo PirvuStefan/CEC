@@ -970,6 +970,7 @@ public class HelloApplication extends Application {
                             // Set the cell style to light blue
 
                         }
+                        if( nr >= 4 ) break; // if the employee has 4 shifts, we stop
                     }
 
                     for(int i = 0; i < pos.length; i++) {
@@ -1004,7 +1005,7 @@ public class HelloApplication extends Application {
                                 if( WeekendShift.pos[j] >= firstDay ){
                                     int colIndex = WeekendShift.pos[j] + 4;
                                     if( colIndex >= row.getLastCellNum() ) break; // skip if column index is out of bounds
-                                    if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex + 2)) ){
+                                    if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex + 2)) && !row.getCell(colIndex).getStringCellValue().equals("8") ){
                                         row.getCell(colIndex).setCellValue(8);
                                         count++;
                                         break;
@@ -1015,7 +1016,7 @@ public class HelloApplication extends Application {
                                 if( WeekendShift.pos[j] >= firstDay ){
                                     int colIndex = WeekendShift.pos[j] + 4;
                                     if( colIndex >= row.getLastCellNum() ) break; // skip if column index is out of bounds
-                                    if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex - 2)) ){
+                                    if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex - 2)) && !row.getCell(colIndex).getStringCellValue().equals("8") ){
                                         row.getCell(colIndex).setCellValue(8);
                                         count++;
                                         break;
@@ -1024,14 +1025,14 @@ public class HelloApplication extends Application {
                            }
                         }
                     }
-                    if( count == 1 && nr > 3){
-                        // if the count is 1 and he has more than 3 shifts, we force another shift on the first available day after the firstDay
+                    if( count == 1 && nr > 2){
+                        // if the count is 1 and he has more than 2 shifts, we force another shift on the first available day after the firstDay
                         for(int j = 0; j < WeekendShift.size; j++){
                             if( whatDay(WeekendShift.pos[j], pos).equals("sambata") ){
                                 if( WeekendShift.pos[j] >= firstDay ){
                                     int colIndex = WeekendShift.pos[j] + 4;
                                     if( colIndex >= row.getLastCellNum() ) break; // skip if column index is out of bounds
-                                    if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex + 2)) ){
+                                    if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex + 2)) && !row.getCell(colIndex).getStringCellValue().equals("8") ){
                                         row.getCell(colIndex).setCellValue(8);
                                         count++;
                                         break;
@@ -1042,7 +1043,34 @@ public class HelloApplication extends Application {
                                 if( WeekendShift.pos[j] >= firstDay ){
                                     int colIndex = WeekendShift.pos[j] + 4;
                                     if( colIndex >= row.getLastCellNum() ) break; // skip if column index is out of bounds
-                                    if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex - 2)) ){
+                                    if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex - 2)) && !row.getCell(colIndex).getStringCellValue().equals("8") ){
+                                        row.getCell(colIndex).setCellValue(8);
+                                        count++;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if( count == 2 && nr > 3){
+                        // if the count is 1 and he has more than 2 shifts, we force another shift on the first available day after the firstDay
+                        for(int j = 0; j < WeekendShift.size; j++){
+                            if( whatDay(WeekendShift.pos[j], pos).equals("sambata") ){
+                                if( WeekendShift.pos[j] >= firstDay ){
+                                    int colIndex = WeekendShift.pos[j] + 4;
+                                    if( colIndex >= row.getLastCellNum() ) break; // skip if column index is out of bounds
+                                    if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex + 2)) && !row.getCell(colIndex).getStringCellValue().equals("8") ){
+                                        row.getCell(colIndex).setCellValue(8);
+                                        count++;
+                                        break;
+                                    }
+                                }
+                            }
+                            else if( whatDay(WeekendShift.pos[j], pos).equals("duminica") ){
+                                if( WeekendShift.pos[j] >= firstDay ){
+                                    int colIndex = WeekendShift.pos[j] + 4;
+                                    if( colIndex >= row.getLastCellNum() ) break; // skip if column index is out of bounds
+                                    if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex - 2)) && !row.getCell(colIndex).getStringCellValue().equals("8") ){
                                         row.getCell(colIndex).setCellValue(8);
                                         count++;
                                         break;
