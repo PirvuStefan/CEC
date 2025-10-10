@@ -136,8 +136,8 @@ public class HelloApplication extends Application {
                 return;
             }
 
-            File modifiedSheet = WeekendModify(mainSheet, weekendSheet);
-            HolidayModify(modifiedSheet, holidaysSheet);
+            File modifiedSheet = HolidayModify(mainSheet, holidaysSheet);
+            WeekendModify(modifiedSheet, weekendSheet);
             if (modifiedSheet != null) {
                 try {
                     Files.copy(modifiedSheet.toPath(), outputDir.resolve(modifiedSheet.getName()), StandardCopyOption.REPLACE_EXISTING);
