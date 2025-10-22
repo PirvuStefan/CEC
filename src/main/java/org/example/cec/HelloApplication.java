@@ -1011,85 +1011,15 @@ public class HelloApplication extends Application {
 
                     if ( count == 0 && nr > 0 ) {
                         // if the count is 0, we do force a shift on the first available day after the firstDay,
-
-                        for(int j = 0; j < WeekendShift.size; j++){
-                            if( whatDay(WeekendShift.pos[j], pos).equals("sambata") ){
-                                if( WeekendShift.pos[j] >= firstDay ){
-                                    int colIndex = WeekendShift.pos[j] + 4;
-                                    if( colIndex >= row.getLastCellNum() ) break; // skip if column index is out of bounds
-                                    if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex + 2)) && !row.getCell(colIndex).getStringCellValue().equals("8") ){
-                                        row.getCell(colIndex).setCellValue(8);
-                                        count++;
-                                        break;
-                                    }
-                                }
-                            }
-                            else if( whatDay(WeekendShift.pos[j], pos).equals("duminica") ){
-                                if( WeekendShift.pos[j] >= firstDay ){
-                                    int colIndex = WeekendShift.pos[j] + 4;
-                                    if( colIndex >= row.getLastCellNum() ) break; // skip if column index is out of bounds
-                                    if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex - 2)) && !row.getCell(colIndex).getStringCellValue().equals("8") ){
-                                        row.getCell(colIndex).setCellValue(8);
-                                        count++;
-                                        break;
-                                    }
-                                }
-                           }
-                        }
+                        count = getCount(pos, row, count, firstDay);
                     }
                     if( count == 1 && nr > 2){
                         // if the count is 1 and he has more than 2 shifts, we force another shift on the first available day after the firstDay
-                        for(int j = 0; j < WeekendShift.size; j++){
-                            if( whatDay(WeekendShift.pos[j], pos).equals("sambata") ){
-                                if( WeekendShift.pos[j] >= firstDay ){
-                                    int colIndex = WeekendShift.pos[j] + 4;
-                                    if( colIndex >= row.getLastCellNum() ) break; // skip if column index is out of bounds
-                                    if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex + 2)) && !row.getCell(colIndex).getStringCellValue().equals("8") ){
-                                        row.getCell(colIndex).setCellValue(8);
-                                        count++;
-                                        break;
-                                    }
-                                }
-                            }
-                            else if( whatDay(WeekendShift.pos[j], pos).equals("duminica") ){
-                                if( WeekendShift.pos[j] >= firstDay ){
-                                    int colIndex = WeekendShift.pos[j] + 4;
-                                    if( colIndex >= row.getLastCellNum() ) break; // skip if column index is out of bounds
-                                    if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex - 2)) && !row.getCell(colIndex).getStringCellValue().equals("8") ){
-                                        row.getCell(colIndex).setCellValue(8);
-                                        count++;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
+                        count = getCount(pos, row, count, firstDay);
                     }
                     if( count == 2 && nr > 3){
                         // if the count is 1 and he has more than 2 shifts, we force another shift on the first available day after the firstDay
-                        for(int j = 0; j < WeekendShift.size; j++){
-                            if( whatDay(WeekendShift.pos[j], pos).equals("sambata") ){
-                                if( WeekendShift.pos[j] >= firstDay ){
-                                    int colIndex = WeekendShift.pos[j] + 4;
-                                    if( colIndex >= row.getLastCellNum() ) break; // skip if column index is out of bounds
-                                    if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex + 2)) && !row.getCell(colIndex).getStringCellValue().equals("8") ){
-                                        row.getCell(colIndex).setCellValue(8);
-                                        count++;
-                                        break;
-                                    }
-                                }
-                            }
-                            else if( whatDay(WeekendShift.pos[j], pos).equals("duminica") ){
-                                if( WeekendShift.pos[j] >= firstDay ){
-                                    int colIndex = WeekendShift.pos[j] + 4;
-                                    if( colIndex >= row.getLastCellNum() ) break; // skip if column index is out of bounds
-                                    if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex - 2)) && !row.getCell(colIndex).getStringCellValue().equals("8") ){
-                                        row.getCell(colIndex).setCellValue(8);
-                                        count++;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
+                        count = getCount(pos, row, count, firstDay);
                     }
                     if(count < 4) row.getCell(daysInMonth + 13).setCellValue( 8 * count );
                     else row.getCell(daysInMonth + 13).setCellValue(32);
@@ -1111,6 +1041,34 @@ public class HelloApplication extends Application {
             e.printStackTrace();
         }
         return mainSheet;
+    }
+
+    private int getCount(int[] pos, Row row, int count, int firstDay) {
+        for(int j = 0; j < WeekendShift.size; j++){
+            if( whatDay(WeekendShift.pos[j], pos).equals("sambata") ){
+                if( WeekendShift.pos[j] >= firstDay ){
+                    int colIndex = WeekendShift.pos[j] + 4;
+                    if( colIndex >= row.getLastCellNum() ) break; // skip if column index is out of bounds
+                    if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex + 2)) && !row.getCell(colIndex).getStringCellValue().equals("8") && !row.getCell(colIndex + 1).getStringCellValue().equals("8") ){
+                        row.getCell(colIndex).setCellValue(8);
+                        count++;
+                        break;
+                    }
+                }
+            }
+            else if( whatDay(WeekendShift.pos[j], pos).equals("duminica") ){
+                if( WeekendShift.pos[j] >= firstDay ){
+                    int colIndex = WeekendShift.pos[j] + 4;
+                    if( colIndex >= row.getLastCellNum() ) break; // skip if column index is out of bounds
+                    if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex - 2)) && !row.getCell(colIndex).getStringCellValue().equals("8") && !row.getCell(colIndex - 1).getStringCellValue().equals("8") ){
+                        row.getCell(colIndex).setCellValue(8);
+                        count++;
+                        break;
+                    }
+                }
+            }
+        }
+        return count;
     }
 
     private boolean checkColor( Cell cell ){
