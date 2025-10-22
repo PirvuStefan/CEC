@@ -25,10 +25,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.text.Normalizer;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.swap;
 
@@ -365,9 +369,16 @@ public class HelloApplication extends Application {
                 for( Holiday holiday : holidays) {
 
 
-                    String employeeNameNormalized = holiday.getName().trim().toUpperCase();
 
-                    if (name.equals(employeeNameNormalized)) {
+
+                    String normalizedMain = normalizeName(name).replaceAll("\\s+", "");
+                    String normalizedHoliday = normalizeName(holiday.getName()).replaceAll("\\s+", "");
+
+
+
+
+
+                    if (normalizedMain.equals(normalizedHoliday)) {
                         // we found a match, we can modify the row
                         // now based on the reason of the holiday, we do color the row from the mainSheet ( at that specific employee, from the first day to the last day)
                         int firstDay = holiday.getFirstDay();
@@ -877,8 +888,9 @@ public class HelloApplication extends Application {
                 if (name == null || name.isEmpty()) break;
                 name = name.trim().toUpperCase();
                 if (name.isEmpty()) break;
-                employeeName = employeeName.trim().toUpperCase();
-                if (name.equals(employeeName)) {
+                String normalizedMain = normalizeName(name).replaceAll("\\s+", "");
+                String normalizedHoliday = normalizeName(employeeName.replaceAll("\\s+", ""));
+                if (normalizedMain.equals(normalizedHoliday)) {
                     // we found the employee, now we can modify the shifts
                     int count = 0;
                     int nr = 0 ;
@@ -1452,5 +1464,37 @@ public class HelloApplication extends Application {
             return s + " + " + val;
         }
     }
+
+    // Java - add these methods into `src/main/java/org/example/cec/HelloApplication.java`
+
+
+    private String normalizeName(String s) {
+        if (s == null) return "";
+        // Normalize to composed form, replace NBSP with normal space, remove invisible chars
+        String t = Normalizer.normalize(s, Normalizer.Form.NFKC);
+        t = t.replace('\u00A0', ' ');                // NBSP -> normal space
+        t = t.replaceAll("[\\u200B\\uFEFF\\p{Cf}]", ""); // zero-width + other format chars
+        t = t.replaceAll("[*?]", "");                // keep existing removal of * and ?
+        // Remove diacritics, collapse multiple whitespace and trim
+        t = Normalizer.normalize(t, Normalizer.Form.NFD).replaceAll("\\p{M}", "");
+        t = t.replaceAll("\\s+", " ").trim();
+        return t.toUpperCase();
+    }
+
+    private void debugCompare(String mainRaw, String holidayRaw) {
+        System.out.println("MAIN raw:  [" + mainRaw + "] len=" + (mainRaw == null ? 0 : mainRaw.length()));
+        System.out.println("HOL raw:   [" + holidayRaw + "] len=" + (holidayRaw == null ? 0 : holidayRaw.length()));
+        System.out.println("MAIN cps:  " + toCodepoints(mainRaw));
+        System.out.println("HOL cps:   " + toCodepoints(holidayRaw));
+    }
+
+    private String toCodepoints(String s) {
+        if (s == null) return "";
+        return s.codePoints()
+                .mapToObj(cp -> String.format("%04x", cp))
+                .collect(Collectors.joining(" "));
+    }
+
+
 
 }
