@@ -820,6 +820,8 @@ public class HelloApplication extends Application {
                 if (name == null || name.isEmpty()) break;
                 name = name.trim().toUpperCase();
                 if (name.isEmpty()) break;
+                if(checkWorking(row.getCell(2))) continue; // if the employee is currently not working, we skip him
+
 
                 int startDay = 0;
 
@@ -1082,6 +1084,19 @@ public class HelloApplication extends Application {
             rgbHex = "#" + rgbHex.toUpperCase();
         }
         return ( rgbHex.equals("#FFFFFF") || rgbHex.equals("#002060") ); // white or bluemarin
+    }
+
+    private boolean checkWorking( Cell cell){
+        String s;
+        if( cell == null ) s =  "#FFFFFF";
+        XSSFColor color = (XSSFColor) cell.getCellStyle().getFillForegroundColorColor();
+        String rgbHex = "#FFFFFF"; // default white color
+        if(color != null){
+            String hexColor = color.getARGBHex();
+            rgbHex = hexColor.substring(2, 8); // remove alpha channel
+            rgbHex = "#" + rgbHex.toUpperCase();
+        }
+        return ( rgbHex.equals("#FFFFFF") || rgbHex.equals("#00FFFF") ); // white or aqua
     }
 
 
