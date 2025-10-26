@@ -820,10 +820,10 @@ public class HelloApplication extends Application {
                 if (name == null || name.isEmpty()) break;
                 name = name.trim().toUpperCase();
                 if (name.isEmpty()) break;
-                if(checkWorking(row.getCell(2))) continue; // if the employee is currently not working, we skip him
+                if(!checkWorking(row.getCell(2))) continue; // if the employee is currently not working, we skip him
 
 
-                int startDay = 0;
+                int startDay = 1;
 
                 for(int i  = 1; i <= daysInMonth; i++){
                     Cell cell = row.getCell(i + 4);
@@ -836,17 +836,18 @@ public class HelloApplication extends Application {
                             rgbHex = "#" + rgbHex.toUpperCase();
                         }
                         // Bluemarin (navy blue) is usually #000080
-                            if (rgbHex.equals("#002060") && cell.getCellType() == CellType.NUMERIC && cell.getNumericCellValue() == 8) {
+                        if (rgbHex.equals("#002060") && cell.getCellType() == CellType.NUMERIC && cell.getNumericCellValue() == 8) {
                             startDay = i;
                             // Add your logic here for bluemarin cells with value 8
                         }
                         else if(rgbHex.equals("#002060") && cell.getCellType() == CellType.STRING && cell.getStringCellValue().equals("8")){
                             startDay = i;
                         }
+                        else if(rgbHex.equals("#002060")) startDay = i;
                     }
                 }
 
-                for(int i = startDay + 1; i <= daysInMonth; i++){
+                for(int i = startDay ; i <= daysInMonth; i++){
                     int colIndex = i + 4; // because we start from column F (index 5)
                     if (colIndex >= row.getLastCellNum()) break; // skip if column index is out of bounds
                     Cell cell = row.getCell(colIndex);
