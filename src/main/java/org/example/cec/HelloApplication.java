@@ -421,7 +421,7 @@ public class HelloApplication extends Application {
                                 rgbHex = hexColor.substring(2, 8); // remove alpha channel
                                 rgbHex = "#" + rgbHex.toUpperCase();
                             }
-                            if (headerRow.getCell(colIndex) != null && (  rgbHex.equals("#FFFF00") || rgbHex.equals("#CC00FF") ) ) {
+                            if (headerRow.getCell(colIndex) != null && (  rgbHex.equals("#FFFF00") || rgbHex.equals("#CC00FF") ) && !reason.equals("medical") ) {
                                 cell.setCellValue("");// clear the cell value if it's weekend day bacause he got a holiday and he will not longer work that specific weekend shift if he is on holiday( holiday from 10 to 23 ,
                                 // weekend is 12,13, he had a shift on Sunday, but the shift needs to be removed now since he got a holiday cannot work no anymore)
                                 continue;
@@ -559,8 +559,8 @@ public class HelloApplication extends Application {
                                         rgbHex = hexColor.substring(2, 8); // remove alpha channel
                                         rgbHex = "#" + rgbHex.toUpperCase();
                                     }
-                                    if (headerRow.getCell(colIndex) != null && rgbHex.equals("#FFFF00")) {
-                                        // if is yellow, we do not count it
+                                    if (headerRow.getCell(colIndex) != null && ( rgbHex.equals("#FFFF00") || rgbHex.equals("#CC00FF") )) {
+                                        // if is yellow or purple, we do not count it
                                         try {
                                             int current = Integer.parseInt(awayCellValue);
                                             awayCellValue = Integer.toString(current - 1);
@@ -601,6 +601,60 @@ public class HelloApplication extends Application {
 
                             System.out.println(" asta e " + row.getCell(daysInMonth + 10).getStringCellValue());
                             row.getCell(daysInMonth + 10).setCellValue(medicalCellValue);
+                        }
+                        else if( reason.equals("absenta")){
+                            String awayCellValue = "";
+                            Cell awayCell = row.getCell(daysInMonth + 11);
+                            if (awayCell == null) {
+                                awayCell = row.createCell(daysInMonth + 11, CellType.STRING);
+                            }
+                            if (awayCell.getCellType() == CellType.STRING) {
+                                awayCellValue = awayCell.getStringCellValue().trim();
+                                if (awayCellValue.isEmpty()) {
+                                    awayCellValue = Integer.toString(lastDay - firstDay + 1);
+                                } else {
+                                    try {
+                                        int current = Integer.parseInt(awayCellValue);
+                                        awayCellValue = Integer.toString(current + (lastDay - firstDay + 1));
+                                    } catch (NumberFormatException e) {
+                                        awayCellValue = awayCellValue + " + " + (lastDay - firstDay + 1);
+                                    }
+                                }
+                            } else if (awayCell.getCellType() == CellType.NUMERIC) {
+                                int current = (int) awayCell.getNumericCellValue();
+                                awayCellValue = Integer.toString(current + (lastDay - firstDay + 1));
+                            } else {
+                                awayCellValue = Integer.toString(lastDay - firstDay + 1);
+                            }
+
+                            for(int i = firstDay; i <= lastDay; i++){
+                                //for this one we do not neeed to count the weekend days here or the holidays
+                                if( i < 1 || i > 31 ) break;
+                                int colIndex = i + 4; // because we start from column F (index 5)
+                                if (colIndex >= row.getLastCellNum()) break; // skip if column index is out of bounds
+                                Cell cell = row.getCell(colIndex);
+                                if( cell == null ) continue;
+
+                                XSSFColor color = (XSSFColor) headerRow.getCell(colIndex).getCellStyle().getFillForegroundColorColor();
+                                String rgbHex = "#FFFFFF"; // default white color
+                                if (color != null) {
+                                    String hexColor = color.getARGBHex();
+                                    rgbHex = hexColor.substring(2, 8); // remove alpha channel
+                                    rgbHex = "#" + rgbHex.toUpperCase();
+                                }
+                                if (headerRow.getCell(colIndex) != null && ( rgbHex.equals("#FFFF00") || rgbHex.equals("#CC00FF") )) {
+                                    // if is yellow or purple, we do not count it
+                                    try {
+                                        int current = Integer.parseInt(awayCellValue);
+                                        awayCellValue = Integer.toString(current - 1);
+                                    } catch (NumberFormatException e) {
+                                        // if we cannot parse it, we do nothing
+                                    }
+                                }
+                            }
+
+                            System.out.println(" asta e " + row.getCell(daysInMonth + 11).getStringCellValue());
+                            row.getCell(daysInMonth + 11).setCellValue(awayCellValue);
                         }
 
 
@@ -655,9 +709,12 @@ public class HelloApplication extends Application {
                     period = "";
                 }
 
+
                 System.out.println("Vacation Period: " + period);
-                String firstDay = period.split("\\*")[0].trim();
-                String lastDay = period.split("\\*")[1].trim();
+                                String[] parts = period.split("\\*");
+                                String firstDay = parts[0].trim().replaceFirst("^0+(?!$)", "");
+                                String lastDay = parts[1].trim().replaceFirst("^0+(?!$)", "");
+
                 String reason = row.getCell(3).getStringCellValue();
                 reason = switch (reason) {
                     case "co", "CO" -> "concediu";
