@@ -371,8 +371,8 @@ public class HelloApplication extends Application {
 
 
 
-                    String normalizedMain = normalizeName(name).replaceAll("\\s+", "");
-                    String normalizedHoliday = normalizeName(holiday.getName()).replaceAll("\\s+", "");
+                    String normalizedMain = normalizeName(name).replaceAll("[\\s\\-]+", "");
+                    String normalizedHoliday = normalizeName(holiday.getName()).replaceAll("[\\s\\-]+", "");
 
 
 
@@ -421,7 +421,7 @@ public class HelloApplication extends Application {
                                 rgbHex = hexColor.substring(2, 8); // remove alpha channel
                                 rgbHex = "#" + rgbHex.toUpperCase();
                             }
-                            if (headerRow.getCell(colIndex) != null && (  rgbHex.equals("#FFFF00") || rgbHex.equals("#CC00FF") ) && !reason.equals("medical") ) {
+                            if (headerRow.getCell(colIndex) != null && (  rgbHex.equals("#FFFF00") || rgbHex.equals("#CC00FF") ) && !reason.equals("medical") && !reason.equals("demisie") ) {
                                 cell.setCellValue("");// clear the cell value if it's weekend day bacause he got a holiday and he will not longer work that specific weekend shift if he is on holiday( holiday from 10 to 23 ,
                                 // weekend is 12,13, he had a shift on Sunday, but the shift needs to be removed now since he got a holiday cannot work no anymore)
                                 continue;
@@ -521,9 +521,9 @@ public class HelloApplication extends Application {
                         System.out.println("Days in month: " + daysInMonth);
                         if( reason.equals("concediu") ){
                             String awayCellValue = "";
-                            Cell awayCell = row.getCell(daysInMonth + 11);
+                            Cell awayCell = row.getCell(daysInMonth + 7);
                             if (awayCell == null) {
-                                awayCell = row.createCell(daysInMonth + 11, CellType.STRING);
+                                awayCell = row.createCell(daysInMonth + 7, CellType.STRING);
                             }
                             if (awayCell.getCellType() == CellType.STRING) {
                                 awayCellValue = awayCell.getStringCellValue().trim();
@@ -570,15 +570,15 @@ public class HelloApplication extends Application {
                                     }
                                 }
 
-                            System.out.println(" asta e " + row.getCell(daysInMonth + 11).getStringCellValue());
-                            row.getCell(daysInMonth + 11).setCellValue(awayCellValue);
+                            System.out.println(" asta e " + row.getCell(daysInMonth + 7).getStringCellValue());
+                            row.getCell(daysInMonth + 7).setCellValue(awayCellValue);
 
                         }
                         else if( reason.equals("medical")){
                             String medicalCellValue = "";
-                            Cell medicalCell = row.getCell(daysInMonth + 10);
+                            Cell medicalCell = row.getCell(daysInMonth + 6);
                             if (medicalCell == null) {
-                                medicalCell = row.createCell(daysInMonth + 10, CellType.STRING);
+                                medicalCell = row.createCell(daysInMonth + 6, CellType.STRING);
                             }
                             if (medicalCell.getCellType() == CellType.STRING) {
                                 medicalCellValue = medicalCell.getStringCellValue().trim();
@@ -599,14 +599,14 @@ public class HelloApplication extends Application {
                                 medicalCellValue = Integer.toString(lastDay - firstDay + 1);
                             }
 
-                            System.out.println(" asta e " + row.getCell(daysInMonth + 10).getStringCellValue());
-                            row.getCell(daysInMonth + 10).setCellValue(medicalCellValue);
+                            System.out.println(" asta e " + row.getCell(daysInMonth + 6).getStringCellValue());
+                            row.getCell(daysInMonth + 6).setCellValue(medicalCellValue);
                         }
                         else if( reason.equals("absenta")){
                             String awayCellValue = "";
-                            Cell awayCell = row.getCell(daysInMonth + 11);
+                            Cell awayCell = row.getCell(daysInMonth + 15);
                             if (awayCell == null) {
-                                awayCell = row.createCell(daysInMonth + 11, CellType.STRING);
+                                awayCell = row.createCell(daysInMonth + 15, CellType.STRING);
                             }
                             if (awayCell.getCellType() == CellType.STRING) {
                                 awayCellValue = awayCell.getStringCellValue().trim();
@@ -653,8 +653,8 @@ public class HelloApplication extends Application {
                                 }
                             }
 
-                            System.out.println(" asta e " + row.getCell(daysInMonth + 11).getStringCellValue());
-                            row.getCell(daysInMonth + 11).setCellValue(awayCellValue);
+                            System.out.println(" asta e " + row.getCell(daysInMonth + 15).getStringCellValue());
+                            row.getCell(daysInMonth + 15).setCellValue(awayCellValue);
                         }
 
 
