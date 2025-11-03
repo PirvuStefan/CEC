@@ -948,8 +948,10 @@ public class HelloApplication extends Application {
                 if (name == null || name.isEmpty()) break;
                 name = name.trim().toUpperCase();
                 if (name.isEmpty()) break;
-                String normalizedMain = normalizeName(name).replaceAll("\\s+", "");
-                String normalizedHoliday = normalizeName(employeeName.replaceAll("\\s+", ""));
+
+                String normalizedMain = normalizeName(name).replaceAll("[\\s\\-]+", "");
+                String normalizedHoliday = normalizeName(employeeName).replaceAll("[\\s\\-]+", "");
+
                 if (normalizedMain.equals(normalizedHoliday)) {
                     // we found the employee, now we can modify the shifts
                     int count = 0;
@@ -1081,10 +1083,10 @@ public class HelloApplication extends Application {
                         // if the count is 1 and he has more than 2 shifts, we force another shift on the first available day after the firstDay
                         count = getCount(pos, row, count, firstDay);
                     }
-                    if(count < 4) row.getCell(daysInMonth + 13).setCellValue( 8 * count );
-                    else row.getCell(daysInMonth + 13).setCellValue(32);
-                    if(sarbatoriCount < 4) row.getCell(daysInMonth + 14).setCellValue( 8 * sarbatoriCount );
-                    else row.getCell(daysInMonth + 14).setCellValue(32);
+                    if(count < 4) row.getCell(daysInMonth + 9).setCellValue( 8 * count );
+                    else row.getCell(daysInMonth + 9).setCellValue(32);
+                    if(sarbatoriCount < 4) row.getCell(daysInMonth + 10).setCellValue( 8 * sarbatoriCount );
+                    else row.getCell(daysInMonth + 10).setCellValue(32);
 
                     System.out.println("Main sheet updated with weekend shifts successfully! " + employeeName);break; // exit the loop after modifying the employee
 
