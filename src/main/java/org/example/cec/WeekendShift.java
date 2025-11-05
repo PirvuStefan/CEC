@@ -60,6 +60,7 @@ public class WeekendShift {
             System.out.print(pos[i] + " ");
         }
         sarbatoriSize = sarbatoriCount;
+        System.out.println("SARBATORI : " + sarbatoriSize);
     }
 
     private int getValueint(Row row, int cellIndex) {

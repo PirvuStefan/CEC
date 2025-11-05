@@ -455,7 +455,7 @@ public class WeekendModify {
 
     private static boolean checkColor(Cell cell){
         String s;
-        if( cell == null ) s =  "#FFFFFF";
+        if( cell == null ) return true;
         XSSFColor color = (XSSFColor) cell.getCellStyle().getFillForegroundColorColor();
         String rgbHex = "#FFFFFF"; // default white color
         if(color != null){
