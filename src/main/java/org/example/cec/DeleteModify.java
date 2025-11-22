@@ -8,11 +8,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import static org.example.cec.HelloApplication.daysInMonth;
 
 public class DeleteModify {
 
-    static File Launch(File mainSheet, String center){
+    static File Launch(File mainSheet, String center, int daysInMonth) {
 
         try (FileInputStream fis = new FileInputStream(mainSheet);
              Workbook workbook = WorkbookFactory.create(fis)) {
@@ -55,6 +54,40 @@ public class DeleteModify {
         }
         System.out.println("Holiday modification completed.");
         return mainSheet;
+
+    }
+
+    void deleteRow(Sheet sheet, int rowIndex, int daysInMonth) {
+        // we aim to delete the progress from that row
+        for( int i = 0 ; i <= daysInMonth + 4 ; i++){
+            Cell cell = sheet.getRow(rowIndex).getCell(i);
+            if(cell != null){
+                cell.setCellValue("");
+            }
+        }
+    }
+
+
+    private static String checkColorValability(Cell cell){
+
+        // here we check if the color is white , bluemarin
+        String s;
+        if( cell == null ) return null;
+        XSSFColor color = (XSSFColor) cell.getCellStyle().getFillForegroundColorColor();
+        String rgbHex = "#FFFFFF"; // default white color
+        if(color != null){
+            String hexColor = color.getARGBHex();
+            rgbHex = hexColor.substring(2, 8); // remove alpha channel
+            rgbHex = "#" + rgbHex.toUpperCase();
+        }
+
+        if( rgbHex.equals("FFFFF")) return "WHITE";
+        if( rgbHex.equals("002060")) return "BLUEMARIN";
+        if( rgbHex.equals("FFFF00")) return "YELLOW";
+        if( rgbHex.equals("00FFFF")) return "AQUA";
+        return "OTHER";
+
+
 
     }
 }
