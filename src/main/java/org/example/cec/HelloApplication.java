@@ -11,30 +11,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.xssf.usermodel.XSSFColor;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.text.Normalizer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.text.Normalizer;
-import java.util.stream.Collectors;
-
-import static java.util.Collections.swap;
 
 public class HelloApplication extends Application {
 
@@ -159,14 +141,14 @@ public class HelloApplication extends Application {
 
         });
 
-        // --- ADDED: Sterge Datele button directly under "Proceseaza Datele" ---
+
         Button deleteButton = new Button("Sterge Datele");
         deleteButton.setPrefWidth(200);
         styleProcessButton(deleteButton);
         deleteButton.setOnAction(e -> {
             stage.setScene(createDeleteDataScene(stage, stage.getScene()));
         });
-        // --- END ADDED ---
+
 
         Button instructionsButton = new Button("Cum folosim aplicatia?");
         instructionsButton.setPrefWidth(200);
@@ -238,15 +220,15 @@ public class HelloApplication extends Application {
         Scene instructionsScene = new Scene(layout, 600, 400);
 
         backButton.setOnAction(e -> stage.setScene(mainScene));
-        weekendDetailsButton.setOnAction(e -> stage.setScene(createWeekendDetailsScene(stage, mainScene, instructionsScene)));
-        vacanteDetailsButton.setOnAction(e -> stage.setScene(createVacanteDetailsScene(stage, mainScene, instructionsScene)));
+        weekendDetailsButton.setOnAction(e -> stage.setScene(createWeekendDetailsScene(stage, instructionsScene)));
+        vacanteDetailsButton.setOnAction(e -> stage.setScene(createVacanteDetailsScene(stage, instructionsScene)));
 
         return instructionsScene;
     }
 
 
 
-    private Scene createWeekendDetailsScene(Stage stage, Scene mainScene, Scene instructionsScene) {
+    private Scene createWeekendDetailsScene(Stage stage, Scene instructionsScene) {
         Label title = new Label("Detalii Weekend");
         title.setStyle("-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: white;");
 
@@ -277,7 +259,7 @@ public class HelloApplication extends Application {
         return new Scene(layout, 600, 400);
     }
 
-    private Scene createVacanteDetailsScene(Stage stage, Scene mainScene, Scene instructionsScene) {
+    private Scene createVacanteDetailsScene(Stage stage, Scene instructionsScene) {
         Label title = new Label("Detalii Vacanțe");
         title.setStyle("-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: white;");
 
