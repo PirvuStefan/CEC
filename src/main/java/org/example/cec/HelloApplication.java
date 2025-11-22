@@ -159,15 +159,24 @@ public class HelloApplication extends Application {
 
         });
 
+        // --- ADDED: Sterge Datele button directly under "Proceseaza Datele" ---
+        Button deleteButton = new Button("Sterge Datele");
+        deleteButton.setPrefWidth(200);
+        styleProcessButton(deleteButton);
+        deleteButton.setOnAction(e -> {
+            stage.setScene(createDeleteDataScene(stage, stage.getScene()));
+        });
+        // --- END ADDED ---
+
         Button instructionsButton = new Button("Cum folosim aplicatia?");
         instructionsButton.setPrefWidth(200);
         instructionsButton.setStyle("-fx-background-color: rgba(0,123,255,0.85); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 10 20 10 20;");
-        VBox root = new VBox(30, title, fileSelectors, processButton, instructionsButton);
+        VBox root = new VBox(30, title, fileSelectors, processButton, deleteButton, instructionsButton);
         root.setAlignment(Pos.CENTER);
         root.setPadding(new Insets(20));
         root.setStyle("-fx-background-color: linear-gradient(to bottom right, rgba(0,100,200,0.85), rgba(0,180,255,0.85));");
 
-        Scene mainScene = new Scene(root, 600, 400);
+        Scene mainScene = new Scene(root, 600, 500);
         stage.setScene(mainScene);
         stage.setTitle("Central Excel Controller");
         stage.setMinWidth(500);
@@ -399,6 +408,108 @@ public class HelloApplication extends Application {
     }
 
 
+
+    private Scene createDeleteDataScene(Stage stage, Scene mainScene) {
+        Label title = new Label("Sterge Date Programate");
+        title.setStyle("-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: white;");
+
+        VBox fileSelectors = new VBox(20);
+        fileSelectors.setPadding(new Insets(20));
+        fileSelectors.setAlignment(Pos.CENTER);
+
+        // Excel file selector
+        Label excelLabel = new Label("Selecteaza Fisierul Excel Principal:");
+        excelLabel.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
+
+        TextField excelFilePath = new TextField();
+        excelFilePath.setPromptText("Calea catre fisierul Excel...");
+        excelFilePath.setStyle("-fx-background-radius: 8; -fx-background-color: white;");
+
+        Button browseButton = new Button("Cauta");
+        browseButton.setStyle("-fx-background-color: rgba(255,255,255,0.8); -fx-background-radius: 8; -fx-font-weight: bold;");
+
+        final File[] selectedFile = {null};
+        browseButton.setOnAction(e -> {
+            FileChooser fc = new FileChooser();
+            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files", "*.xlsx", "*.xls"));
+            File file = fc.showOpenDialog(stage);
+            if (file != null) {
+                excelFilePath.setText(file.getAbsolutePath());
+                selectedFile[0] = file;
+            }
+        });
+
+        HBox excelBox = new HBox(10, excelLabel, excelFilePath, browseButton);
+        excelBox.setAlignment(Pos.CENTER);
+        HBox.setHgrow(excelFilePath, Priority.ALWAYS);
+
+        // Shop center input
+        Label shopLabel = new Label("Centru Comercial:");
+        shopLabel.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
+
+        TextField shopInput = new TextField();
+        shopInput.setPromptText("Numele centrului comercial...");
+        shopInput.setStyle("-fx-background-radius: 8; -fx-background-color: white;");
+
+        HBox shopBox = new HBox(10, shopLabel, shopInput);
+        shopBox.setAlignment(Pos.CENTER);
+        HBox.setHgrow(shopInput, Priority.ALWAYS);
+
+        fileSelectors.getChildren().addAll(excelBox, shopBox);
+
+        // Process button
+        Button processDeleteButton = new Button("Proceseaza Stergerea");
+        processDeleteButton.setPrefWidth(200);
+        styleProcessButton(processDeleteButton);
+        processDeleteButton.setOnAction(e -> {
+            if (selectedFile[0] == null) {
+                showAlert("Te rog selecteaza un fisier Excel!");
+                return;
+            }
+            if (shopInput.getText().trim().isEmpty()) {
+                showAlert("Te rog introdu numele centrului comercial!");
+                return;
+            }
+
+            // TODO: Implement deletion logic here
+            // Call a method to delete data for the specified shop center
+            boolean success = deleteShopCenterData(selectedFile[0], shopInput.getText().trim());
+
+            if (success) {
+                showAlert("Datele pentru " + shopInput.getText().trim() + " au fost sterse cu succes!");
+                stage.setScene(mainScene);
+            } else {
+                showAlert("Eroare la stergerea datelor!");
+            }
+        });
+
+        // Back button
+        Button backButton = new Button("Inapoi la Pagina Principala");
+        backButton.setPrefWidth(200);
+        backButton.setStyle("-fx-background-color: rgba(0,123,255,0.85); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 10 20 10 20;");
+        backButton.setOnAction(e -> stage.setScene(mainScene));
+
+        VBox root = new VBox(30, title, fileSelectors, processDeleteButton, backButton);
+        root.setAlignment(Pos.CENTER);
+        root.setPadding(new Insets(20));
+        root.setStyle("-fx-background-color: linear-gradient(to bottom right, rgba(0,100,200,0.85), rgba(0,180,255,0.85));");
+
+        return new Scene(root, 600, 500);
+    }
+
+    private boolean deleteShopCenterData(File excelFile, String shopCenter) {
+        // TODO: Implement the logic to delete data for the specified shop center
+        // This is a placeholder - you'll need to implement the actual deletion logic
+        // based on your Excel structure and requirements
+        try {
+            // Example: Open workbook, find rows with matching shop center, delete them
+            // Return true if successful, false otherwise
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     private void resetStaticVariables(){
         WeekendShift.size = 0;

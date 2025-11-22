@@ -328,8 +328,9 @@ public class HolidayModify {
                                 }
                             }
 
-                            //System.out.println(" asta e " + row.getCell(daysInMonth + 15).getStringCellValue());
                             row.getCell(daysInMonth + 15).setCellValue(awayCellValue);
+                            row.getCell(daysInMonth + 5).setCellValue(getWorkingHoursTotal(row));
+                            // set the total working hours
                         }
 
 
@@ -431,5 +432,26 @@ public class HolidayModify {
         t = Normalizer.normalize(t, Normalizer.Form.NFD).replaceAll("\\p{M}", "");
         t = t.replaceAll("\\s+", " ").trim();
         return t.toUpperCase();
+    }
+
+    private static int getWorkingHoursTotal(Row row) {
+        int total = 0;
+        for (int i = 5; i < row.getLastCellNum(); i++) { // starting from column F (index 5)
+            Cell cell = row.getCell(i);
+            if (cell != null && cell.getCellType() == CellType.NUMERIC) {
+                total += (int) cell.getNumericCellValue();
+                continue;
+            }
+
+
+                try {
+                    assert cell != null;
+                    total += Integer.parseInt( cell.getStringCellValue() );
+                } catch (NumberFormatException e) {
+                    // do nothing
+                }
+
+        }
+        return total;
     }
 }
