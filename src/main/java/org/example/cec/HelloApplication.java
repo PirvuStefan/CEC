@@ -474,7 +474,7 @@ public class HelloApplication extends Application {
                 return;
             }
 
-            // TODO: Implement deletion logic here
+
             // Call a method to delete data for the specified shop center
             boolean success = deleteShopCenterData(selectedFile[0], shopInput.getText().trim());
 
@@ -501,15 +501,17 @@ public class HelloApplication extends Application {
     }
 
     private boolean deleteShopCenterData(File excelFile, String shopCenter) {
-        // TODO: Implement the logic to delete data for the specified shop center
-        // This is a placeholder - you'll need to implement the actual deletion logic
+
         // based on your Excel structure and requirements
         try {
             // Example: Open workbook, find rows with matching shop center, delete them
             // Return true if successful, false otherwise
+                DeleteModify.Launch(excelFile, shopCenter);
+                resetStaticVariables();
             return true;
         } catch (Exception e) {
             e.printStackTrace();
+            resetStaticVariables();
             return false;
         }
     }

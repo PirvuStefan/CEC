@@ -9,10 +9,12 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import static org.example.cec.HelloApplication.daysInMonth;
+
 
 public class DeleteModify {
 
-    static File Launch(File mainSheet, String center, int daysInMonth) {
+    static File Launch(File mainSheet, String center) {
 
         try (FileInputStream fis = new FileInputStream(mainSheet);
              Workbook workbook = WorkbookFactory.create(fis)) {
@@ -27,11 +29,14 @@ public class DeleteModify {
                 name = name.trim().toUpperCase();
                 if (name.isEmpty()) break;
 
-                String magazin = (row.getCell(3) != null) ? row.getCell(3).getStringCellValue() : "";
+                String magazin = (row.getCell(1) != null) ? row.getCell(1).getStringCellValue() : "";
                 if (magazin == null || magazin.isEmpty()) break;
-                magazin = magazin.trim().toUpperCase();
+                magazin = magazin.trim().toLowerCase();
+                center = center.trim().toLowerCase();
                 if( magazin.equals(center) ){
                     //call delete function for this row
+                    System.out.println("Deleting holidays for employee: " + name + " at store: " + magazin);
+                    deleteRow(sheet, i);
                 }
 
 
@@ -58,7 +63,7 @@ public class DeleteModify {
 
     }
 
-    void deleteRow(Sheet sheet, int rowIndex, int daysInMonth) {
+    static void deleteRow(Sheet sheet, int rowIndex) {
         // we aim to delete the progress from that row
 
         Row row = sheet.getRow(rowIndex);
@@ -72,6 +77,7 @@ public class DeleteModify {
                 String colorStatus = checkColorValability(cell);
                 if( colorStatus.equals("DELETE_COLOR") ){
                     // we do set the cell to white color
+                    System.out.println("Deleting holidays for employee: " + cell.getStringCellValue() + " at store: " + i);
                     CellStyle newStyle = sheet.getWorkbook().createCellStyle();
                     newStyle.cloneStyleFrom(cell.getCellStyle());
                     XSSFColor whiteColor = new XSSFColor(new java.awt.Color(255, 255, 255), null);
@@ -88,7 +94,7 @@ public class DeleteModify {
 
 
         }
-        resetHoursWorked(row, daysInMonth);
+        resetHoursWorked(row);
 
 
 
@@ -122,7 +128,7 @@ public class DeleteModify {
         return "DELETE_PROGRESS"; // white, yellow or purple ( normal day, weekend, holiday progress)
     }
 
-    private static void resetHoursWorked(Row row, int daysInMonth) {
+    private static void resetHoursWorked(Row row) {
 
         row.getCell(daysInMonth + 5).setCellValue(""); // reset total hours
         row.getCell(daysInMonth + 6).setCellValue(""); // reset CM days
