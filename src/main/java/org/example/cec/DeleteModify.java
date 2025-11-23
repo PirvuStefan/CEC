@@ -1,6 +1,7 @@
 package org.example.cec;
 
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 
 import java.io.File;
@@ -59,35 +60,74 @@ public class DeleteModify {
 
     void deleteRow(Sheet sheet, int rowIndex, int daysInMonth) {
         // we aim to delete the progress from that row
+
+        Row row = sheet.getRow(rowIndex);
         for( int i = 0 ; i <= daysInMonth + 4 ; i++){
             Cell cell = sheet.getRow(rowIndex).getCell(i);
-            if(cell != null){
-                cell.setCellValue("");
+
+            if(cell == null) continue;
+
+
+            if( i >= 5 ){ // from column F to the end of month
+                String colorStatus = checkColorValability(cell);
+                if( colorStatus.equals("DELETE_COLOR") ){
+                    // we do set the cell to white color
+                    CellStyle newStyle = sheet.getWorkbook().createCellStyle();
+                    newStyle.cloneStyleFrom(cell.getCellStyle());
+                    XSSFColor whiteColor = new XSSFColor(new java.awt.Color(255, 255, 255), null);
+                    ((XSSFCellStyle) newStyle).setFillForegroundColor(whiteColor);
+                    newStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                    cell.setCellStyle(newStyle);
+                }
+                else if(colorStatus.equals("DELETE_PROGRESS")) {
+                    // we do set the cell to empty
+                    cell.setCellValue("");
+                }
             }
+
+
+
         }
+        resetHoursWorked(row, daysInMonth);
+
+
+
     }
 
 
     private static String checkColorValability(Cell cell){
-
-        // here we check if the color is white , bluemarin
-        String s;
-        if( cell == null ) return null;
-        XSSFColor color = (XSSFColor) cell.getCellStyle().getFillForegroundColorColor();
-        String rgbHex = "#FFFFFF"; // default white color
-        if(color != null){
+        if (cell == null) return null;
+        XSSFColor color = null;
+        if (cell.getCellStyle() != null) {
+            color = (XSSFColor) cell.getCellStyle().getFillForegroundColorColor();
+        }
+        String rgbHex = "#FFFFFF";
+        if (color != null) {
             String hexColor = color.getARGBHex();
-            rgbHex = hexColor.substring(2, 8); // remove alpha channel
-            rgbHex = "#" + rgbHex.toUpperCase();
+            if (hexColor != null && hexColor.length() >= 8) {
+                rgbHex = "#" + hexColor.substring(2, 8).toUpperCase();
+            } else {
+                byte[] rgb = color.getRGB();
+                if (rgb != null && rgb.length == 3) {
+                    rgbHex = String.format("#%02X%02X%02X", rgb[0] & 0xFF, rgb[1] & 0xFF, rgb[2] & 0xFF);
+                }
+            }
         }
 
-        if( rgbHex.equals("FFFFF")) return "WHITE";
-        if( rgbHex.equals("002060")) return "BLUEMARIN";
-        if( rgbHex.equals("FFFF00")) return "YELLOW";
-        if( rgbHex.equals("00FFFF")) return "AQUA";
-        return "OTHER";
+        // holiday colors -> DELETE
+        if (rgbHex.equals("#00B050") || rgbHex.equals("#00FFFF") || rgbHex.equals("#FFA500") || rgbHex.equals("#FF0000"))
+            return "DELETE_COLOR";
+        if (rgbHex.equals("#002060"))
+            return "BLUEMARIN";
+        return "DELETE_PROGRESS"; // white, yellow or purple ( normal day, weekend, holiday progress)
+    }
 
+    private static void resetHoursWorked(Row row, int daysInMonth) {
 
-
+        row.getCell(daysInMonth + 5).setCellValue(""); // reset total hours
+        row.getCell(daysInMonth + 6).setCellValue(""); // reset CM days
+        row.getCell(daysInMonth + 7).setCellValue(""); // reset CO days
+        row.getCell(daysInMonth + 9).setCellValue(""); // reset weekend shifts worked
+        row.getCell(daysInMonth + 10).setCellValue(""); // reset sarbatoai shifts worked
     }
 }
