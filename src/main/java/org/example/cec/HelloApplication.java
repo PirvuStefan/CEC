@@ -433,11 +433,32 @@ public class HelloApplication extends Application {
         shopInput.setPromptText("Numele centrului comercial...");
         shopInput.setStyle("-fx-background-radius: 8; -fx-background-color: white;");
 
+        Label daysLabel = new Label("Cate zile sunt in luna asta?");
+        daysLabel.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
+        TextField daysInput = new TextField();
+        daysInput.setPromptText("numarul de zile (e.g. 30)");
+        daysInput.setStyle("-fx-background-radius: 8; -fx-background-color: white;");
+        daysInput.textProperty().addListener((obs, oldVal, newVal) -> {
+            try {
+                int val = Integer.parseInt(newVal.trim());
+                if (val >= 1 && val <= 31) {
+                    daysInMonth = val;
+                }
+            } catch (NumberFormatException ignored) {
+                showAlert("Te rog introdu un numar valid intre 1 si 31 pentru zilele din luna!");
+                daysInput.clear();
+            }
+        });
+
         HBox shopBox = new HBox(10, shopLabel, shopInput);
         shopBox.setAlignment(Pos.CENTER);
         HBox.setHgrow(shopInput, Priority.ALWAYS);
 
-        fileSelectors.getChildren().addAll(excelBox, shopBox);
+        HBox daysBox = new HBox(10, daysLabel, daysInput);
+        daysBox.setAlignment(Pos.CENTER);
+        HBox.setHgrow(daysInput, Priority.ALWAYS);
+
+        fileSelectors.getChildren().addAll(excelBox, shopBox, daysBox);
 
         // Process button
         Button processDeleteButton = new Button("Proceseaza Stergerea");
