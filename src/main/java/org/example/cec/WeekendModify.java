@@ -225,6 +225,8 @@ public class WeekendModify {
                     if(sarbatoriCount < 4) row.getCell(daysInMonth + 10).setCellValue( 8 * sarbatoriCount );
                     else row.getCell(daysInMonth + 10).setCellValue(32);
 
+                    row.getCell(daysInMonth + 5).setCellValue(getWorkingHoursTotal(row));
+
                     System.out.println("Main sheet updated with weekend shifts successfully! " + employeeName);break; // exit the loop after modifying the employee
 
                 }
@@ -505,6 +507,29 @@ public class WeekendModify {
             }
         }
         return count;
+    }
+
+    private static int getWorkingHoursTotal(Row row) {
+        int total = 0;
+        for (int j = 1; j <= daysInMonth; j++) { // starting from column F (index 5)
+            int i = j + 4;
+            if (i >= row.getLastCellNum()) break; // skip if column index is
+            Cell cell = row.getCell(i);
+            if (cell != null && cell.getCellType() == CellType.NUMERIC) {
+                total += (int) cell.getNumericCellValue();
+                continue;
+            }
+
+
+            try {
+                assert cell != null;
+                total += Integer.parseInt( cell.getStringCellValue() );
+            } catch (NumberFormatException e) {
+                // do nothing
+            }
+
+        }
+        return total;
     }
 
 
