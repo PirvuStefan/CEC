@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.example.cec.HelloApplication.daysInMonth;
+import static org.example.cec.HelloApplication.normalizeName;
 
 public class WeekendModify {
 

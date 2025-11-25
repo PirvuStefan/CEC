@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static org.example.cec.HelloApplication.daysInMonth;
+import static org.example.cec.HelloApplication.normalizeName;
 
 
 public class DeleteModify {
@@ -33,6 +34,9 @@ public class DeleteModify {
                 if (magazin == null || magazin.isEmpty()) break;
                 magazin = magazin.trim().toLowerCase();
                 center = center.trim().toLowerCase();
+
+                magazin = normalizeName(magazin).replaceAll("[\\s\\-]+", "");
+                center = normalizeName(center).replaceAll("[\\s\\-]+", "");
                 if( magazin.equals(center) ){
                     //call delete function for this row
                     System.out.println("Deleting holidays for employee: " + name + " at store: " + magazin);

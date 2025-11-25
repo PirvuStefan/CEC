@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.text.Normalizer;
 
 public class HelloApplication extends Application {
 
@@ -522,6 +523,19 @@ public class HelloApplication extends Application {
         daysInMonth = 0;
         WeekendShift.sarbatoriSize = 0;
         WeekendShift.sarbatoare = new int[32];
+    }
+
+    static String normalizeName(String s) {
+        if (s == null) return "";
+        // Normalize to composed form, replace NBSP with normal space, remove invisible chars
+        String t = Normalizer.normalize(s, Normalizer.Form.NFKC);
+        t = t.replace('\u00A0', ' ');                // NBSP -> normal space
+        t = t.replaceAll("[\\u200B\\uFEFF\\p{Cf}]", ""); // zero-width + other format chars
+        t = t.replaceAll("[*?]", "");                // keep existing removal of * and ?
+        // Remove diacritics, collapse multiple whitespace and trim
+        t = Normalizer.normalize(t, Normalizer.Form.NFD).replaceAll("\\p{M}", "");
+        t = t.replaceAll("\\s+", " ").trim();
+        return t.toUpperCase();
     }
 
 
