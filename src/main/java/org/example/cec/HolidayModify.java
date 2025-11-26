@@ -34,7 +34,6 @@ public class HolidayModify {
             Sheet sheet = workbook.getSheetAt(0);
             // Go to row 3 (index 3, since it's 0-based), starting from column F (index 5), and find the last column with an integer (day of month)
             Row headerRow = sheet.getRow(3);
-            Row first = sheet.getRow(0);
 
             for (int rowIndex = 0; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
                 Row row = sheet.getRow(rowIndex);

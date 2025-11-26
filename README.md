@@ -1,6 +1,7 @@
 # Central Excel Controller (CEC)
 
 A JavaFX desktop application designed to automate and streamline the management of employee shifts, weekend schedules, and vacation/holiday tracking through Excel file processing.
+Please read the Functionalities.md for a more in depth explanation of the code and algorithms used in this project.
 
 ## Project Overview
 
@@ -32,7 +33,7 @@ The Central Excel Controller (CEC) is a powerful tool created to help managers a
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/YourUsername/CEC.git
+   git clone https://github.com/PirvuStefan/CEC.git
    cd CEC
    ```
 
@@ -45,6 +46,8 @@ The Central Excel Controller (CEC) is a powerful tool created to help managers a
    ```bash
    mvn javafx:run
    ```
+   
+This will build a fat JAR file located in the `target` directory.Also know in the java community as an uber jar.
 
 ## Usage
 
@@ -312,6 +315,18 @@ CEC/
 └── README.md
 ```
 
+
+## Delete Progress Functionality
+
+The 'Delete Progress' button allows users to erase every progress from the people that belong to a specific store/location in the main Excel sheet. This is useful when you want to reset the data for a particular store without affecting others.
+### How It Works
+1. **Select Store**: Choose the store/location from the dropdown menu.
+2. **Delete Data**: Click the 'Delete Progress' button to remove all progress data for employees associated with the selected store.
+3. **Data Removal**: The application will clear all progress-related entries (shifts, holidays, etc.) for the employees of that store in the main excel sheet.
+4. **Confirmation**: A confirmation message will be displayed once the data has been successfully deleted.
+
+This comes in handy when you want to 'rollback' the changes made to a specific store without affecting the data of other stores in the same file.
+
 ## Important Notes
 
 ### File Format Requirements
@@ -348,24 +363,9 @@ CEC/
 - Verify period format is `DD*DD`
 - Ensure leave type code is valid
 
-## Contributing
-
-Contributions are welcome! Please:
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Support
-
-For issues, questions, or suggestions:
-- Open an issue on GitHub
-- Contact: [your-email@example.com]
 
 ## Changelog
 
@@ -378,4 +378,4 @@ For issues, questions, or suggestions:
 
 ---
 
-**Made with ❤️ for streamlined employee scheduling**
+

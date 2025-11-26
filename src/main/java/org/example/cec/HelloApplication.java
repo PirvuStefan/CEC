@@ -445,6 +445,7 @@ public class HelloApplication extends Application {
                 if (val >= 1 && val <= 31) {
                     daysInMonth = val;
                 }
+
             } catch (NumberFormatException ignored) {
                 showAlert("Te rog introdu un numar valid intre 1 si 31 pentru zilele din luna!");
                 daysInput.clear();
@@ -472,6 +473,10 @@ public class HelloApplication extends Application {
             }
             if (shopInput.getText().trim().isEmpty()) {
                 showAlert("Te rog introdu numele centrului comercial!");
+                return;
+            }
+            if( daysInMonth == 0 ){
+                showAlert("Te rog introdu numarul de zile din luna!");
                 return;
             }
 

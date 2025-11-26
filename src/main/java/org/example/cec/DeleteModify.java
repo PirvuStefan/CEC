@@ -22,6 +22,10 @@ public class DeleteModify {
 
             Sheet sheet = workbook.getSheetAt(0);
 
+
+            center = normalizeName(center).replaceAll("[\\s\\-]+", "");
+            System.out.println(center);
+
             for(int i = 0 ; i <= sheet.getLastRowNum(); i++){
                 Row row = sheet.getRow(i);
                 if(row == null) break;
@@ -32,11 +36,7 @@ public class DeleteModify {
 
                 String magazin = (row.getCell(1) != null) ? row.getCell(1).getStringCellValue() : "";
                 if (magazin == null || magazin.isEmpty()) break;
-                magazin = magazin.trim().toLowerCase();
-                center = center.trim().toLowerCase();
-
                 magazin = normalizeName(magazin).replaceAll("[\\s\\-]+", "");
-                center = normalizeName(center).replaceAll("[\\s\\-]+", "");
                 if( magazin.equals(center) ){
                     //call delete function for this row
                     System.out.println("Deleting holidays for employee: " + name + " at store: " + magazin);
@@ -57,12 +57,12 @@ public class DeleteModify {
                 workbook.write(fos);
             }
 
-            System.out.println("Main sheet updated with holidays successfully!");
+            System.out.println("Modifications completed successfully. ( Delete the progress for center: " + center + " )");
 
         } catch (IOException e) { // Added InvalidFormatException
             e.printStackTrace();
         }
-        System.out.println("Holiday modification completed.");
+
         return mainSheet;
 
     }
@@ -71,14 +71,14 @@ public class DeleteModify {
         // we aim to delete the progress from that row
 
         Row row = sheet.getRow(rowIndex);
-        for( int i = 0 ; i <= daysInMonth + 4 ; i++){
+        for( int j = 1 ; j <= daysInMonth  ; j++){
+            int i = j + 4; // because the days start from column F (index 5)
             Cell cell = sheet.getRow(rowIndex).getCell(i);
 
             if(cell == null) continue;
 
 
-            if( i >= 5 ){ // from column F to the end of month
-                String colorStatus = checkColorValability(cell);
+            String colorStatus = checkColorValability(cell);
                 if( colorStatus.equals("DELETE_COLOR") ){
                     // we do set the cell to white color
                     System.out.println("Deleting holidays for employee: " + cell.getStringCellValue() + " at store: " + i);
@@ -93,7 +93,7 @@ public class DeleteModify {
                     // we do set the cell to empty
                     cell.setCellValue("");
                 }
-            }
+
 
 
 
@@ -127,9 +127,9 @@ public class DeleteModify {
         // holiday colors -> DELETE
         if (rgbHex.equals("#00B050") || rgbHex.equals("#00FFFF") || rgbHex.equals("#FFA500") || rgbHex.equals("#FF0000"))
             return "DELETE_COLOR";
-        if (rgbHex.equals("#002060"))
-            return "BLUEMARIN";
-        return "DELETE_PROGRESS"; // white, yellow or purple ( normal day, weekend, holiday progress)
+        if (rgbHex.equals("#002060") || rgbHex.equals("#FFFFFF")) // if we do have white or dark blue ( start day of the contract ) , we do absolutely nothing
+            return "NOT_DELETE";
+        return "DELETE_PROGRESS"; //yellow or purple ( normal day, weekend, holiday progress)
     }
 
     private static void resetHoursWorked(Row row) {
