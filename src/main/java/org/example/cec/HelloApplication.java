@@ -25,7 +25,7 @@ public class HelloApplication extends Application {
     private File weekendSheet;
     private File holidaysSheet;
     static int daysInMonth;
-    private int firstDayOfWeekend;
+    private boolean reset;
     // we need to know how many days are in a month and what is the first day of the first weekend ( like to know how to count and take in consideration the weekends when we process the data)
 
     @Override
@@ -55,6 +55,10 @@ public class HelloApplication extends Application {
         daysInput.setPromptText("numarul de zile (e.g. 30)");
         daysInput.setStyle("-fx-background-radius: 8; -fx-background-color: white;");
         daysInput.textProperty().addListener((obs, oldVal, newVal) -> {
+            if(reset){
+                reset = false ;
+                return;
+            }
             try {
                 int val = Integer.parseInt(newVal.trim());
                 if (val >= 1 && val <= 31) {
@@ -528,6 +532,7 @@ public class HelloApplication extends Application {
         daysInMonth = 0;
         WeekendShift.sarbatoriSize = 0;
         WeekendShift.sarbatoare = new int[32];
+        reset = true;
     }
 
     static String normalizeName(String s) {

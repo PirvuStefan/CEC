@@ -363,18 +363,15 @@ This comes in handy when you want to 'rollback' the changes made to a specific s
 - Verify period format is `DD*DD`
 - Ensure leave type code is valid
 
+**Additional**
+- This will most probably not work on your system since you do not know the exact file structure and formats used in your organization. Please adapt accordingly by reading the Functionalities.md file and the code itself.
+- The application is build for a specific use cases and excel sheets that are used in a specific organization.Those sheets might differ from the ones you have.For legal reasons I cannot share those files publicly.
+- The application currently supports only `.xlsx` files (Excel 2007 and later).
+- If you do want to extend the application to support your own file formats, please do not, this is strictly forbidden by the license agreement.
+
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Changelog
-
-### Version 1.0.0 (Current)
-- Initial release
-- Weekend shift allocation
-- Holiday management
-- Multi-store support
-- Automated archiving
+This project is licensed under a License - see the LICENSE file for details.
 
 ---
 
