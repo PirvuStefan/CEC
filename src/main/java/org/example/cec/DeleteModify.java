@@ -139,5 +139,16 @@ public class DeleteModify {
         row.getCell(daysInMonth + 7).setCellValue(""); // reset CO days
         row.getCell(daysInMonth + 9).setCellValue(""); // reset weekend shifts worked
         row.getCell(daysInMonth + 10).setCellValue(""); // reset sarbatoai shifts worked
+
+        // i think we also should put the "8" on white cell that remain white after deleting the progress, as they are normal working days
+        for( int i = 1 ; i <= daysInMonth  ; i++) {
+
+            int colIndex = i + 4; // because we start from column F (index 5)
+            Cell cell = row.getCell(colIndex);
+            if (cell == null) continue;
+
+
+        }
+
     }
 }

@@ -147,18 +147,20 @@ public class HelloApplication extends Application {
         });
 
 
-        Button deleteButton = new Button("Sterge Datele");
-        deleteButton.setPrefWidth(200);
-        styleProcessButton(deleteButton);
-        deleteButton.setOnAction(e -> {
-            stage.setScene(createDeleteDataScene(stage, stage.getScene()));
-        });
+        //Button deleteButton = new Button("Sterge Datele");
+        //deleteButton.setPrefWidth(200);
+        //styleProcessButton(deleteButton);
+        //deleteButton.setOnAction(e -> {
+          //  stage.setScene(createDeleteDataScene(stage, stage.getScene()));
+        //});
+
+        // disable delete button for now
 
 
         Button instructionsButton = new Button("Cum folosim aplicatia?");
         instructionsButton.setPrefWidth(200);
         instructionsButton.setStyle("-fx-background-color: rgba(0,123,255,0.85); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 10 20 10 20;");
-        VBox root = new VBox(30, title, fileSelectors, processButton, deleteButton, instructionsButton);
+        VBox root = new VBox(30, title, fileSelectors, processButton, instructionsButton);
         root.setAlignment(Pos.CENTER);
         root.setPadding(new Insets(20));
         root.setStyle("-fx-background-color: linear-gradient(to bottom right, rgba(0,100,200,0.85), rgba(0,180,255,0.85));");

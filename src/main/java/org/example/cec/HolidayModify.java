@@ -422,7 +422,7 @@ public class HolidayModify {
     }
 
 
-    private static int getWorkingHoursTotal(Row row) {
+    static int getWorkingHoursTotal(Row row) {
         int total = 0;
         for (int j = 1; j <= daysInMonth; j++) { // starting from column F (index 5)
             int i = j + 4;
