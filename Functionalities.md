@@ -357,6 +357,7 @@ static File Launch(File mainSheet, File weekendSheet){
 ### Shift Generation Algorithm
 
 The algorithm ensures fair distribution by assigning shifts to days with the minimum number of already assigned employees:
+This assures the normal distribution of shifts among all the employees from a specific store using a Greedy approach.
 
 ```java
 private static int[] generateLine(int[][] x, int lineIndex, int[] numberOfShifts, int[] pos) {
