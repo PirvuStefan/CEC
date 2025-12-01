@@ -7,6 +7,10 @@ Please read the Functionalities.md for a more in depth explanation of the code a
 
 The Central Excel Controller (CEC) is a powerful tool created to help managers and HR departments efficiently handle employee scheduling across multiple stores/locations. The application processes Excel files containing employee information and automatically:
 
+<img width="1148" height="510" alt="Screenshot 2025-12-01 at 16 38 41" src="https://github.com/user-attachments/assets/02c40204-b19a-4459-9bf9-689495507a1e" />
+
+
+
 - Allocates weekend shifts fairly among employees
 - Manages vacation days, medical leave, and other absences
 - Ensures compliance with work regulations and employee history
@@ -59,6 +63,14 @@ This will build a fat JAR file located in the `target` directory.Also know in th
    - **Holidays Sheet**: Contains vacation requests and leave information
 4. Click "Proceseaza Datele" (Process Data)
 5. Find your processed files in the `arhiva` folder
+
+## Base Functionality
+
+### Overview
+If the program has not done this on the main file before ( less than 15% of employees assigned ), all the employees that do not have a skip color will be assigned a shift on every normal-day work shift.
+
+<img width="907" height="391" alt="Screenshot 2025-12-01 at 16 40 44" src="https://github.com/user-attachments/assets/54add17b-246f-443c-8668-97398bd23bc9" />
+
 
 ## Weekend Functionality
 
