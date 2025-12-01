@@ -70,6 +70,7 @@ This will build a fat JAR file located in the `target` directory.Also know in th
 If the program has not done this on the main file before ( less than 15% of employees assigned ), all the employees that do not have a skip color will be assigned a shift on every normal-day work shift.
 
 <img width="907" height="391" alt="Screenshot 2025-12-01 at 16 40 44" src="https://github.com/user-attachments/assets/54add17b-246f-443c-8668-97398bd23bc9" />
+If the employee does not have a start day market with `navy blue`, the start day will be the first day of the month (their employment has started before the current month).
 
 
 ## Weekend Functionality
