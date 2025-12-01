@@ -6,7 +6,7 @@ module org.example.cec {
     requires org.apache.poi.ooxml;
     requires java.desktop;
     requires org.apache.poi.poi;
-    requires org.example.cec;
+
 
 
     opens org.example.cec to javafx.fxml;
