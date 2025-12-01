@@ -3,7 +3,7 @@
 A JavaFX desktop application designed to automate and streamline the management of employee shifts, weekend schedules, and vacation/holiday tracking through Excel file processing.
 Please read the Functionalities.md for a more in depth explanation of the code and algorithms used in this project.
 
-<img width="645" height="429" alt="Screenshot 2025-10-09 at 16 11 04" src="https://github.com/user-attachments/assets/e318c4a2-b22a-47af-a13e-1396555e6a57" />
+<img width="907" height="391" alt="Screenshot 2025-10-09 at 16 11 04" src="https://github.com/user-attachments/assets/e318c4a2-b22a-47af-a13e-1396555e6a57" />
 
 
 ## Project Overview
