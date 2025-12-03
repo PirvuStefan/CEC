@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.example.cec.HelloApplication.daysInMonth;
+import static org.example.cec.WeekendShift.whatDay;
+
 import static org.example.cec.HelloApplication.normalizeName;
 
 public class WeekendModify {
@@ -141,7 +143,11 @@ public class WeekendModify {
                                     }
                                 }
 
-                                if(!checkColor(row.getCell(colIndex + 2)) && day + 2 <= daysInMonth) skip = true; // if the cell is not white, we skip it
+                                if( day + 2 > daysInMonth ) skip = true;
+
+                                if(!checkColor(row.getCell(colIndex + 2))) skip = true; // if the cell is not white, we skip it
+
+                                if( day + 2 > daysInMonth ) skip = true;
 
 
                             }
@@ -153,7 +159,11 @@ public class WeekendModify {
                                         break;
                                     }
                                 }
-                                if(!checkColor(row.getCell(colIndex - 2)) && day - 2 >= 1) skip = true; // if the cell is not white, we skip it
+
+                                if( day - 2 < 1 ) skip = true;
+
+
+                                if(!checkColor(row.getCell(colIndex - 2))) skip = true; // if the cell is not white, we skip it
                             }
                             if(skip) continue;
                             System.out.println("Modifying shift for " + employeeName + " on day " + day + " at column index " + colIndex + " with shift type " + whatDay(day, pos));
@@ -429,21 +439,7 @@ public class WeekendModify {
 
 
 
-    private static String whatDay(int x, int[] v){
-        // testam ce e tip de zi este y
 
-        // v[i] si v[i+1] si v[i+2]
-        if( x == v[0] && v[0] + 1 != v[1]) return "duminicaF";
-        if( x == v[WeekendShift.size - 1] && v[WeekendShift.size - 1] - 1 != v[WeekendShift.size - 2]) return "sambataF";
-
-        for(int i = 0; i < WeekendShift.size; i++)
-            if( v[i] == x && i + 1 < WeekendShift.size && v[i] + 1 == v[i + 1]) return "sambata";
-            else if( v[i] == x && i - 1 >= 0 && v[i] - 1 == v[i - 1]) return "duminica";
-
-        return "none";
-
-
-    }
 
     private static int calculateMin(int[][] x, int lineIndex){
         int minim = Integer.MAX_VALUE;
@@ -488,7 +484,7 @@ public class WeekendModify {
                 if( WeekendShift.pos[j] >= firstDay ){
                     int colIndex = WeekendShift.pos[j] + 4;
                     if( colIndex >= row.getLastCellNum() ) break; // skip if column index is out of bounds
-                    if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex + 2)) && !row.getCell(colIndex).getStringCellValue().equals("8") && !row.getCell(colIndex + 1).getStringCellValue().equals("8") ){
+                    if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex + 2)) && !row.getCell(colIndex).getStringCellValue().equals("8") && !row.getCell(colIndex + 1).getStringCellValue().equals("8") && WeekendShift.pos[j] + 2 <= daysInMonth ){
                         row.getCell(colIndex).setCellValue(8);
                         count++;
                         break;
@@ -499,7 +495,7 @@ public class WeekendModify {
                 if( WeekendShift.pos[j] >= firstDay ){
                     int colIndex = WeekendShift.pos[j] + 4;
                     if( colIndex >= row.getLastCellNum() ) break; // skip if column index is out of bounds
-                    if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex - 2)) && !row.getCell(colIndex).getStringCellValue().equals("8") && !row.getCell(colIndex - 1).getStringCellValue().equals("8") ){
+                    if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex - 2)) && !row.getCell(colIndex).getStringCellValue().equals("8") && !row.getCell(colIndex - 1).getStringCellValue().equals("8") && WeekendShift.pos[j] - 2 >= 1 ){
                         row.getCell(colIndex).setCellValue(8);
                         count++;
                         break;

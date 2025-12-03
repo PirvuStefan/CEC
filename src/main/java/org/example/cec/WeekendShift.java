@@ -59,6 +59,29 @@ public class WeekendShift {
             }
             System.out.print(pos[i] + " ");
         }
+
+        for(int i = 0;i < size ;i++){
+
+            if(whatDay(pos[i],pos).equals("dumincaF")){
+
+
+                for(int j = 0; j < size; j++){
+                    pos[j] = pos[j+1];
+                }
+
+                size--;
+
+
+
+            }
+            if(whatDay(pos[i],pos).equals("sambataF")) size--;
+
+
+            // if the first day of the month is a sunday, we remove it from the list by shifting left
+            // if the last day of the month is a saturday, we just decrease the size ( no need to shift for getting rid of it )
+
+
+        }
         sarbatoriSize = sarbatoriCount;
         System.out.println("SARBATORI : " + sarbatoriSize);
     }
@@ -92,6 +115,22 @@ public class WeekendShift {
             rgbHex = "#" + rgbHex.toUpperCase();
         }
         return rgbHex.equals("#FFFFFF");
+    }
+
+    static String whatDay(int x, int[] v){
+        // testam ce e tip de zi este y
+
+        // v[i] si v[i+1] si v[i+2]
+        if( x == v[0] && v[0] + 1 != v[1]) return "duminicaF";
+        if( x == v[WeekendShift.size - 1] && v[WeekendShift.size - 1] - 1 != v[WeekendShift.size - 2]) return "sambataF";
+
+        for(int i = 0; i < WeekendShift.size; i++)
+            if( v[i] == x && i + 1 < WeekendShift.size && v[i] + 1 == v[i + 1]) return "sambata";
+            else if( v[i] == x && i - 1 >= 0 && v[i] - 1 == v[i - 1]) return "duminica";
+
+        return "none";
+
+
     }
 
 
