@@ -175,7 +175,7 @@ public class ParseWorkingHours {
 
     private static boolean checkColor( Cell cell ){
         String s;
-        if( cell == null ) s =  "#FFFFFF";
+        if( cell == null ) return true;
         XSSFColor color = (XSSFColor) cell.getCellStyle().getFillForegroundColorColor();
         String rgbHex = "#FFFFFF"; // default white color
         if(color != null){
@@ -185,4 +185,6 @@ public class ParseWorkingHours {
         }
         return ( rgbHex.equals("#FFFFFF") || rgbHex.equals("#002060") ); // white or bluemarin
     }
+
+
 }

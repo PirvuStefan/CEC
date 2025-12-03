@@ -452,7 +452,7 @@ public class WeekendModify {
         return minim;
     }
 
-    private static boolean checkColor(Cell cell){
+    static boolean checkColor(Cell cell){
         String s;
         if( cell == null ) return true;
         XSSFColor color = (XSSFColor) cell.getCellStyle().getFillForegroundColorColor();
@@ -465,7 +465,7 @@ public class WeekendModify {
         return ( rgbHex.equals("#FFFFFF") || rgbHex.equals("#002060") ); // white or bluemarin
     }
 
-    private static String normalizeName(String s) {
+    static String normalizeName(String s) {
         if (s == null) return "";
         // Normalize to composed form, replace NBSP with normal space, remove invisible chars
         String t = Normalizer.normalize(s, Normalizer.Form.NFKC);
@@ -528,6 +528,8 @@ public class WeekendModify {
         }
         return total;
     }
+
+
 
 
 }
