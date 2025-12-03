@@ -245,7 +245,7 @@ public class HolidayModify {
                                 }
                             }
 
-                            System.out.println(" asta e " + row.getCell(daysInMonth + 7).getStringCellValue());
+
                             row.getCell(daysInMonth + 7).setCellValue(awayCellValue);
 
                         }
@@ -274,7 +274,7 @@ public class HolidayModify {
                                 medicalCellValue = Integer.toString(lastDay - firstDay + 1);
                             }
 
-                            System.out.println(" asta e " + row.getCell(daysInMonth + 6).getStringCellValue());
+
                             row.getCell(daysInMonth + 6).setCellValue(medicalCellValue);
                         }
                         else if( reason.equals("absenta")){
