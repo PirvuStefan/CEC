@@ -28,6 +28,7 @@ public class ParseWorkingHours {
 
 
 
+
     private static boolean testModify(File mainSheet, int daysInMonth) {
 
         int count = 0;
@@ -106,28 +107,7 @@ public class ParseWorkingHours {
                 if (name.isEmpty()) break;
                 if (!checkWorking(row.getCell(2))) continue; // if the employee is currently not working, we skip him
 
-
-                int startDay = 1;
-
-                for (int i = 1; i <= daysInMonth; i++) {
-                    Cell cell = row.getCell(i + 4);
-                    if (cell != null) {
-                        XSSFColor color = (XSSFColor) cell.getCellStyle().getFillForegroundColorColor();
-                        String rgbHex = "#FFFFFF"; // default white color
-                        if (color != null) {
-                            String hexColor = color.getARGBHex();
-                            rgbHex = hexColor.substring(2, 8); // remove alpha channel
-                            rgbHex = "#" + rgbHex.toUpperCase();
-                        }
-                        // Bluemarin (navy blue) is usually #000080
-                        if (rgbHex.equals("#002060") && cell.getCellType() == CellType.NUMERIC && cell.getNumericCellValue() == 8) {
-                            startDay = i;
-                            // Add your logic here for bluemarin cells with value 8
-                        } else if (rgbHex.equals("#002060") && cell.getCellType() == CellType.STRING && cell.getStringCellValue().equals("8")) {
-                            startDay = i;
-                        } else if (rgbHex.equals("#002060")) startDay = i;
-                    }
-                }
+                int startDay = getStartDay(row);
 
                 for (int i = startDay; i <= daysInMonth; i++) {
                     int colIndex = i + 4; // because we start from column F (index 5)
@@ -160,6 +140,33 @@ public class ParseWorkingHours {
         return mainSheet;
     }
 
+
+    static int getStartDay(Row row){
+        int startDay = 1;
+        for (int i = 1; i <= HelloApplication.daysInMonth; i++) {
+            Cell cell = row.getCell(i + 4);
+            if (cell != null) {
+                XSSFColor color = (XSSFColor) cell.getCellStyle().getFillForegroundColorColor();
+                String rgbHex = "#FFFFFF"; // default white color
+                if (color != null) {
+                    String hexColor = color.getARGBHex();
+                    rgbHex = hexColor.substring(2, 8); // remove alpha channel
+                    rgbHex = "#" + rgbHex.toUpperCase();
+                }
+                // Bluemarin (navy blue) is usually #000080
+                if (rgbHex.equals("#002060") && cell.getCellType() == CellType.NUMERIC && cell.getNumericCellValue() == 8) {
+                    startDay = i;
+                    // Add your logic here for bluemarin cells with value 8
+                } else if (rgbHex.equals("#002060") && cell.getCellType() == CellType.STRING && cell.getStringCellValue().equals("8")) {
+                    startDay = i;
+                } else if (rgbHex.equals("#002060")) startDay = i;
+            }
+        }
+        return startDay;
+    }
+
+
+
     private static boolean checkWorking( Cell cell){
         String s;
         if( cell == null ) s =  "#FFFFFF";
@@ -173,7 +180,7 @@ public class ParseWorkingHours {
         return ( rgbHex.equals("#FFFFFF") || rgbHex.equals("#00FFFF") ); // white or aqua
     }
 
-    private static boolean checkColor( Cell cell ){
+    static boolean checkColor( Cell cell ){
         String s;
         if( cell == null ) return true;
         XSSFColor color = (XSSFColor) cell.getCellStyle().getFillForegroundColorColor();

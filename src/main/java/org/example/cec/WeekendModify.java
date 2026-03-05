@@ -33,7 +33,7 @@ public class WeekendModify {
         }
         else System.out.println("Lista de angajati pentru weekend a fost initializata cu succes!");
 
-        ParseWorkingHours.initializeSheet(mainSheet, daysInMonth);
+        //ParseWorkingHours.initializeSheet(mainSheet, daysInMonth);
 
         for( String magazin : weekendEmployees.keySet()){
 
@@ -94,6 +94,10 @@ public class WeekendModify {
 
                 if (normalizedMain.equals(normalizedHoliday)) {
                     // we found the employee, now we can modify the shifts
+
+                    ParseIndividualHours.Parse(row);
+                    // we parse the base working hours for the employees
+
                     int count = 0;
                     int nr = 0 ;
                     int sarbatoriCount = 0;
