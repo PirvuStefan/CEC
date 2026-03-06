@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +15,12 @@ import static org.example.cec.HelloApplication.normalizeName;
 import static org.example.cec.WeekendModify.getWorkingHoursTotal;
 
 public class HolidayModify {
+
+
+    // holiday deletes the shift of the employee for the specific day, if the employee is on holiday, he cannot work on that day, so we need to delete the shift from the mainSheet, we also need to color the cell with the reason of the holiday ( green for concediu, pink for maternitate, blue for medical, orange for absenta and red for demisie)
+    // it also deletes a WeekendShift if the employee is on holiday from monday to friday and the weekend shift on saturday will be discarded,
+    // we do process the holidays first and then the weekends shifts to avoid certain conflicts
+    // TODO: we do need to see if this interferes with the panama shifts, I think that the panama are not pseudo-real and algorihm based and if on the shift is marked with a X, it has actually worked there
 
     static File Launch(File mainSheet, File holidaysSheet) {
         List<Holiday> holidays;
@@ -201,50 +206,7 @@ public class HolidayModify {
                             if (awayCell == null) {
                                 awayCell = row.createCell(daysInMonth + 7, CellType.STRING);
                             }
-                            if (awayCell.getCellType() == CellType.STRING) {
-                                awayCellValue = awayCell.getStringCellValue().trim();
-                                if (awayCellValue.isEmpty()) {
-                                    awayCellValue = Integer.toString(lastDay - firstDay + 1);
-                                } else {
-                                    try {
-                                        int current = Integer.parseInt(awayCellValue);
-                                        awayCellValue = Integer.toString(current + (lastDay - firstDay + 1));
-                                    } catch (NumberFormatException e) {
-                                        awayCellValue = awayCellValue + " + " + (lastDay - firstDay + 1);
-                                    }
-                                }
-                            } else if (awayCell.getCellType() == CellType.NUMERIC) {
-                                int current = (int) awayCell.getNumericCellValue();
-                                awayCellValue = Integer.toString(current + (lastDay - firstDay + 1));
-                            } else {
-                                awayCellValue = Integer.toString(lastDay - firstDay + 1);
-                            }
-
-                            for(int i = firstDay; i <= lastDay; i++){
-                                //for this one we do not neeed to count the weekend days here or the holidays
-                                if( i < 1 || i > 31 ) break;
-                                int colIndex = i + 4; // because we start from column F (index 5)
-                                if (colIndex >= row.getLastCellNum()) break; // skip if column index is out of bounds
-                                Cell cell = row.getCell(colIndex);
-                                if( cell == null ) continue;
-
-                                XSSFColor color = (XSSFColor) headerRow.getCell(colIndex).getCellStyle().getFillForegroundColorColor();
-                                String rgbHex = "#FFFFFF"; // default white color
-                                if (color != null) {
-                                    String hexColor = color.getARGBHex();
-                                    rgbHex = hexColor.substring(2, 8); // remove alpha channel
-                                    rgbHex = "#" + rgbHex.toUpperCase();
-                                }
-                                if (headerRow.getCell(colIndex) != null && ( rgbHex.equals("#FFFF00") || rgbHex.equals("#CC00FF") )) {
-                                    // if is yellow or purple, we do not count it
-                                    try {
-                                        int current = Integer.parseInt(awayCellValue);
-                                        awayCellValue = Integer.toString(current - 1);
-                                    } catch (NumberFormatException e) {
-                                        // if we cannot parse it, we do nothing
-                                    }
-                                }
-                            }
+                            awayCellValue = getAwayValue(headerRow, row, firstDay, lastDay, awayCell);
 
 
                             row.getCell(daysInMonth + 7).setCellValue(awayCellValue);
@@ -284,50 +246,7 @@ public class HolidayModify {
                             if (awayCell == null) {
                                 awayCell = row.createCell(daysInMonth + 15, CellType.STRING);
                             }
-                            if (awayCell.getCellType() == CellType.STRING) {
-                                awayCellValue = awayCell.getStringCellValue().trim();
-                                if (awayCellValue.isEmpty()) {
-                                    awayCellValue = Integer.toString(lastDay - firstDay + 1);
-                                } else {
-                                    try {
-                                        int current = Integer.parseInt(awayCellValue);
-                                        awayCellValue = Integer.toString(current + (lastDay - firstDay + 1));
-                                    } catch (NumberFormatException e) {
-                                        awayCellValue = awayCellValue + " + " + (lastDay - firstDay + 1);
-                                    }
-                                }
-                            } else if (awayCell.getCellType() == CellType.NUMERIC) {
-                                int current = (int) awayCell.getNumericCellValue();
-                                awayCellValue = Integer.toString(current + (lastDay - firstDay + 1));
-                            } else {
-                                awayCellValue = Integer.toString(lastDay - firstDay + 1);
-                            }
-
-                            for(int i = firstDay; i <= lastDay; i++){
-                                //for this one we do not neeed to count the weekend days here or the holidays
-                                if( i < 1 || i > 31 ) break;
-                                int colIndex = i + 4; // because we start from column F (index 5)
-                                if (colIndex >= row.getLastCellNum()) break; // skip if column index is out of bounds
-                                Cell cell = row.getCell(colIndex);
-                                if( cell == null ) continue;
-
-                                XSSFColor color = (XSSFColor) headerRow.getCell(colIndex).getCellStyle().getFillForegroundColorColor();
-                                String rgbHex = "#FFFFFF"; // default white color
-                                if (color != null) {
-                                    String hexColor = color.getARGBHex();
-                                    rgbHex = hexColor.substring(2, 8); // remove alpha channel
-                                    rgbHex = "#" + rgbHex.toUpperCase();
-                                }
-                                if (headerRow.getCell(colIndex) != null && ( rgbHex.equals("#FFFF00") || rgbHex.equals("#CC00FF") )) {
-                                    // if is yellow or purple, we do not count it
-                                    try {
-                                        int current = Integer.parseInt(awayCellValue);
-                                        awayCellValue = Integer.toString(current - 1);
-                                    } catch (NumberFormatException e) {
-                                        // if we cannot parse it, we do nothing
-                                    }
-                                }
-                            }
+                            awayCellValue = getAwayValue(headerRow, row, firstDay, lastDay, awayCell);
 
                             row.getCell(daysInMonth + 15).setCellValue(awayCellValue);
                             row.getCell(daysInMonth + 5).setCellValue(getWorkingHoursTotal(row));
@@ -356,6 +275,55 @@ public class HolidayModify {
         }
         System.out.println("Holiday modification completed.");
         return mainSheet;
+    }
+
+    private static String getAwayValue(Row headerRow, Row row, int firstDay, int lastDay, Cell awayCell) {
+        String awayCellValue;
+        if (awayCell.getCellType() == CellType.STRING) {
+            awayCellValue = awayCell.getStringCellValue().trim();
+            if (awayCellValue.isEmpty()) {
+                awayCellValue = Integer.toString(lastDay - firstDay + 1);
+            } else {
+                try {
+                    int current = Integer.parseInt(awayCellValue);
+                    awayCellValue = Integer.toString(current + (lastDay - firstDay + 1));
+                } catch (NumberFormatException e) {
+                    awayCellValue = awayCellValue + " + " + (lastDay - firstDay + 1);
+                }
+            }
+        } else if (awayCell.getCellType() == CellType.NUMERIC) {
+            int current = (int) awayCell.getNumericCellValue();
+            awayCellValue = Integer.toString(current + (lastDay - firstDay + 1));
+        } else {
+            awayCellValue = Integer.toString(lastDay - firstDay + 1);
+        }
+
+        for(int i = firstDay; i <= lastDay; i++){
+            //for this one we do not neeed to count the weekend days here or the holidays
+            if( i < 1 || i > 31 ) break;
+            int colIndex = i + 4; // because we start from column F (index 5)
+            if (colIndex >= row.getLastCellNum()) break; // skip if column index is out of bounds
+            Cell cell = row.getCell(colIndex);
+            if( cell == null ) continue;
+
+            XSSFColor color = (XSSFColor) headerRow.getCell(colIndex).getCellStyle().getFillForegroundColorColor();
+            String rgbHex = "#FFFFFF"; // default white color
+            if (color != null) {
+                String hexColor = color.getARGBHex();
+                rgbHex = hexColor.substring(2, 8); // remove alpha channel
+                rgbHex = "#" + rgbHex.toUpperCase();
+            }
+            if (headerRow.getCell(colIndex) != null && ( rgbHex.equals("#FFFF00") || rgbHex.equals("#CC00FF") )) {
+                // if is yellow or purple, we do not count it
+                try {
+                    int current = Integer.parseInt(awayCellValue);
+                    awayCellValue = Integer.toString(current - 1);
+                } catch (NumberFormatException e) {
+                    // if we cannot parse it, we do nothing
+                }
+            }
+        }
+        return awayCellValue;
     }
 
     private static List<Holiday> InitialiseHolidaysList(File holidaysSheet) {

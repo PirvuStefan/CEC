@@ -27,6 +27,7 @@ public class HelloApplication extends Application {
     private File mainSheet;
     private File weekendSheet;
     private File holidaysSheet;
+    private File panamaSheet;
     static int daysInMonth;
     static boolean reset;
     // we need to know how many days are in a month and what is the first day of the first weekend ( like to know how to count and take in consideration the weekends when we process the data)
@@ -99,6 +100,7 @@ public class HelloApplication extends Application {
         fileSelectors.getChildren().addAll(
             createFileSelector("Fisierul Principal", file -> mainSheet = file),
             createFileSelector("Fisierul Weekend", file -> weekendSheet = file),
+            createFileSelector("Fisierul Munca Inegala", file -> panamaSheet = file),
             createFileSelector("Fisierul Vacante", file -> holidaysSheet = file)
         );
         fileSelectors.getChildren().add(daysBox);

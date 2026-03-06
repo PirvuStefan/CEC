@@ -15,6 +15,7 @@ import java.util.Map;
 
 import static org.example.cec.HelloApplication.daysInMonth;
 import static org.example.cec.WeekendShift.whatDay;
+import static org.example.cec.HelloApplication.normalizeName;
 
 import static org.example.cec.HelloApplication.normalizeName;
 
@@ -469,18 +470,6 @@ public class WeekendModify {
         return ( rgbHex.equals("#FFFFFF") || rgbHex.equals("#002060") ); // white or bluemarin
     }
 
-    static String normalizeName(String s) {
-        if (s == null) return "";
-        // Normalize to composed form, replace NBSP with normal space, remove invisible chars
-        String t = Normalizer.normalize(s, Normalizer.Form.NFKC);
-        t = t.replace('\u00A0', ' ');                // NBSP -> normal space
-        t = t.replaceAll("[\\u200B\\uFEFF\\p{Cf}]", ""); // zero-width + other format chars
-        t = t.replaceAll("[*?]", "");                // keep existing removal of * and ?
-        // Remove diacritics, collapse multiple whitespace and trim
-        t = Normalizer.normalize(t, Normalizer.Form.NFD).replaceAll("\\p{M}", "");
-        t = t.replaceAll("\\s+", " ").trim();
-        return t.toUpperCase();
-    }
 
     private static int getCount(int[] pos, Row row, int count, int firstDay) {
         for(int j = 0; j < WeekendShift.size; j++){

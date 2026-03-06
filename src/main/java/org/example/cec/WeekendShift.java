@@ -50,7 +50,6 @@ public class WeekendShift {
             e.printStackTrace();
         }
         size = position - 2;
-        System.out.println("SA VEDEM");
         for(int i = 0; i < size + 2; i++) {
 
             if( pos[i] == 0) {
