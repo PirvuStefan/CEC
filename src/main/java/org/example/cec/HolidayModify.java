@@ -12,6 +12,7 @@ import java.util.List;
 
 import static org.example.cec.HelloApplication.daysInMonth;
 import static org.example.cec.HelloApplication.normalizeName;
+import static org.example.cec.Placeholders.*;
 import static org.example.cec.WeekendModify.getWorkingHoursTotal;
 
 public class HolidayModify {
@@ -202,21 +203,21 @@ public class HolidayModify {
                         System.out.println("Days in month: " + daysInMonth);
                         if( reason.equals("concediu") ){
                             String awayCellValue = "";
-                            Cell awayCell = row.getCell(daysInMonth + 7);
+                            Cell awayCell = row.getCell(daysInMonth + HOLIDAY_OFFSET.asInt());
                             if (awayCell == null) {
-                                awayCell = row.createCell(daysInMonth + 7, CellType.STRING);
+                                awayCell = row.createCell(daysInMonth + HOLIDAY_OFFSET.asInt(), CellType.STRING);
                             }
                             awayCellValue = getAwayValue(headerRow, row, firstDay, lastDay, awayCell);
 
 
-                            row.getCell(daysInMonth + 7).setCellValue(awayCellValue);
+                            row.getCell(daysInMonth + HOLIDAY_OFFSET.asInt()).setCellValue(awayCellValue);
 
                         }
                         else if( reason.equals("medical")){
                             String medicalCellValue = "";
-                            Cell medicalCell = row.getCell(daysInMonth + 6);
+                            Cell medicalCell = row.getCell(daysInMonth + MEDICAL_OFFSET.asInt());
                             if (medicalCell == null) {
-                                medicalCell = row.createCell(daysInMonth + 6, CellType.STRING);
+                                medicalCell = row.createCell(daysInMonth + MEDICAL_OFFSET.asInt(), CellType.STRING);
                             }
                             if (medicalCell.getCellType() == CellType.STRING) {
                                 medicalCellValue = medicalCell.getStringCellValue().trim();
@@ -238,18 +239,18 @@ public class HolidayModify {
                             }
 
 
-                            row.getCell(daysInMonth + 6).setCellValue(medicalCellValue);
+                            row.getCell(daysInMonth + MEDICAL_OFFSET.asInt()).setCellValue(medicalCellValue);
                         }
                         else if( reason.equals("absenta")){
                             String awayCellValue = "";
-                            Cell awayCell = row.getCell(daysInMonth + 15);
+                            Cell awayCell = row.getCell(daysInMonth + ABSENTEE_OFFSET.asInt());
                             if (awayCell == null) {
-                                awayCell = row.createCell(daysInMonth + 15, CellType.STRING);
+                                awayCell = row.createCell(daysInMonth + ABSENTEE_OFFSET.asInt(), CellType.STRING);
                             }
                             awayCellValue = getAwayValue(headerRow, row, firstDay, lastDay, awayCell);
 
-                            row.getCell(daysInMonth + 15).setCellValue(awayCellValue);
-                            row.getCell(daysInMonth + 5).setCellValue(getWorkingHoursTotal(row));
+                            row.getCell(daysInMonth + ABSENTEE_OFFSET.asInt()).setCellValue(awayCellValue);
+                            row.getCell(daysInMonth + WORKING_OFFSET.asInt()).setCellValue(getWorkingHoursTotal(row));
                             // set the total working hours
                         }
 
@@ -389,6 +390,8 @@ public class HolidayModify {
 
         return holidays;
     }
+
+
 
 
 

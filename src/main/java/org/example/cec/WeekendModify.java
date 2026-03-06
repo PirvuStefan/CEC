@@ -1,5 +1,6 @@
 package org.example.cec;
 
+import org.apache.poi.ss.formula.functions.DMax;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 
@@ -16,6 +17,7 @@ import java.util.Map;
 import static org.example.cec.HelloApplication.daysInMonth;
 import static org.example.cec.WeekendShift.whatDay;
 import static org.example.cec.HelloApplication.normalizeName;
+import static org.example.cec.Placeholders.*;
 
 import static org.example.cec.HelloApplication.normalizeName;
 
@@ -236,12 +238,11 @@ public class WeekendModify {
                         // if the count is 1 and he has more than 2 shifts, we force another shift on the first available day after the firstDay
                         count = getCount(pos, row, count, firstDay);
                     }
-                    if(count < 4) row.getCell(daysInMonth + 9).setCellValue( 8 * count );
-                    else row.getCell(daysInMonth + 9).setCellValue(32);
-                    if(sarbatoriCount < 4) row.getCell(daysInMonth + 10).setCellValue( 8 * sarbatoriCount );
-                    else row.getCell(daysInMonth + 10).setCellValue(32);
 
-                    row.getCell(daysInMonth + 5).setCellValue(getWorkingHoursTotal(row));
+
+                    row.getCell(daysInMonth + WEEKEND_OFFSET.asInt()).setCellValue( Math.min(32, 8 * count) );
+                    row.getCell(daysInMonth + SARBATORI_OFFSET.asInt()).setCellValue( Math.min(32, 8 * sarbatoriCount) );
+                    row.getCell(daysInMonth + WORKING_OFFSET.asInt()).setCellValue(getWorkingHoursTotal(row));
 
                     System.out.println("Main sheet updated with weekend shifts successfully! " + employeeName);break; // exit the loop after modifying the employee
 
