@@ -28,7 +28,7 @@ public class HelloApplication extends Application {
     private File weekendSheet;
     private File holidaysSheet;
     static int daysInMonth;
-    private boolean reset;
+    static boolean reset;
     // we need to know how many days are in a month and what is the first day of the first weekend ( like to know how to count and take in consideration the weekends when we process the data)
 
     @Override
@@ -352,7 +352,7 @@ public class HelloApplication extends Application {
         return box;
     }
 
-    private void showAlert(String message) {
+    static void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText(null);
         alert.setContentText(message);
@@ -371,11 +371,7 @@ public class HelloApplication extends Application {
     }
 
 
-
-
-
-
-    private void styleProcessButton(Button processButton) {
+    static void styleProcessButton(Button processButton) {
         processButton.setStyle(
                 "-fx-background-color: rgba(0,123,255,0.85); " +
                         "-fx-text-fill: white; " +
@@ -421,136 +417,6 @@ public class HelloApplication extends Application {
     }
 
 
-
-    private Scene createDeleteDataScene(Stage stage, Scene mainScene) {
-        Label title = new Label("Sterge Date Programate");
-        title.setStyle("-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: white;");
-
-        VBox fileSelectors = new VBox(20);
-        fileSelectors.setPadding(new Insets(20));
-        fileSelectors.setAlignment(Pos.CENTER);
-
-        // Excel file selector
-        Label excelLabel = new Label("Selecteaza Fisierul Excel Principal:");
-        excelLabel.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
-
-        TextField excelFilePath = new TextField();
-        excelFilePath.setPromptText("Calea catre fisierul Excel...");
-        excelFilePath.setStyle("-fx-background-radius: 8; -fx-background-color: white;");
-
-        Button browseButton = new Button("Cauta");
-        browseButton.setStyle("-fx-background-color: rgba(255,255,255,0.8); -fx-background-radius: 8; -fx-font-weight: bold;");
-
-        final File[] selectedFile = {null};
-        browseButton.setOnAction(e -> {
-            FileChooser fc = new FileChooser();
-            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files", "*.xlsx", "*.xls"));
-            File file = fc.showOpenDialog(stage);
-            if (file != null) {
-                excelFilePath.setText(file.getAbsolutePath());
-                selectedFile[0] = file;
-            }
-        });
-
-        HBox excelBox = new HBox(10, excelLabel, excelFilePath, browseButton);
-        excelBox.setAlignment(Pos.CENTER);
-        HBox.setHgrow(excelFilePath, Priority.ALWAYS);
-
-        // Shop center input
-        Label shopLabel = new Label("Centru Comercial:");
-        shopLabel.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
-
-        TextField shopInput = new TextField();
-        shopInput.setPromptText("Numele centrului comercial...");
-        shopInput.setStyle("-fx-background-radius: 8; -fx-background-color: white;");
-
-        Label daysLabel = new Label("Cate zile sunt in luna asta?");
-        daysLabel.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
-        TextField daysInput = new TextField();
-        daysInput.setPromptText("numarul de zile (e.g. 30)");
-        daysInput.setStyle("-fx-background-radius: 8; -fx-background-color: white;");
-        daysInput.textProperty().addListener((obs, oldVal, newVal) -> {
-            try {
-                int val = Integer.parseInt(newVal.trim());
-                if (val >= 1 && val <= 31) {
-                    daysInMonth = val;
-                }
-
-            } catch (NumberFormatException ignored) {
-                showAlert("Te rog introdu un numar valid intre 1 si 31 pentru zilele din luna!");
-                daysInput.clear();
-            }
-        });
-
-        HBox shopBox = new HBox(10, shopLabel, shopInput);
-        shopBox.setAlignment(Pos.CENTER);
-        HBox.setHgrow(shopInput, Priority.ALWAYS);
-
-        HBox daysBox = new HBox(10, daysLabel, daysInput);
-        daysBox.setAlignment(Pos.CENTER);
-        HBox.setHgrow(daysInput, Priority.ALWAYS);
-
-        fileSelectors.getChildren().addAll(excelBox, shopBox, daysBox);
-
-        // Process button
-        Button processDeleteButton = new Button("Proceseaza Stergerea");
-        processDeleteButton.setPrefWidth(200);
-        styleProcessButton(processDeleteButton);
-        processDeleteButton.setOnAction(e -> {
-            if (selectedFile[0] == null) {
-                showAlert("Te rog selecteaza un fisier Excel!");
-                return;
-            }
-            if (shopInput.getText().trim().isEmpty()) {
-                showAlert("Te rog introdu numele centrului comercial!");
-                return;
-            }
-            if( daysInMonth == 0 ){
-                showAlert("Te rog introdu numarul de zile din luna!");
-                return;
-            }
-
-
-            // Call a method to delete data for the specified shop center
-            boolean success = deleteShopCenterData(selectedFile[0], shopInput.getText().trim());
-
-            if (success) {
-                showAlert("Datele pentru " + shopInput.getText().trim() + " au fost sterse cu succes!");
-                stage.setScene(mainScene);
-            } else {
-                showAlert("Eroare la stergerea datelor!");
-            }
-        });
-
-        // Back button
-        Button backButton = new Button("Inapoi la Pagina Principala");
-        backButton.setPrefWidth(200);
-        backButton.setStyle("-fx-background-color: rgba(0,123,255,0.85); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 10 20 10 20;");
-        backButton.setOnAction(e -> stage.setScene(mainScene));
-
-        VBox root = new VBox(30, title, fileSelectors, processDeleteButton, backButton);
-        root.setAlignment(Pos.CENTER);
-        root.setPadding(new Insets(20));
-        root.setStyle("-fx-background-color: linear-gradient(to bottom right, rgba(0,100,200,0.85), rgba(0,180,255,0.85));");
-
-        return new Scene(root, 600, 500);
-    }
-
-    private boolean deleteShopCenterData(File excelFile, String shopCenter) {
-
-        // based on your Excel structure and requirements
-        try {
-            // Example: Open workbook, find rows with matching shop center, delete them
-            // Return true if successful, false otherwise
-                DeleteModify.Launch(excelFile, shopCenter);
-                resetStaticVariables();
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            resetStaticVariables();
-            return false;
-        }
-    }
 
     private void resetStaticVariables(){
         WeekendShift.size = 0;

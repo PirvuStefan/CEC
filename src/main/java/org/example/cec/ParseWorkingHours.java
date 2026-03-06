@@ -8,7 +8,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import static org.example.cec.HolidayModify.getWorkingHoursTotal;
+import static org.example.cec.WeekendModify.getWorkingHoursTotal;
+
+import static org.example.cec.WeekendModify.getWorkingHoursTotal;
 
 public class ParseWorkingHours {
 
