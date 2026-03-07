@@ -218,23 +218,14 @@ public class HelloApplication extends Application {
         mainSheet = null;
         weekendSheet = null;
         holidaysSheet = null;
+        panamaSheet = null;
     }
 
     private Scene createInstructionsScene(Stage stage, Scene mainScene) {
         Label title = new Label("Ghid De Utilizare  \u2714");
         title.setStyle("-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: white;");
 
-        Label instructions = new Label(
-            """
-            1. Selecteaza fisierele necesare apasand pe butonul cauta .
-            2. Fii sigur ca fisierele sunt corect formatate .
-            3. Apasa 'Proceseaza Datele' .
-            4. Fisierul modificat se poate gasi in folderul 'arhiva' .
-            5. Nu uita sa faci o copie de siguranta a fisierelor originale inainte de procesare.
-            6. Toate sheet-urile trebuie sa fie pe pozitia 0 ( primul sheet din excel ) .
-            """
-        );
-        instructions.setStyle("-fx-font-size: 16px; -fx-text-fill: white; -fx-padding: 10;");
+        Label instructions = getLabel();
 
         Button backButton = new Button("Inapoi la Pagina Principala");
         backButton.setStyle("-fx-background-color: rgba(0,123,255,0.85); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 10 20 10 20;");
@@ -259,6 +250,20 @@ public class HelloApplication extends Application {
         return instructionsScene;
     }
 
+    private static Label getLabel() {
+        Label instructions = new Label(
+            """
+            1. Selecteaza fisierele necesare apasand pe butonul cauta .
+            2. Fii sigur ca fisierele sunt corect formatate .
+            3. Apasa 'Proceseaza Datele' .
+            4. Fisierul modificat se poate gasi in folderul 'arhiva' .
+            5. Nu uita sa faci o copie de siguranta a fisierelor originale inainte de procesare.
+            6. Toate sheet-urile trebuie sa fie pe pozitia 0 ( primul sheet din excel ) .
+            """
+        );
+        instructions.setStyle("-fx-font-size: 16px; -fx-text-fill: white; -fx-padding: 10;");
+        return instructions;
+    }
 
 
     private Scene createWeekendDetailsScene(Stage stage, Scene instructionsScene) {
@@ -278,6 +283,10 @@ public class HelloApplication extends Application {
                - Pentru o gestionare eficienta, este esential ca numarul de ture alocate fiecarui angajat sa nu fie mai mare decat numarul de weekend-uri din luna respectiva.
                """
         );
+        return getScene(stage, instructionsScene, title, details);
+    }
+
+    private Scene getScene(Stage stage, Scene instructionsScene, Label title, Label details) {
         details.setStyle("-fx-font-size: 16px; -fx-text-fill: white; -fx-padding: 10;");
 
         Button backButton = new Button("Înapoi la Ghid");
@@ -314,18 +323,7 @@ public class HelloApplication extends Application {
                 - Toate modificarile sunt salvate si arhivate in folderul 'arhiva'.
                 """
         );
-        details.setStyle("-fx-font-size: 16px; -fx-text-fill: white; -fx-padding: 10;");
-
-        Button backButton = new Button("Înapoi la Ghid");
-        backButton.setStyle("-fx-background-color: rgba(0,123,255,0.85); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 10 20 10 20;");
-        backButton.setOnAction(e -> stage.setScene(instructionsScene));
-
-        VBox layout = new VBox(20, title, details, backButton);
-        layout.setAlignment(Pos.CENTER);
-        layout.setPadding(new Insets(20));
-        layout.setStyle("-fx-background-color: linear-gradient(to bottom right, rgba(0,100,200,0.85), rgba(0,180,255,0.85));");
-
-        return new Scene(layout, 600, 400);
+        return getScene(stage, instructionsScene, title, details);
     }
 
     private HBox createFileSelector(String labelText, FileConsumer fileSetter) {
