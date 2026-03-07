@@ -300,7 +300,7 @@ public class WeekendModify {
                         if(cell.getStringCellValue().equals("X") || cell.getStringCellValue().equals("x")) numberOfShifts++;
                     }
                 }
-                System.out.println(name + " has " + numberOfShifts + " shifts.");
+                //System.out.println(name + " has " + numberOfShifts + " shifts.");
                 Employee employee = new Employee(name, numberOfShifts, shift);
                 employees.add(employee);
                 if( nextRow.getCell(0).getStringCellValue().isEmpty() && nextRow.getCell(1).getStringCellValue().isEmpty()){

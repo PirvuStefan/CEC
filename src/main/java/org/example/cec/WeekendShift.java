@@ -24,7 +24,7 @@ public class WeekendShift {
         int sarbatoriCount = 0;
         int position = 0;
         pos = new int[32];
-        sarbatoare = new int[10];
+        sarbatoare = new int[15];
         try (FileInputStream fis = new FileInputStream(weekendFile)) {
             Workbook workbook = new XSSFWorkbook(fis);
             Sheet sheet = workbook.getSheetAt(0);
@@ -85,7 +85,7 @@ public class WeekendShift {
         System.out.println("SARBATORI : " + sarbatoriSize);
     }
 
-    private int getValueint(Row row, int cellIndex) {
+    static int getValueint(Row row, int cellIndex) {
         Cell cell = row.getCell(cellIndex);
         if (cell == null) {
             return 0; // sau altă valoare implicită

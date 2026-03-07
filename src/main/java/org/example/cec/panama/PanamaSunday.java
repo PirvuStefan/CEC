@@ -4,7 +4,6 @@ import org.apache.poi.ss.usermodel.Row;
 
 public class PanamaSunday extends Panama {
 
-     @Override
     public void setWeekShift(int lastDay, Row row) {
          // lastDay is always Sunday, so we start from Sunday and go backwards to see if we can parse a full week of Sunday, Saturday, Wednesday, Monday
          if(lastDay-- > 0) {
