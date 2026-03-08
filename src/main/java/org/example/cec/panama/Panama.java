@@ -4,7 +4,9 @@ import org.apache.poi.ss.usermodel.Row;
 
 public abstract class Panama {
 
-    public abstract void setWeekShift(int lastDay, Row row);
+    int lastDay; // this is the Sunday of that specific week
+
+    public abstract void setWeekShift(Row row);
 
 
 }
