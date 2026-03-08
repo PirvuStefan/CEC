@@ -7,12 +7,14 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public class PanamaModify {
 
 
 
-    private static List<PanamaShift> InitialiseHolidaysList(File panamaSheet) {
+    private static Map<String, PanamaShift> InitialiseHolidaysList(File panamaSheet) {
+        // the key is the name of the employee
 
         String filePath = panamaSheet.getAbsolutePath();
 

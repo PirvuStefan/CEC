@@ -7,9 +7,13 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.File;
 import java.io.FileInputStream;
 
+
+
+
 public class WeekendShift {
 
-    static int size;
+
+    static int size = -1;
     static int sarbatoriSize;
     static int[] pos;
     static int[] sarbatoare;
