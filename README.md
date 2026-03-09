@@ -67,7 +67,7 @@ This will build a fat JAR file located in the `target` directory.Also know in th
 4. Click "Proceseaza Datele" (Process Data)
 5. Find your processed files in the `arhiva` folder
 
-> **Note:** You must select the Main Sheet plus at least one of the other files to proceed. The Panama sheet is loaded independently from the weekend processing pipeline.
+> **Note:** You must select the Main Sheet plus at least one of the other files to proceed. The Panama sheet shares the same structure as the Weekend sheet.
 
 ## Base Functionality
 
@@ -407,6 +407,7 @@ The 'Delete Progress' button allows users to erase every progress from the peopl
 4. **Confirmation**: A confirmation message will be displayed once the data has been successfully deleted.
 
 This comes in handy when you want to 'rollback' the changes made to a specific store without affecting the data of other stores in the same file.
+> **Note:** This feature is currently disabled because of already processed data that can not be 100% reversed without human intervention.
 
 ## Important Notes
 
