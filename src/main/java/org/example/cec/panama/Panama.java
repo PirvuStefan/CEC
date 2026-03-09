@@ -7,6 +7,7 @@ public abstract class Panama {
     int lastDay; // this is the Sunday of that specific week
 
     public abstract void setWeekShift(Row row);
+    public abstract void print();
 
 
 }

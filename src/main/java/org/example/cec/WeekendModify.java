@@ -1,6 +1,5 @@
 package org.example.cec;
 
-import org.apache.poi.ss.formula.functions.DMax;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 
@@ -8,7 +7,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,18 +17,16 @@ import static org.example.cec.WeekendShift.whatDay;
 import static org.example.cec.HelloApplication.normalizeName;
 import static org.example.cec.Placeholders.*;
 
-import static org.example.cec.HelloApplication.normalizeName;
-
 public class WeekendModify {
 
-    static File Launch(File mainSheet, File weekendSheet){
+    static File launch(File mainSheet, File weekendSheet){
 
         Map< String , List<Employee>> weekendEmployees;
         System.out.println("Modifying main sheet with weekend shifts...");
         WeekendShift test = new WeekendShift();
         test.initialiseSize(weekendSheet); // to set the size of the weekend shift ( static variable);
         System.out.println("Weekend size: " + WeekendShift.size);
-        weekendEmployees = InitialiseWeekendList(weekendSheet);
+        weekendEmployees = initialiseWeekendList(weekendSheet);
         if( weekendEmployees.isEmpty()){
             System.out.println("Eroare la initializarea listei de angajati pentru weekend!");
         }
@@ -107,7 +103,7 @@ public class WeekendModify {
                     int firstDay = 0;
 
                     for(int i = 1; i <= daysInMonth; i++){
-                        Cell cell = row.getCell(i + 4);
+                        Cell cell = row.getCell(i + DAY_OFFSET.asInt());
                         if (cell != null) {
                             XSSFColor color = (XSSFColor) cell.getCellStyle().getFillForegroundColorColor();
                             String rgbHex = "#FFFFFF"; // default white color
@@ -130,7 +126,7 @@ public class WeekendModify {
                         if (shifts[i] == 1) {
                             nr++;
                             int day = pos[i];
-                            int colIndex = day + 4; // because we start from column F (index 5)
+                            int colIndex = day + DAY_OFFSET.asInt(); // because we start from column F (index 5)
 
                             boolean skip = false;
 
@@ -203,7 +199,7 @@ public class WeekendModify {
                     }
 
                     for(int i = 0; i < pos.length; i++) {
-                        Cell shiftCell = row.getCell(pos[i] + 4);
+                        Cell shiftCell = row.getCell(pos[i] + DAY_OFFSET.asInt());
                         String cellValue = "";
                         if (shiftCell != null) {
                             if (shiftCell.getCellType() == CellType.STRING) {
@@ -218,7 +214,7 @@ public class WeekendModify {
                     for(int i = 0; i < shiftsSarbatori.length; i++){
                         if( shiftsSarbatori[i] == 1 ){
                             int day = sarb[i];
-                            int colIndex = day + 4;
+                            int colIndex = day + DAY_OFFSET.asInt(); // because we start from column F (index 5)
                             if( colIndex >= row.getLastCellNum() ) break; // skip if column index is out of bounds
                             sarbatoriCount++;
                             row.getCell(colIndex).setCellValue(8);
@@ -262,7 +258,7 @@ public class WeekendModify {
     }
 
 
-    private static Map< String, List<Employee>> InitialiseWeekendList(File weekendSheet) {
+    private static Map< String, List<Employee>> initialiseWeekendList(File weekendSheet) {
         System.out.println("Initialising weekend employees from file: " + weekendSheet.getAbsolutePath());
         try (FileInputStream fis = new FileInputStream(weekendSheet);
              Workbook workbook = WorkbookFactory.create(fis)) { // Updated to use WorkbookFactory.create
@@ -476,7 +472,7 @@ public class WeekendModify {
         for(int j = 0; j < WeekendShift.size; j++){
             if( whatDay(WeekendShift.pos[j], pos).equals("sambata") ){
                 if( WeekendShift.pos[j] >= firstDay ){
-                    int colIndex = WeekendShift.pos[j] + 4;
+                    int colIndex = WeekendShift.pos[j] + DAY_OFFSET.asInt();
                     if( colIndex >= row.getLastCellNum() ) break; // skip if column index is out of bounds
                     if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex + 2)) && !row.getCell(colIndex).getStringCellValue().equals("8") && !row.getCell(colIndex + 1).getStringCellValue().equals("8") && WeekendShift.pos[j] + 2 <= daysInMonth ){
                         row.getCell(colIndex).setCellValue(8);
@@ -487,7 +483,7 @@ public class WeekendModify {
             }
             else if( whatDay(WeekendShift.pos[j], pos).equals("duminica") ){
                 if( WeekendShift.pos[j] >= firstDay ){
-                    int colIndex = WeekendShift.pos[j] + 4;
+                    int colIndex = WeekendShift.pos[j] + DAY_OFFSET.asInt();
                     if( colIndex >= row.getLastCellNum() ) break; // skip if column index is out of bounds
                     if( checkColor(row.getCell(colIndex)) && checkColor(row.getCell(colIndex - 2)) && !row.getCell(colIndex).getStringCellValue().equals("8") && !row.getCell(colIndex - 1).getStringCellValue().equals("8") && WeekendShift.pos[j] - 2 >= 1 ){
                         row.getCell(colIndex).setCellValue(8);
@@ -503,7 +499,7 @@ public class WeekendModify {
     static int getWorkingHoursTotal(Row row) {
         int total = 0;
         for (int j = 1; j <= daysInMonth; j++) { // starting from column F (index 5)
-            int i = j + 4;
+            int i = j + DAY_OFFSET.asInt();
             if (i >= row.getLastCellNum()) break; // skip if column index is
             Cell cell = row.getCell(i);
             if (cell != null && cell.getCellType() == CellType.NUMERIC) {

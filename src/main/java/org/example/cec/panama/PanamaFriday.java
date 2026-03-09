@@ -28,4 +28,9 @@ public class PanamaFriday extends Panama {
         }
 
     }
+
+    public void print() {
+        System.out.println("Panama Friday: " + lastDay);
+
+    }
 }

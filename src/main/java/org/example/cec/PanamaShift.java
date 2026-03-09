@@ -51,6 +51,7 @@ public class PanamaShift extends WeekendShift {
                        granted = granted || (cell.getCellType() == CellType.STRING && (cell.getStringCellValue().equals("X") || cell.getStringCellValue().equals("x")));
                        addPanama(granted,day1 + 1);
                        i++;
+                       // here we should be on Saturday, that is why we increment i, so with the for loop increment we will have on the next testing also Saturday/duminicaF
                    }
 
                    continue;
@@ -75,6 +76,16 @@ public class PanamaShift extends WeekendShift {
      if(value) panamaList.add(new PanamaFriday(position));
      else panamaList.add(new PanamaSunday(position));
 
+    }
+
+    void print(){
+        for(Panama p : panamaList){
+            p.print();
+        }
+        System.out.println("-----------------------------");
+        for(Boolean b : sarbatoriList){
+            System.out.println("Ziua: " + PanamaShift.sarbatoare[sarbatoriList.indexOf(b)] + " : " + b);
+        }
     }
 
 

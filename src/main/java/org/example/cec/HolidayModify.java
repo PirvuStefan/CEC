@@ -23,7 +23,7 @@ public class HolidayModify {
     // we do process the holidays first and then the weekends shifts to avoid certain conflicts
     // TODO: we do need to see if this interferes with the panama shifts, I think that the panama are not pseudo-real and algorihm based and if on the shift is marked with a X, it has actually worked there
 
-    static File Launch(File mainSheet, File holidaysSheet) {
+    static File launch(File mainSheet, File holidaysSheet) {
         List<Holiday> holidays;
         String filePath = holidaysSheet.getAbsolutePath();
 

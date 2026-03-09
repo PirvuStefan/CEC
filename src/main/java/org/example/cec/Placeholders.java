@@ -2,6 +2,7 @@ package org.example.cec;
 
 
 public enum Placeholders {
+    DAY_OFFSET("4"),
     WORKING_OFFSET("5"),
     MEDICAL_OFFSET("6"),
     HOLIDAY_OFFSET("7"),

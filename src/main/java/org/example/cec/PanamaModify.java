@@ -8,15 +8,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import static org.example.cec.HelloApplication.normalizeName;
+import static org.example.cec.Placeholders.DAY_OFFSET;
+import static org.example.cec.WeekendModify.checkColor;
 
 public class PanamaModify {
 
 
 
-    private static Map<String, PanamaShift> InitialiseHolidaysList(File panamaSheet) {
+    private static Map<String, PanamaShift> InitialisePanamaShifts(File panamaSheet) {
         // the key is the name of the employee
 
         String filePath = panamaSheet.getAbsolutePath();
+
+        Map<String , PanamaShift> List = new java.util.HashMap<>();
 
         try (FileInputStream fis = new FileInputStream(new File(filePath));
              Workbook workbook = WorkbookFactory.create(fis)) {
@@ -37,6 +42,9 @@ public class PanamaModify {
                     if (cell == null) continue;
                     String cellValue = cell.getStringCellValue();
                     if (cellValue == null || cellValue.isEmpty()) continue;
+
+                    PanamaShift shift = new PanamaShift(panamaSheet, row);
+                    List.put(name, shift);
 
                     // Process the cell value as needed
                     System.out.println("Processing cell value: " + cellValue);
@@ -63,5 +71,58 @@ public class PanamaModify {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static File launch(File mainSheet, File panamaSheet) {
+        Map<String, PanamaShift> panamaShifts = InitialisePanamaShifts(panamaSheet);
+
+        try (FileInputStream fis = new FileInputStream(mainSheet);
+             Workbook workbook = WorkbookFactory.create(fis)) {
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            for(int i = 0 ; i <= sheet.getLastRowNum(); i++){
+                Row row = sheet.getRow(i);
+                if(row == null) break;
+                String name = (row.getCell(2) != null) ? row.getCell(2).getStringCellValue() : "";
+                if (name == null || name.isEmpty()) break;
+                name = name.trim().toUpperCase();
+                if (name.isEmpty()) break;
+
+                assert panamaShifts != null;
+                if(panamaShifts.containsKey(name) || panamaShifts.containsKey(normalizeName(name))) {
+                    PanamaShift shift = panamaShifts.get(name);
+
+                    for(Boolean b : shift.sarbatoriList) {
+                        if(b) {
+                            // mark it there
+                            int colIndex = WeekendShift.sarbatoare[shift.sarbatoriList.indexOf(b)] + DAY_OFFSET.asInt();
+                            Cell cell = row.getCell(colIndex);
+                            if(cell == null) continue;
+                            cell.setCellValue(11);
+                        }
+                    }
+
+
+
+
+
+
+                    // Apply the Panama shifts to the main sheet as needed
+                    // This is where you would implement the logic to modify the main sheet based on the Panama shifts
+                }
+            }
+
+            try (FileOutputStream fos = new FileOutputStream(mainSheet)) {
+                workbook.write(fos);
+            }
+
+            System.out.println("Main sheet updated with Panama shifts successfully!");
+
+        } catch (IOException e) { // Added InvalidFormatException
+            e.printStackTrace();
+        }
+
+        return mainSheet;
     }
 }

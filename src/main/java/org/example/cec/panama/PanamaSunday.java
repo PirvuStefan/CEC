@@ -28,4 +28,9 @@ public class PanamaSunday extends Panama {
 
     // Monday, Wednesday, Saturday, Sunday
     // 4 days a week
+
+
+    public void print() {
+        System.out.println("Panama Sunday: " + lastDay);
+    }
 }

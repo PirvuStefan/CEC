@@ -13,7 +13,6 @@ import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -122,7 +121,7 @@ public class HelloApplication extends Application {
                 return;
             }
             if(weekendSheet != null && holidaysSheet == null){
-                File modifiedSheet = WeekendModify.Launch(mainSheet, weekendSheet);
+                File modifiedSheet = WeekendModify.launch(mainSheet, weekendSheet);
                 if (modifiedSheet != null) {
                     try {
                         Files.copy(modifiedSheet.toPath(), outputDir.resolve(modifiedSheet.getName()), StandardCopyOption.REPLACE_EXISTING);
@@ -138,7 +137,7 @@ public class HelloApplication extends Application {
 
             }
             if(weekendSheet == null && holidaysSheet != null){
-                File modifiedSheet = HolidayModify.Launch(mainSheet, holidaysSheet);
+                File modifiedSheet = HolidayModify.launch(mainSheet, holidaysSheet);
                 if (modifiedSheet != null) {
                     try {
                         Files.copy(modifiedSheet.toPath(), outputDir.resolve(modifiedSheet.getName()), StandardCopyOption.REPLACE_EXISTING);
@@ -153,8 +152,8 @@ public class HelloApplication extends Application {
                 return;
             }
 
-            File modifiedSheet = HolidayModify.Launch(mainSheet, holidaysSheet);
-            WeekendModify.Launch(modifiedSheet, weekendSheet);
+            File modifiedSheet = HolidayModify.launch(mainSheet, holidaysSheet);
+            WeekendModify.launch(modifiedSheet, weekendSheet);
             if (modifiedSheet != null) {
                 try {
                     Files.copy(modifiedSheet.toPath(), outputDir.resolve(modifiedSheet.getName()), StandardCopyOption.REPLACE_EXISTING);
