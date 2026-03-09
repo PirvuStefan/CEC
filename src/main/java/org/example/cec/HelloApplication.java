@@ -27,7 +27,7 @@ public class HelloApplication extends Application {
     private File weekendSheet;
     private File holidaysSheet;
     private File panamaSheet;
-    static int daysInMonth;
+    public static int daysInMonth;
     static boolean reset;
     // we need to know how many days are in a month and what is the first day of the first weekend ( like to know how to count and take in consideration the weekends when we process the data)
 

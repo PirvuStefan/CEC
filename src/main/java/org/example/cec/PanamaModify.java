@@ -1,6 +1,7 @@
 package org.example.cec;
 
 import org.apache.poi.ss.usermodel.*;
+import org.example.cec.panama.Panama;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -92,20 +93,7 @@ public class PanamaModify {
                 assert panamaShifts != null;
                 if(panamaShifts.containsKey(name) || panamaShifts.containsKey(normalizeName(name))) {
                     PanamaShift shift = panamaShifts.get(name);
-
-                    for(Boolean b : shift.sarbatoriList) {
-                        if(b) {
-                            // mark it there
-                            int colIndex = WeekendShift.sarbatoare[shift.sarbatoriList.indexOf(b)] + DAY_OFFSET.asInt();
-                            Cell cell = row.getCell(colIndex);
-                            if(cell == null) continue;
-                            cell.setCellValue(11);
-                        }
-                    }
-
-
-
-
+                    shift.setShift(row);
 
 
                     // Apply the Panama shifts to the main sheet as needed

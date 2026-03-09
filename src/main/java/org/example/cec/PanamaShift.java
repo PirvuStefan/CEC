@@ -10,8 +10,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 
+import static org.example.cec.Placeholders.DAY_OFFSET;
 import static org.example.cec.WeekendModify.checkColor;
-import static org.example.cec.WeekendShift.getValueint;
 
 
 public class PanamaShift extends WeekendShift {
@@ -28,7 +28,6 @@ public class PanamaShift extends WeekendShift {
            Sheet sheet = workbook.getSheetAt(0);
            Row firstRow = sheet.getRow(1);
 
-           int count = 0;
            for(int i = 0 ; i < sarbatoriSize + size;i++){
 
                int currentDay = i+2;
@@ -83,10 +82,29 @@ public class PanamaShift extends WeekendShift {
             p.print();
         }
         System.out.println("-----------------------------");
-        for(Boolean b : sarbatoriList){
-            System.out.println("Ziua: " + PanamaShift.sarbatoare[sarbatoriList.indexOf(b)] + " : " + b);
+        for(int i = 0; i < sarbatoriList.size(); i++){
+            System.out.println("Sarbatoare " + WeekendShift.sarbatoare[i] + ": " + sarbatoriList.get(i));
         }
     }
+
+    void setShift(Row row) {
+
+        for (int i = 0; i < this.sarbatoriList.size(); i++) {
+            if (Boolean.TRUE.equals(this.sarbatoriList.get(i))) {
+                int colIndex = WeekendShift.sarbatoare[i] + DAY_OFFSET.asInt();
+                Cell cell = row.getCell(colIndex);
+                if (cell != null) {
+                    cell.setCellValue(11);
+                }
+            }
+        }
+
+        for (int idx = this.panamaList.size() - 1; idx >= 0; idx--) {
+            this.panamaList.get(idx).setWeekShift(row);
+        }
+    }
+
+
 
 
 }

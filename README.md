@@ -60,11 +60,14 @@ This will build a fat JAR file located in the `target` directory.Also know in th
 1. Launch the application
 2. Enter the number of days in the current month
 3. Select your Excel files:
-   - **Main Sheet**: Contains employee roster and daily schedules
-   - **Weekend Sheet**: Contains weekend shift requirements and employee availability
-   - **Holidays Sheet**: Contains vacation requests and leave information
+   - **Fisierul Principal** (Main Sheet): Contains employee roster and daily schedules — **always required**
+   - **Fisierul Weekend** (Weekend Sheet): Contains weekend shift requirements and employee availability — optional
+   - **Fisierul Munca Inegala** (Panama Sheet): Contains Panama/uneven-work-week shift assignments — optional
+   - **Fisierul Vacante** (Holidays Sheet): Contains vacation requests and leave information — optional
 4. Click "Proceseaza Datele" (Process Data)
 5. Find your processed files in the `arhiva` folder
+
+> **Note:** You must select the Main Sheet plus at least one of the other files to proceed. The Panama sheet is loaded independently from the weekend processing pipeline.
 
 ## Base Functionality
 
@@ -152,6 +155,50 @@ The Weekend Sheet must contain:
 5. Updates main sheet with 8-hour shifts on allocated days
 6. Clears any conflicting Monday shifts following weekend work
 7. Records total weekend hours in reporting columns
+
+## Panama Shifts Functionality
+
+### Overview
+The **Panama shift schedule** is a specific work rotation pattern designed for employees who work an uneven number of hours across the week — some weeks they work more days, some weeks fewer. This is common in retail and service environments that operate 7 days a week.
+
+The application supports two Panama patterns:
+
+| Pattern | Working Days | Days Off |
+|---------|-------------|----------|
+| **Panama Sunday** | Monday, Wednesday, Saturday, Sunday (4 days) | Tuesday, Thursday, Friday |
+| **Panama Friday** | Tuesday, Thursday, Friday (3 days) | Monday, Wednesday, Saturday, Sunday |
+
+Each week an employee alternates between these two patterns, producing a fair overall distribution of working and non-working days across the month.
+
+### How It Works
+
+1. **Select the "Fisierul Munca Inegala" file** — this is the Panama schedule sheet which lists which employees follow this rotation and whether they are on the 4-day (Sunday) or 3-day (Friday) variant for each weekend block.
+2. The application reads each weekend block and determines which pattern applies for each employee based on an `X` marker in the sheet.
+   - **X present** → the employee works the **Friday pattern** (Tue/Thu/Fri) for that week.
+   - **No X** → the employee works the **Sunday pattern** (Mon/Wed/Sat/Sun) for that week.
+3. For each public holiday column the shift is assigned individually: if the employee is marked with `X` for that holiday, they receive an **11-hour shift** on that day.
+4. The shifts are then written into the main sheet — each assigned day gets a value of **11** (hours worked).
+5. The system processes weeks in **reverse order** within the month to correctly apply the pattern without overwriting earlier days.
+
+### Panama Sheet Format
+
+The Panama sheet must follow this structure:
+
+| Column A | Column B | Column C onwards |
+|----------|----------|-----------------|
+| Store name | Employee name | Weekend blocks (with `X` if working that block) |
+
+- Row 1 (index 1 in the file) acts as the **header row** containing the day numbers for each weekend block.
+- A **colored cell** in the header marks a public holiday; a **white cell** marks a regular weekend.
+- Weekend blocks are always treated as Saturday+Sunday pairs. Isolated Sundays (first day of month) and isolated Saturdays (last day of month) are handled as special edge cases.
+
+### Important Notes
+
+- The Panama sheet file is optional. The main processing will still run without it.
+- Employees not present in the Panama sheet are not affected.
+- This functionality is independent from the regular Weekend functionality — do **not** add Panama employees to the Weekend sheet.
+
+---
 
 ## Holiday/Vacation Functionality
 
@@ -321,12 +368,29 @@ CEC/
 │   ├── main/
 │   │   ├── java/
 │   │   │   └── org/example/cec/
-│   │   │       ├── HelloApplication.java    # Main application
+│   │   │       ├── HelloApplication.java    # Main application & GUI
+│   │   │       ├── Launcher.java            # JAR entry point
 │   │   │       ├── Employee.java            # Employee model
-│   │   │       ├── Holiday.java             # Holiday model
-│   │   │       └── WeekendShift.java        # Weekend shift model
+│   │   │       ├── Holiday.java             # Holiday/absence model
+│   │   │       ├── WeekendShift.java        # Weekend shift data model
+│   │   │       ├── WeekendModify.java       # Weekend shift processing logic
+│   │   │       ├── HolidayModify.java       # Holiday processing logic
+│   │   │       ├── PanamaShift.java         # Panama schedule shift model
+│   │   │       ├── PanamaModify.java        # Panama schedule processing logic
+│   │   │       ├── ParseWorkingHours.java   # Global daily shift initializer
+│   │   │       ├── ParseIndividualHours.java# Per-employee daily shift parser
+│   │   │       ├── DeleteModify.java        # Store data reset logic
+│   │   │       ├── Placeholders.java        # Column offset constants (enum)
+│   │   │       ├── HelloController.java     # FXML controller (minimal)
+│   │   │       └── panama/
+│   │   │           ├── Panama.java          # Abstract Panama week model
+│   │   │           ├── PanamaFriday.java    # Fri/Thu/Tue shift pattern
+│   │   │           └── PanamaSunday.java    # Mon/Wed/Sat/Sun shift pattern
 │   │   └── resources/
-│   └── test/
+│   │       └── org/example/cec/
+│   │           ├── hello-view.fxml          # FXML layout
+│   │           └── icons/
+│   │               └── icon.png             # Application icon
 ├── arhiva/                                   # Output folder (auto-created)
 ├── pom.xml
 └── README.md

@@ -2,6 +2,8 @@ package org.example.cec.panama;
 
 import org.apache.poi.ss.usermodel.Row;
 
+import static org.example.cec.HelloApplication.daysInMonth;
+
 public class PanamaSunday extends Panama {
 
     public PanamaSunday(int lastDay) {
@@ -10,18 +12,19 @@ public class PanamaSunday extends Panama {
 
     public void setWeekShift(Row row) {
          // lastDay is always Sunday, so we start from Sunday and go backwards to see if we can parse a full week of Sunday, Saturday, Wednesday, Monday
-         if(lastDay-- > 0) {
+         if(lastDay > 0 && lastDay <= daysInMonth) {
              row.getCell(lastDay).setCellValue(11);
          }
-         if(lastDay > 0) {
+         lastDay--;
+         if(lastDay > 0 && lastDay <= daysInMonth) {
              row.getCell(lastDay).setCellValue(11);
          }
          lastDay = lastDay - 3;
-         if(lastDay > 0) {
+         if(lastDay > 0 && lastDay <= daysInMonth) {
              row.getCell(lastDay).setCellValue(11);
          }
          lastDay = lastDay - 2;
-         if(lastDay > 0) {
+         if(lastDay > 0 && lastDay <= daysInMonth) {
              row.getCell(lastDay).setCellValue(11);
          }
      }
