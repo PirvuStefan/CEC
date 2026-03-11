@@ -72,9 +72,23 @@ public class PanamaShift extends WeekendShift {
 
     private void addPanama(boolean value, int position) {
 
-     if(value) panamaList.add(new PanamaFriday(position));
-     else panamaList.add(new PanamaSunday(position));
+     if(value) panamaList.add(new PanamaSunday(position));
+     else panamaList.add(new PanamaFriday(position));
 
+    }
+
+    private void addLastPanama() {
+        if (panamaList.isEmpty()) return;
+        Panama panama = panamaList.get(panamaList.size() - 1);
+        int position = panama.getLastDay();
+        if (panama instanceof PanamaFriday) {
+            addPanama(false,position + 7);
+        } else if (panama instanceof PanamaSunday) {
+            addPanama(true,position + 7);
+        }
+
+        // we do add a pseudo-panama to the list for example, the month has 31 days and the 27th day is Sunday, we do have 4 more days from an incompleted week, so we add another Panama with the position 34 with the complementary type of the last real Panama
+        // if Friday type, we add Sunday, if Sunday type, we add Friday
     }
 
     void print(){
@@ -94,7 +108,10 @@ public class PanamaShift extends WeekendShift {
                 int colIndex = WeekendShift.sarbatoare[i] + DAY_OFFSET.asInt();
                 Cell cell = row.getCell(colIndex);
                 if (cell != null) {
-                    cell.setCellValue(11);
+                    if(cell.getCellType().equals(CellType.NUMERIC)){
+                        cell.setCellValue(11);
+                    }
+                    else cell.setCellValue("11");
                 }
             }
         }

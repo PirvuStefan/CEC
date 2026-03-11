@@ -323,6 +323,13 @@ public class HelloApplication extends Application {
         filePath.setEditable(true); // to enable text editing in the filepath
         filePath.setStyle("-fx-background-radius: 8; -fx-background-color: white;");
 
+        HBox box = getHBox(fileSetter, filePath, label);
+        box.setAlignment(Pos.CENTER);
+        HBox.setHgrow(filePath, Priority.ALWAYS);
+        return box;
+    }
+
+    private static HBox getHBox(FileConsumer fileSetter, TextField filePath, Label label) {
         Button browseButton = new Button("Browse");
         browseButton.setStyle("-fx-background-color: rgba(255,255,255,0.8); -fx-background-radius: 8; -fx-font-weight: bold;");
         browseButton.setOnAction(e -> {
@@ -336,8 +343,6 @@ public class HelloApplication extends Application {
         });
 
         HBox box = new HBox(10, label, filePath, browseButton);
-        box.setAlignment(Pos.CENTER);
-        HBox.setHgrow(filePath, Priority.ALWAYS);
         return box;
     }
 
