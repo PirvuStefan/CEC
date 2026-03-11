@@ -112,7 +112,7 @@ public class HelloApplication extends Application {
                 showAlert("Te rog introdu numarul de zile din luna!");
                 return;
             }
-            if (weekendSheet == null && holidaysSheet == null) {
+            if (weekendSheet == null && holidaysSheet == null && panamaSheet == null) {
                 showAlert("Te rog selecteaza toate fisierele necesare!");
                 return;
             }
@@ -120,25 +120,13 @@ public class HelloApplication extends Application {
                 showAlert("Fisierul principal nu a fost selectat!");
                 return;
             }
-            if(weekendSheet != null && holidaysSheet == null){
-                File modifiedSheet = WeekendModify.launch(mainSheet, weekendSheet);
-                if (modifiedSheet != null) {
-                    try {
-                        Files.copy(modifiedSheet.toPath(), outputDir.resolve(modifiedSheet.getName()), StandardCopyOption.REPLACE_EXISTING);
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                        showAlert("Failed to copy the modified file to the output directory.");
-                    }
-                }
-                showAlert("Fisierul principal a fost modificat cu succes folosind fisierul de weekend!");
-                resetStaticVariables();
-                clearFileSelections(fileSelectors);
-                return;
 
-            }
-            if(weekendSheet == null && holidaysSheet != null){
+
+            if (holidaysSheet != null) {
                 File modifiedSheet = HolidayModify.launch(mainSheet, holidaysSheet);
                 if (modifiedSheet != null) {
+                    // Use the modified file as the new main sheet for subsequent steps
+                    mainSheet = modifiedSheet;
                     try {
                         Files.copy(modifiedSheet.toPath(), outputDir.resolve(modifiedSheet.getName()), StandardCopyOption.REPLACE_EXISTING);
                     } catch (IOException ex) {
@@ -146,22 +134,34 @@ public class HelloApplication extends Application {
                         showAlert("Failed to copy the modified file to the output directory.");
                     }
                 }
-                showAlert("Fisierul principal a fost modificat cu succes folosind fisierul de concedii!");
-                resetStaticVariables();
-                clearFileSelections(fileSelectors);
-                return;
             }
 
-            File modifiedSheet = HolidayModify.launch(mainSheet, holidaysSheet);
-            WeekendModify.launch(modifiedSheet, weekendSheet);
-            if (modifiedSheet != null) {
-                try {
-                    Files.copy(modifiedSheet.toPath(), outputDir.resolve(modifiedSheet.getName()), StandardCopyOption.REPLACE_EXISTING);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                    showAlert("Failed to copy the modified file to the output directory.");
+            if (weekendSheet != null) {
+                File modifiedSheet = WeekendModify.launch(mainSheet, weekendSheet);
+                if (modifiedSheet != null) {
+                    mainSheet = modifiedSheet;
+                    try {
+                        Files.copy(modifiedSheet.toPath(), outputDir.resolve(modifiedSheet.getName()), StandardCopyOption.REPLACE_EXISTING);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                        showAlert("Failed to copy the modified file to the output directory.");
+                    }
                 }
             }
+
+            if (panamaSheet != null) {
+                File modifiedSheet = PanamaModify.launch(mainSheet, panamaSheet);
+                if (modifiedSheet != null) {
+                    mainSheet = modifiedSheet;
+                    try {
+                        Files.copy(modifiedSheet.toPath(), outputDir.resolve(modifiedSheet.getName()), StandardCopyOption.REPLACE_EXISTING);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                        showAlert("Failed to copy the modified file to the output directory.");
+                    }
+                }
+            }
+
 
             showAlert("Fisierul principal a fost modificat cu succes folosind ambele fisiere!");
             resetStaticVariables();
@@ -170,16 +170,6 @@ public class HelloApplication extends Application {
 
 
         });
-
-
-        //Button deleteButton = new Button("Sterge Datele");
-        //deleteButton.setPrefWidth(200);
-        //styleProcessButton(deleteButton);
-        //deleteButton.setOnAction(e -> {
-          //  stage.setScene(createDeleteDataScene(stage, stage.getScene()));
-        //});
-
-        // disable delete button for now
 
 
         Button instructionsButton = new Button("Cum folosim aplicatia?");

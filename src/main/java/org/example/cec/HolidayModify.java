@@ -25,7 +25,6 @@ public class HolidayModify {
 
     static File launch(File mainSheet, File holidaysSheet) {
         List<Holiday> holidays;
-        String filePath = holidaysSheet.getAbsolutePath();
 
         //ParseWorkingHours.initializeSheet(mainSheet, daysInMonth);
 
@@ -153,7 +152,7 @@ public class HolidayModify {
 
                             for(int i = lastDay + 1; i<= daysInMonth; i++){
 
-                                int colIndex = i + 4; // because we start from column F (index 5)
+                                int colIndex = i + DAY_OFFSET.asInt(); // because we start from column F (index 5)
                                 if (colIndex >= row.getLastCellNum()) break; // skip if column index is out of bounds
 
                                 Cell cell = row.getCell(colIndex);
