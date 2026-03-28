@@ -1,16 +1,5 @@
 package org.example.cec;
 
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
@@ -19,15 +8,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.Normalizer;
 
 import static org.example.cec.HelloApplication.daysInMonth;
-import static org.example.cec.HelloApplication.styleProcessButton;
-import static org.example.cec.HelloApplication.showAlert;
-import static org.example.cec.HelloApplication.normalizeName;
 
 
-public class DeleteModify {
+public class DeleteModify implements NormalizeName{
 
     static File Launch(File mainSheet, String center) {
 
@@ -37,7 +22,7 @@ public class DeleteModify {
             Sheet sheet = workbook.getSheetAt(0);
 
 
-            center = normalizeName(center).replaceAll("[\\s\\-]+", "");
+            center = NormalizeName.set(center).replaceAll("[\\s\\-]+", "");
             System.out.println(center);
 
             for(int i = 0 ; i <= sheet.getLastRowNum(); i++){
@@ -50,7 +35,7 @@ public class DeleteModify {
 
                 String magazin = (row.getCell(1) != null) ? row.getCell(1).getStringCellValue() : "";
                 if (magazin == null || magazin.isEmpty()) break;
-                magazin = normalizeName(magazin).replaceAll("[\\s\\-]+", "");
+                magazin = NormalizeName.set(magazin).replaceAll("[\\s\\-]+", "");
                 if( magazin.equals(center) ){
                     //call delete function for this row
                     System.out.println("Deleting holidays for employee: " + name + " at store: " + magazin);

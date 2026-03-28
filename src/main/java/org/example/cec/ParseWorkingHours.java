@@ -8,7 +8,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import static org.example.cec.WeekendModify.getWorkingHoursTotal;
 import static org.example.cec.Placeholders.*;
 
 
@@ -125,7 +124,7 @@ public class ParseWorkingHours {
 
                 if (startDay > 0) System.out.println("Employee: " + name + " , start day: " + startDay);
 
-                row.getCell(daysInMonth + WORKING_OFFSET.asInt() ).setCellValue(getWorkingHoursTotal(row));
+                row.getCell(daysInMonth + WORKING_OFFSET.asInt() ).setCellValue(WorkingHoursTotal.get(row));
 
 
 

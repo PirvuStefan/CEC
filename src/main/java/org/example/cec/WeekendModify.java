@@ -14,10 +14,9 @@ import java.util.Map;
 
 import static org.example.cec.HelloApplication.daysInMonth;
 import static org.example.cec.WeekendShift.whatDay;
-import static org.example.cec.HelloApplication.normalizeName;
 import static org.example.cec.Placeholders.*;
 
-public class WeekendModify {
+public class WeekendModify implements NormalizeName {
 
     static File launch(File mainSheet, File weekendSheet){
 
@@ -88,8 +87,8 @@ public class WeekendModify {
                 name = name.trim().toUpperCase();
                 if (name.isEmpty()) break;
 
-                String normalizedMain = normalizeName(name).replaceAll("[\\s\\-]+", "");
-                String normalizedHoliday = normalizeName(employeeName).replaceAll("[\\s\\-]+", "");
+                String normalizedMain = NormalizeName.set(name).replaceAll("[\\s\\-]+", "");
+                String normalizedHoliday = NormalizeName.set(employeeName).replaceAll("[\\s\\-]+", "");
 
                 if (normalizedMain.equals(normalizedHoliday)) {
                     // we found the employee, now we can modify the shifts
@@ -238,7 +237,7 @@ public class WeekendModify {
 
                     row.getCell(daysInMonth + WEEKEND_OFFSET.asInt()).setCellValue( Math.min(32, 8 * count) );
                     row.getCell(daysInMonth + SARBATORI_OFFSET.asInt()).setCellValue( Math.min(32, 8 * sarbatoriCount) );
-                    row.getCell(daysInMonth + WORKING_OFFSET.asInt()).setCellValue(getWorkingHoursTotal(row));
+                    row.getCell(daysInMonth + WORKING_OFFSET.asInt()).setCellValue(WorkingHoursTotal.get(row));
 
                     System.out.println("Main sheet updated with weekend shifts successfully! " + employeeName);break; // exit the loop after modifying the employee
 
@@ -496,28 +495,7 @@ public class WeekendModify {
         return count;
     }
 
-    static int getWorkingHoursTotal(Row row) {
-        int total = 0;
-        for (int j = 1; j <= daysInMonth; j++) { // starting from column F (index 5)
-            int i = j + DAY_OFFSET.asInt();
-            if (i >= row.getLastCellNum()) break; // skip if column index is
-            Cell cell = row.getCell(i);
-            if (cell != null && cell.getCellType() == CellType.NUMERIC) {
-                total += (int) cell.getNumericCellValue();
-                continue;
-            }
 
-
-            try {
-                assert cell != null;
-                total += Integer.parseInt( cell.getStringCellValue() );
-            } catch (NumberFormatException e) {
-                // do nothing
-            }
-
-        }
-        return total;
-    }
 
 
 

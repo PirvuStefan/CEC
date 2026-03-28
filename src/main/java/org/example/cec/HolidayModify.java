@@ -11,11 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.example.cec.HelloApplication.daysInMonth;
-import static org.example.cec.HelloApplication.normalizeName;
 import static org.example.cec.Placeholders.*;
-import static org.example.cec.WeekendModify.getWorkingHoursTotal;
 
-public class HolidayModify {
+public class HolidayModify implements NormalizeName, WorkingHoursTotal {
 
 
     // holiday deletes the shift of the employee for the specific day, if the employee is on holiday, he cannot work on that day, so we need to delete the shift from the mainSheet, we also need to color the cell with the reason of the holiday ( green for concediu, pink for maternitate, blue for medical, orange for absenta and red for demisie)
@@ -52,8 +50,8 @@ public class HolidayModify {
 
 
 
-                    String normalizedMain = normalizeName(name).replaceAll("[\\s\\-]+", "");
-                    String normalizedHoliday = normalizeName(holiday.getName()).replaceAll("[\\s\\-]+", "");
+                    String normalizedMain = NormalizeName.set(name).replaceAll("[\\s\\-]+", "");
+                    String normalizedHoliday = NormalizeName.set(holiday.getName()).replaceAll("[\\s\\-]+", "");
 
 
 
@@ -249,7 +247,7 @@ public class HolidayModify {
                             awayCellValue = getAwayValue(headerRow, row, firstDay, lastDay, awayCell);
 
                             row.getCell(daysInMonth + ABSENTEE_OFFSET.asInt()).setCellValue(awayCellValue);
-                            row.getCell(daysInMonth + WORKING_OFFSET.asInt()).setCellValue(getWorkingHoursTotal(row));
+                            row.getCell(daysInMonth + WORKING_OFFSET.asInt()).setCellValue(WorkingHoursTotal.get(row));
                             // set the total working hours
                         }
 

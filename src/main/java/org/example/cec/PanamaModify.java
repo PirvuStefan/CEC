@@ -1,17 +1,14 @@
 package org.example.cec;
 
 import org.apache.poi.ss.usermodel.*;
-import org.example.cec.panama.Panama;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
-import static org.example.cec.HelloApplication.normalizeName;
-import static org.example.cec.Placeholders.DAY_OFFSET;
-import static org.example.cec.WeekendModify.checkColor;
+
+import static org.example.cec.NormalizeName.set;
 
 public class PanamaModify {
 
@@ -91,7 +88,7 @@ public class PanamaModify {
                 if (name.isEmpty()) break;
 
                 assert panamaShifts != null;
-                if(panamaShifts.containsKey(name) || panamaShifts.containsKey(normalizeName(name))) {
+                if(panamaShifts.containsKey(name) || panamaShifts.containsKey(set(name))) {
                     PanamaShift shift = panamaShifts.get(name);
                     shift.setShift(row);
 
