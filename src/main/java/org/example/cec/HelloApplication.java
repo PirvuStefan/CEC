@@ -36,23 +36,7 @@ public class HelloApplication extends Application {
 
 
 
-        Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("icons/icon.png")));
-        stage.getIcons().add(icon);
-        // Also try to set the platform taskbar/dock icon (useful on macOS/Windows)
-        try {
-            if (java.awt.Taskbar.getTaskbar().isSupported(java.awt.Taskbar.Feature.ICON_IMAGE)) {
-                try (java.io.InputStream is = getClass().getResourceAsStream("/org/example/cec/icons/icon.png")) {
-                    if (is != null) {
-                        java.awt.Image awtImage = javax.imageio.ImageIO.read(is);
-                        if (awtImage != null) {
-                            java.awt.Taskbar.getTaskbar().setIconImage(awtImage);
-                        }
-                    }
-                }
-            }
-        } catch (Throwable t) {
-            System.err.println("Failed to set Taskbar icon: " + t);
-        }
+
 
         Path outputDir = Path.of("arhiva");
         try {
