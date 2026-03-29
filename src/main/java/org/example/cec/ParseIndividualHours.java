@@ -1,7 +1,7 @@
 package org.example.cec;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFColor;
-import static org.example.cec.HelloApplication.daysInMonth;
+import static org.example.cec.ui.MainScene.daysInMonth;
 import static org.example.cec.ParseWorkingHours.getStartDay;
 import static org.example.cec.ParseWorkingHours.checkColor;
 

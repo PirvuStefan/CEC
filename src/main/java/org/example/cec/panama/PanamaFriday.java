@@ -4,7 +4,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 
-import static org.example.cec.HelloApplication.daysInMonth;
+import static org.example.cec.ui.MainScene.daysInMonth;
 
 public class PanamaFriday extends Panama {
 

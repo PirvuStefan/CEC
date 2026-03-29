@@ -2,7 +2,7 @@ package org.example.cec.panama;
 
 import org.apache.poi.ss.usermodel.Row;
 
-import static org.example.cec.HelloApplication.daysInMonth;
+import static org.example.cec.ui.MainScene.daysInMonth;
 
 public class PanamaSunday extends Panama {
 

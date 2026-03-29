@@ -10,10 +10,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.example.cec.HelloApplication.daysInMonth;
+import static org.example.cec.ui.MainScene.daysInMonth;
 import static org.example.cec.Placeholders.*;
 
 public class HolidayModify implements NormalizeName, WorkingHoursTotal {
+
+    private File mainSheet, holidaysSheet;
+    public HolidayModify(File mainSheet, File holidaysSheet) {
+        this.mainSheet = mainSheet;
+        this.holidaysSheet = holidaysSheet;
+    }
 
 
     // holiday deletes the shift of the employee for the specific day, if the employee is on holiday, he cannot work on that day, so we need to delete the shift from the mainSheet, we also need to color the cell with the reason of the holiday ( green for concediu, pink for maternitate, blue for medical, orange for absenta and red for demisie)
@@ -21,12 +27,14 @@ public class HolidayModify implements NormalizeName, WorkingHoursTotal {
     // we do process the holidays first and then the weekends shifts to avoid certain conflicts
     // TODO: we do need to see if this interferes with the panama shifts, I think that the panama are not pseudo-real and algorihm based and if on the shift is marked with a X, it has actually worked there
 
-    static File launch(File mainSheet, File holidaysSheet) {
+    public File launch() {
         List<Holiday> holidays;
 
         //ParseWorkingHours.initializeSheet(mainSheet, daysInMonth);
 
-        holidays = InitialiseHolidaysList(holidaysSheet);
+        HolidayInitialize holidayInitialize = new HolidayInitialize(holidaysSheet);
+
+        holidays = holidayInitialize.InitialiseHolidaysList();
         System.out.println("Total holidays loaded: " + holidays.size());
 
         // now we do have the holiday data, we can modify the mainSheet
@@ -324,69 +332,7 @@ public class HolidayModify implements NormalizeName, WorkingHoursTotal {
         return awayCellValue;
     }
 
-    private static List<Holiday> InitialiseHolidaysList(File holidaysSheet) {
-        List<Holiday> holidays = new ArrayList<>();
-        String filePath = holidaysSheet.getAbsolutePath();
 
-        try (FileInputStream fis = new FileInputStream(new File(filePath));
-             Workbook workbook = WorkbookFactory.create(fis)) { // Updated to use WorkbookFactory.create
-
-            Sheet sheet = workbook.getSheetAt(0);
-            System.out.println(sheet.getSheetName() );
-
-            for (int rowIndex = 2; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
-                Row row = sheet.getRow(rowIndex);
-                if (row == null) break;
-
-                String name = (row.getCell(0) != null && row.getCell(0).getCellType() == CellType.STRING) ? row.getCell(0).getStringCellValue() : null;
-                if( name == null || name.isEmpty() ) break;
-                System.out.println("Processing row " + (rowIndex + 1) + " for employee: " + name);
-                String magazin = row.getCell(1).getStringCellValue();
-                String period;
-                if (row.getCell(2).getCellType() == CellType.STRING) {
-                    period = row.getCell(2).getStringCellValue();
-                } else if (row.getCell(2).getCellType() == CellType.NUMERIC) {
-                    int day = row.getCell(2).getDateCellValue().getDate();
-                    period = day + "-" + day;
-                } else {
-                    period = "";
-                }
-
-
-                System.out.println("Vacation Period: " + period);
-                String[] parts = period.split("\\*");
-                String firstDay = parts[0].trim().replaceFirst("^0+(?!$)", "");
-                String lastDay = parts[1].trim().replaceFirst("^0+(?!$)", "");
-
-                String reason = row.getCell(3).getStringCellValue();
-                reason = switch (reason) {
-                    case "co", "CO" -> "concediu";
-                    //case "m", "M" -> "maternitate";
-                    case "cm", "m", "CM", "M" -> "medical";
-                    case "abs", "ABS" -> "absenta";
-                    case "dem", "DEM" -> "demisie";
-                    default -> "concediu";
-                };
-                Holiday holiday = new Holiday(Integer.parseInt(firstDay), Integer.parseInt(lastDay), reason, name, magazin);
-                holidays.add(holiday);
-            }
-
-            try (FileOutputStream fos = new FileOutputStream(new File(filePath))) {
-                workbook.write(fos);
-            }
-
-            System.out.println("Excel file modified successfully!");
-
-        } catch (IOException e) { // Added InvalidFormatException
-            e.printStackTrace();
-        }
-
-        for (Holiday holiday : holidays) {
-            System.out.println("Holiday: " + holiday.getName() + ", " + holiday.getFirstDay() + "-" + holiday.getLastDay() + ", " + holiday.getReason());
-        }
-
-        return holidays;
-    }
 
 
 

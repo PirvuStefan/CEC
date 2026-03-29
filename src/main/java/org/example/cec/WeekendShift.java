@@ -13,10 +13,10 @@ import java.io.FileInputStream;
 public class WeekendShift {
 
 
-    static int size = -1;
-    static int sarbatoriSize;
-    static int[] pos;
-    static int[] sarbatoare;
+    public static int size = -1;
+    public static int sarbatoriSize;
+    public static int[] pos;
+    public static int[] sarbatoare;
 
     public void initialiseDays(int size){
         WeekendShift.size = size;

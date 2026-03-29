@@ -12,20 +12,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.example.cec.HelloApplication.daysInMonth;
+import static org.example.cec.ui.MainScene.daysInMonth;
 import static org.example.cec.WeekendShift.whatDay;
 import static org.example.cec.Placeholders.*;
 
 public class WeekendModify implements NormalizeName {
 
-    static File launch(File mainSheet, File weekendSheet){
+    private File mainSheet, weekendSheet;
+
+    public WeekendModify(File mainSheet, File weekendSheet) {
+        this.mainSheet = mainSheet;
+        this.weekendSheet = weekendSheet;
+    }
+
+    public File launch(File mainSheet, File weekendSheet){
 
         Map< String , List<Employee>> weekendEmployees;
         System.out.println("Modifying main sheet with weekend shifts...");
         WeekendShift test = new WeekendShift();
         test.initialiseSize(weekendSheet); // to set the size of the weekend shift ( static variable);
         System.out.println("Weekend size: " + WeekendShift.size);
-        weekendEmployees = initialiseWeekendList(weekendSheet);
+        WeekendInitialize initializer = new WeekendInitialize(weekendSheet);
+        weekendEmployees = initializer.initialiseWeekendList();
         if( weekendEmployees.isEmpty()){
             System.out.println("Eroare la initializarea listei de angajati pentru weekend!");
         }
@@ -257,66 +265,6 @@ public class WeekendModify implements NormalizeName {
     }
 
 
-    private static Map< String, List<Employee>> initialiseWeekendList(File weekendSheet) {
-        System.out.println("Initialising weekend employees from file: " + weekendSheet.getAbsolutePath());
-        try (FileInputStream fis = new FileInputStream(weekendSheet);
-             Workbook workbook = WorkbookFactory.create(fis)) { // Updated to use WorkbookFactory.create
-
-            Sheet sheet = workbook.getSheetAt(0);
-            Map<String, List<Employee>> weekendEmployees = new HashMap<>();
-            String magazin = "";
-            List < Employee > employees = new ArrayList<>();
-
-
-
-            for (int rowIndex = 2; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
-                Row firstRow = sheet.getRow(2);
-                Row row = sheet.getRow(rowIndex);
-                Row nextRow = sheet.getRow(rowIndex + 1);
-                if (row == null) break;
-                // every type of this document should end with 2 empty rows in order to work
-
-                String name = row.getCell(1).getStringCellValue();
-                if( name == null || name.isEmpty() ) break;
-                if(!row.getCell(0).getStringCellValue().isEmpty()) magazin = row.getCell(0).getStringCellValue();
-
-
-
-
-
-                WeekendShift shift = new WeekendShift();
-                shift.initialiseDays(WeekendShift.size);
-                int numberOfShifts = 0;
-                for(int i = 0 ; i < 30; i++){
-                    Cell cell = row.getCell(i + 2);
-                    if(cell == null) break;
-                    if( !checkColor(firstRow.getCell(i)) ) continue;
-                    else if(cell.getCellType() == CellType.STRING){
-                        if(cell.getStringCellValue().equals("X") || cell.getStringCellValue().equals("x")) numberOfShifts++;
-                    }
-                }
-                //System.out.println(name + " has " + numberOfShifts + " shifts.");
-                Employee employee = new Employee(name, numberOfShifts, shift);
-                employees.add(employee);
-                if( nextRow.getCell(0).getStringCellValue().isEmpty() && nextRow.getCell(1).getStringCellValue().isEmpty()){
-                    weekendEmployees.put(magazin, new ArrayList<>(employees));
-                    employees.clear();
-                    break;
-                }
-                if(!nextRow.getCell(0).getStringCellValue().isEmpty() ) {
-                    weekendEmployees.put(magazin, new ArrayList<>(employees));
-                    employees.clear();
-                }
-
-            }
-
-            return weekendEmployees;
-
-        } catch (IOException e) { // Added InvalidFormatException
-            e.printStackTrace();
-        }
-        return new HashMap<>(); // return an empty map if there was an error
-    }
 
 
     private static int[][] generateShiftEmployeesHolidays(List < Employee > employees, File weekendSheet){

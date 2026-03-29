@@ -71,7 +71,7 @@ public class PanamaModify {
         return List;
     }
 
-     static File launch(File mainSheet, File panamaSheet) {
+     public static File launch(File mainSheet, File panamaSheet) {
         Map<String, PanamaShift> panamaShifts = InitialisePanamaShifts(panamaSheet);
 
         try (FileInputStream fis = new FileInputStream(mainSheet);

@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static org.example.cec.Placeholders.*;
+import static org.example.cec.ui.MainScene.daysInMonth;
 
 
 public class ParseWorkingHours {
@@ -145,7 +146,7 @@ public class ParseWorkingHours {
 
     static int getStartDay(Row row){
         int startDay = 1;
-        for (int i = 1; i <= HelloApplication.daysInMonth; i++) {
+        for (int i = 1; i <= daysInMonth; i++) {
             Cell cell = row.getCell(i + 4);
             if (cell != null) {
                 XSSFColor color = (XSSFColor) cell.getCellStyle().getFillForegroundColorColor();
