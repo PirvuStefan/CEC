@@ -192,7 +192,8 @@ public class MainScene implements VariablesReset {
         weekendSheet = null;
         holidaysSheet = null;
         panamaSheet = null;
-    }
+    } // this method might be converted in an interface in the future if we want to reset the file selections from other scenes as well
+    // TODO : convert this to an interface if necessary
 
     private HBox createFileSelector(String labelText, FileConsumer fileSetter) {
         Label label = new Label(labelText + ":");
