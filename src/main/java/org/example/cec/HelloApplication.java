@@ -20,6 +20,8 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.text.Normalizer;
 import java.util.Objects;
+import org.example.cec.ui.SceneController;
+import org.example.cec.ui.InstructionsScene;
 
 public class HelloApplication extends Application implements NormalizeName {
 
@@ -165,13 +167,17 @@ public class HelloApplication extends Application implements NormalizeName {
         root.setStyle("-fx-background-color: linear-gradient(to bottom right, rgba(0,100,200,0.85), rgba(0,180,255,0.85));");
 
         Scene mainScene = new Scene(root, 600, 500);
+
+        SceneController sceneController = new SceneController(stage);
+        sceneController.setMainScene(mainScene);
+
         stage.setScene(mainScene);
         stage.setTitle("Central Excel Controller");
         stage.setMinWidth(500);
         stage.setMinHeight(350);
         stage.show();
 
-        instructionsButton.setOnAction(e -> stage.setScene(createInstructionsScene(stage, mainScene))); // Redirect to instructions page
+        instructionsButton.setOnAction(e -> sceneController.switchToInstructionsScene()); // Redirect to instructions page
     }
 
     private void clearFileSelections(VBox fileSelectors) {
@@ -192,111 +198,6 @@ public class HelloApplication extends Application implements NormalizeName {
         weekendSheet = null;
         holidaysSheet = null;
         panamaSheet = null;
-    }
-
-    private Scene createInstructionsScene(Stage stage, Scene mainScene) {
-        Label title = new Label("Ghid De Utilizare  \u2714");
-        title.setStyle("-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: white;");
-
-        Label instructions = getLabel();
-
-        Button backButton = new Button("Inapoi la Pagina Principala");
-        backButton.setStyle("-fx-background-color: rgba(0,123,255,0.85); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 10 20 10 20;");
-
-        Button weekendDetailsButton = new Button("Detalii Weekend");
-        weekendDetailsButton.setStyle("-fx-background-color: rgba(0,123,255,0.85); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 10 20 10 20;");
-
-        Button vacanteDetailsButton = new Button("Detalii Vacante");
-        vacanteDetailsButton.setStyle("-fx-background-color: rgba(0,123,255,0.85); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 10 20 10 20;");
-
-        VBox layout = new VBox(20, title, instructions, weekendDetailsButton, vacanteDetailsButton, backButton);
-        layout.setAlignment(Pos.CENTER);
-        layout.setPadding(new Insets(20));
-        layout.setStyle("-fx-background-color: linear-gradient(to bottom right, rgba(0,100,200,0.85), rgba(0,180,255,0.85));");
-
-        Scene instructionsScene = new Scene(layout, 600, 400);
-
-        backButton.setOnAction(e -> stage.setScene(mainScene));
-        weekendDetailsButton.setOnAction(e -> stage.setScene(createWeekendDetailsScene(stage, instructionsScene)));
-        vacanteDetailsButton.setOnAction(e -> stage.setScene(createVacanteDetailsScene(stage, instructionsScene)));
-
-        return instructionsScene;
-    }
-
-    private static Label getLabel() {
-        Label instructions = new Label(
-            """
-            1. Selecteaza fisierele necesare apasand pe butonul cauta .
-            2. Fii sigur ca fisierele sunt corect formatate .
-            3. Apasa 'Proceseaza Datele' .
-            4. Fisierul modificat se poate gasi in folderul 'arhiva' .
-            5. Nu uita sa faci o copie de siguranta a fisierelor originale inainte de procesare.
-            6. Toate sheet-urile trebuie sa fie pe pozitia 0 ( primul sheet din excel ) .
-            """
-        );
-        instructions.setStyle("-fx-font-size: 16px; -fx-text-fill: white; -fx-padding: 10;");
-        return instructions;
-    }
-
-
-    private Scene createWeekendDetailsScene(Stage stage, Scene instructionsScene) {
-        Label title = new Label("Detalii Weekend");
-        title.setStyle("-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: white;");
-
-        Label details = new Label(
-                """
-               Functionalitatea Weekend:
-               - Permite modificarea fisierului principal pe baza programului de weekend.
-               - Aloca automat turele de weekend angajatilor, tinand cont de istoricul lor si de numarul de ture necesare.
-               - Zilele de sambata si duminica sunt evidentiate si gestionate separat.
-               - Orice modificare este salvata in fisierul principal si arhivata in folderul 'arhiva'.
-               - Pentru o functionare corecta, asigurati-va ca fisierul de weekend este bine formatat si contine toate informatiile necesare.
-               - Fiecare angajat trebuie sa aiba un numar specific de ture si sa fie marcat daca a lucrat sambata in luna precedenta.
-               - In cazul in care luna incepe cu o duminica, se va tine cont daca angajatul a lucrat sambata in luna precedenta pentru a aloca turele corect.
-               - Pentru o gestionare eficienta, este esential ca numarul de ture alocate fiecarui angajat sa nu fie mai mare decat numarul de weekend-uri din luna respectiva.
-               """
-        );
-        return getScene(stage, instructionsScene, title, details);
-    }
-
-    private Scene getScene(Stage stage, Scene instructionsScene, Label title, Label details) {
-        details.setStyle("-fx-font-size: 16px; -fx-text-fill: white; -fx-padding: 10;");
-
-        Button backButton = new Button("Înapoi la Ghid");
-        backButton.setStyle("-fx-background-color: rgba(0,123,255,0.85); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 10 20 10 20;");
-        backButton.setOnAction(e -> stage.setScene(instructionsScene));
-
-        VBox layout = new VBox(20, title, details, backButton);
-        layout.setAlignment(Pos.CENTER);
-        layout.setPadding(new Insets(20));
-        layout.setStyle("-fx-background-color: linear-gradient(to bottom right, rgba(0,100,200,0.85), rgba(0,180,255,0.85));");
-
-        return new Scene(layout, 600, 400);
-    }
-
-    private Scene createVacanteDetailsScene(Stage stage, Scene instructionsScene) {
-        Label title = new Label("Detalii Vacanțe");
-        title.setStyle("-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: white;");
-
-        Label details = new Label(
-                """
-               Functionalitatea Vacante:
-                - Permite modificarea fisierului principal pe baza fisierului de vacante/concedii.
-                - Zilele de concediu, medical, maternitate, absenta sau demisie sunt marcate distinct.
-                - Culorile specifice sunt folosite pentru a evidentia diferitele tipuri de vacante:
-                  - Concediu: Verde ( co )
-                  - Maternitate: Roz ( m )
-                  - Medical: Albastru deschis ( cm )
-                  - Absenta: Portocaliu ( abs )
-                  - Demisie: Rosu ( dem )
-                - Zilele de weekend care coincid cu vacanta sunt eliberate automat.
-                - In tabelul excel, in coloana "periodata" se introduce perioada vacantei in formatul "zz*zz" (ex: 10*23).
-                - In coloana "tip concediu" se introduce tipul vacantei folosind abrevierile specificate mai sus.
-                - Daca o persoana are mai multe perioade de vacanta, se adauga cate un rand separat pentru fiecare perioada.
-                - Toate modificarile sunt salvate si arhivate in folderul 'arhiva'.
-                """
-        );
-        return getScene(stage, instructionsScene, title, details);
     }
 
     private HBox createFileSelector(String labelText, FileConsumer fileSetter) {
