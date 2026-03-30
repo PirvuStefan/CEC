@@ -10,7 +10,7 @@ import java.io.FileInputStream;
 
 
 
-public class WeekendShift {
+public class WeekendShift implements CellValueGetter {
 
 
     public static int size = -1;
@@ -89,23 +89,7 @@ public class WeekendShift {
         System.out.println("SARBATORI : " + sarbatoriSize);
     }
 
-    static int getValueint(Row row, int cellIndex) {
-        Cell cell = row.getCell(cellIndex);
-        if (cell == null) {
-            return 0; // sau altă valoare implicită
-        }
-        if (cell.getCellType() == CellType.NUMERIC) {
-            return (int) cell.getNumericCellValue();
-        } else if (cell.getCellType() == CellType.STRING) {
-            try {
-                return Integer.parseInt(cell.getStringCellValue());
-            } catch (NumberFormatException e) {
-                return 0; // sau altă valoare implicită
-            }
-        }
-        return 0; // sau altă valoare implicită
 
-    }
 
     private boolean checkColor( Cell cell ){
         String s;

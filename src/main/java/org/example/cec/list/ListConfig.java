@@ -13,7 +13,7 @@ public class ListConfig {
     private final Path outputDir = Path.of("arhiva/list");
     private File file;
 
-    private ListConfig() {
+    ListConfig() {
         try {
             if (!Files.exists(outputDir)) {
                 Files.createDirectory(outputDir);
@@ -47,5 +47,9 @@ public class ListConfig {
 
     protected Path getOutputDir() {
         return outputDir;
+    }
+
+    protected File getFile() {
+        return file;
     }
 }
