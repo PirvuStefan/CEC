@@ -6,11 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import org.example.cec.Employee;
 import org.example.cec.list.SearchEmployee;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SearchEmployeeScene {
 
@@ -74,10 +70,10 @@ public class SearchEmployeeScene {
 
         searchButton.setOnAction(e -> {
             String text = searchInput.getText();
-            SearchEmployee Search1 = new SearchEmployee(text);
-            int key = Search1.getKey();
+            SearchEmployee Search = new SearchEmployee(text);
+            int key = Search.getKey();
             if(key == -1) {
-                resultsArea.setText("Niciun angajat cu marca: " + key);
+                resultsArea.setText("Niciun angajat cu numele \"" + text + "\" nu a fost gasit.");
             } else {
                 resultsArea.setText(Integer.toString(key));
             }
