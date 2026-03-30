@@ -11,6 +11,7 @@ public class ListConfig {
 
     private static ListConfig instance;
     private final Path outputDir = Path.of("arhiva/list");
+    protected Password password;
     private File file;
 
     ListConfig() {
@@ -23,6 +24,7 @@ public class ListConfig {
         }
 
         file = search();
+        password = new Password();
 
     }
 
@@ -33,7 +35,7 @@ public class ListConfig {
         for(File file : files){
             if(file.getName().contains("aux")) continue;
             return file;
-        } // retrun the file that does not contain aux since we might need to create additional copy of the main list for safe deletion
+        } // return the file that does not contain aux since we might need to create additional copy of the main list for safe deletion
 
         return null;
     }

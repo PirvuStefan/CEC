@@ -7,6 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.example.cec.Employee;
+import org.example.cec.list.SearchEmployee;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +68,21 @@ public class SearchEmployeeScene {
         root.getChildren().addAll(title, searchBox, resultsLabel, resultsArea, backButton);
 
         this.scene = new Scene(root, 800, 600);
+
+
+
+
+        searchButton.setOnAction(e -> {
+            String text = searchInput.getText();
+            SearchEmployee Search1 = new SearchEmployee(text);
+            int key = Search1.getKey();
+            if(key == -1) {
+                resultsArea.setText("Niciun angajat cu marca: " + key);
+            } else {
+                resultsArea.setText(Integer.toString(key));
+            }
+        });
+
 
         // Search Button Action
 

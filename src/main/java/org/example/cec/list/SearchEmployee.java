@@ -13,15 +13,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class SearchEmployee implements CellValueGetter {
-    private String name = null;
+    private int key = -1;
 
-    public SearchEmployee(int key) {
+    public SearchEmployee(String nameSearch) {
 
         ListConfig listConfig = new ListConfig();
         File file = listConfig.getFile();
 
         try (FileInputStream fis = new FileInputStream(file);
-             Workbook workbook = WorkbookFactory.create(fis)) {
+             Workbook workbook = WorkbookFactory.create(fis,listConfig.password.getValue())) {
 
             Sheet sheet = workbook.getSheetAt(ListSheet.EMPLOYEE_SEARCH.asInt());
 
@@ -34,8 +34,8 @@ public class SearchEmployee implements CellValueGetter {
                 String name = (row.getCell(1) != null) ? row.getCell(1).getStringCellValue() : "";
                 int keyNow = getValueint(row, 2);
                 if(name == null || name.isEmpty()) continue;
-                if(key == keyNow){
-                  this.name = name;
+                if(name.equals(nameSearch)) {
+                  this.key = keyNow;
                   return;
                 }
 
@@ -66,8 +66,8 @@ public class SearchEmployee implements CellValueGetter {
 
     }
 
-    public String getName() {
-        return name;
+    public int getKey() {
+        return key;
     }
 
 
