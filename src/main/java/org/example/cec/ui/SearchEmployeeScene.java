@@ -80,7 +80,7 @@ public class SearchEmployeeScene {
         });
 
 
-        // Search Button Action
+
 
     }
 

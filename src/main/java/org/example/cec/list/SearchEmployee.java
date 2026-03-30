@@ -69,7 +69,7 @@ public class SearchEmployee implements CellValueGetter, NormalizeName {
                     if (name == null || name.isEmpty()) continue;
 
                     String normName = NormalizeName.set(name).replaceAll("[\\s\\-]+", "");
-                    if (normName.equals(normSearch)) {
+                    if (compareName(normName, normSearch)) {
                         this.key = keyNow;
                         break;
                     }
@@ -86,6 +86,23 @@ public class SearchEmployee implements CellValueGetter, NormalizeName {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean compareName(String name, String search) {
+
+        if (name.equals(search)) return true;
+
+
+        name = name.replace("-", " ");
+        if (name.trim().equals(search)) return true;
+
+
+        name = name.replaceAll("[()]", "");
+        if (name.trim().equals(search)) return true;
+
+
+        name = name.replaceAll("\\s+", " ");
+        return name.trim().equalsIgnoreCase(search);
     }
 
     public int getKey() {
