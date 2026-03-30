@@ -37,5 +37,5 @@ build/
 ### Mac OS ###
 .DS_Store
 
-src/main/resources/password.txt
+src/main/resources/password
 arhiva/list/**
