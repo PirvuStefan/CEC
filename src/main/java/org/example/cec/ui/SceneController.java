@@ -22,6 +22,8 @@ public class SceneController {
     }
 
     public void switchToInstructionsScene() {
+
+
         Scene scene = InstructionsScene.create(this);
         stage.setScene(scene);
     }
@@ -34,6 +36,12 @@ public class SceneController {
     public void switchToVacanteDetailsScene() {
         Scene scene = VacanteDetailsScene.create(this);
         stage.setScene(scene);
+    }
+
+    public void switchToSearchEmployeeScene(){
+        Scene scene = SearchEmployeeScene.create(this);
+        stage.setScene(scene);
+
     }
 }
 

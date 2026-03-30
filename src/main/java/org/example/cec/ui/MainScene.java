@@ -146,7 +146,7 @@ public class MainScene implements VariablesReset {
             clearFileSelections(fileSelectors);
         });
 
-        Button instructionsButton = new Button("Cum folosim aplicatia?");
+        Button instructionsButton = new Button("Comenzi Aditionale");
         instructionsButton.setPrefWidth(200);
         instructionsButton.setStyle("-fx-background-color: rgba(0,123,255,0.85); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 10 20 10 20;");
         VBox root = new VBox(30, title, fileSelectors, processButton, instructionsButton);
@@ -159,7 +159,7 @@ public class MainScene implements VariablesReset {
         // Register scene with controller so instructions can switch back
         sceneController.setMainScene(this.scene);
 
-        instructionsButton.setOnAction(e -> sceneController.switchToInstructionsScene());
+        instructionsButton.setOnAction(e -> sceneController.switchToSearchEmployeeScene());
     }
 
     public Scene getScene() {
