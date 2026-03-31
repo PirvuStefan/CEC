@@ -13,6 +13,8 @@ public class ParseIndividualHours {
 
         if(!checkParse(row)) return;
 
+        System.out.println("Parsing Row " + row.getRowNum() + " for employee: " + row.getCell(2).getStringCellValue());
+
         for(int i = startDay; i <= daysInMonth;i++){
             Cell cell = row.getCell(i + Placeholders.DAY_OFFSET.asInt());
             if(!checkColor(cell)) continue;

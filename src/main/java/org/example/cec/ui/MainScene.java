@@ -9,7 +9,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.example.cec.HolidayModify;
 import org.example.cec.PanamaModify;
-import org.example.cec.VariablesReset;
+import org.example.cec.VariableReset;
 import org.example.cec.WeekendModify;
 
 import java.io.File;
@@ -18,7 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
-public class MainScene implements VariablesReset {
+public class MainScene {
 
     private final Scene scene;
     private final SceneController sceneController;
@@ -142,7 +142,7 @@ public class MainScene implements VariablesReset {
             }
 
             showAlert("Fisierul principal a fost modificat cu succes folosind ambele fisiere!");
-            resetStaticVariables();
+            VariableReset.resetStaticVariables();
             clearFileSelections(fileSelectors);
         });
 
