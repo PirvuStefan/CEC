@@ -10,7 +10,7 @@ import java.io.FileInputStream;
 
 
 
-public class WeekendShift implements CellValueGetter {
+public class WeekendShift implements CellValue {
 
 
     public static int size = -1;

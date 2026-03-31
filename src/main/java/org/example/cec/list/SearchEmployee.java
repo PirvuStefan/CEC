@@ -6,7 +6,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.example.cec.CellValueGetter;
+import org.example.cec.CellValue;
 import org.example.cec.NormalizeName;
 
 import java.io.File;
@@ -14,7 +14,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class SearchEmployee implements CellValueGetter, NormalizeName {
+public class SearchEmployee implements CellValue, NormalizeName {
     private int key = -1;
 
     public SearchEmployee(String nameSearch) {
