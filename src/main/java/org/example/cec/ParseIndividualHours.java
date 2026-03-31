@@ -14,7 +14,7 @@ public class ParseIndividualHours {
         if(!checkParse(row)) return;
 
         for(int i = startDay; i <= daysInMonth;i++){
-            Cell cell = row.getCell(i);
+            Cell cell = row.getCell(i + Placeholders.DAY_OFFSET.asInt());
             if(!checkColor(cell)) continue;
             if(cell.getCellType() == CellType.STRING) cell.setCellValue("8");
             else cell.setCellValue(8);
@@ -31,7 +31,8 @@ public class ParseIndividualHours {
 
 
         for (int i = startDay; i < daysInMonth; i++) {
-            Cell cell = row.getCell(i);
+            Cell cell = row.getCell(i + Placeholders.DAY_OFFSET.asInt());
+            if(checkCell(cell)) continue;
             if (!checkColor(cell)) continue;
             if(checkCell(cell)) count++;
 

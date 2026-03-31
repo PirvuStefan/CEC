@@ -35,6 +35,7 @@ public class WeekendModifyEmployee {
 
                 if (normalizedMain.equals(normalizedHoliday)) {
                     // we found the employee, now we can modify the shifts
+                    System.out.println("Found employee: " + name + " at row " + (rowIndex + 1));
 
                     ParseIndividualHours.Parse(row);
                     // we parse the base working hours for the employees
@@ -72,7 +73,6 @@ public class WeekendModifyEmployee {
 
                             boolean skip = false;
 
-                            System.out.println("Days in month: " + daysInMonth);
 
                             if( day < firstDay ) continue;
 
@@ -92,7 +92,6 @@ public class WeekendModifyEmployee {
 
                                 if(!checkColor(row.getCell(colIndex + 2))) skip = true; // if the cell is not white, we skip it
 
-                                if( day + 2 > daysInMonth ) skip = true;
 
 
                             }
