@@ -35,7 +35,6 @@ public class WeekendModifyEmployee {
 
                 if (normalizedMain.equals(normalizedHoliday)) {
                     // we found the employee, now we can modify the shifts
-                    System.out.println("Found employee: " + name + " at row " + (rowIndex + 1));
 
 
                     ParseIndividualHours ParseNow = new ParseIndividualHours(row);
