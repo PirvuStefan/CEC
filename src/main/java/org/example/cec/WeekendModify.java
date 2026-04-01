@@ -14,7 +14,7 @@ import static org.example.cec.ui.MainScene.daysInMonth;
 import static org.example.cec.WeekendShift.whatDay;
 import static org.example.cec.Placeholders.*;
 
-public class WeekendModify implements NormalizeName {
+public class WeekendModify {
 
     private File mainSheet, weekendSheet;
 

@@ -12,7 +12,7 @@ import java.io.IOException;
 import static org.example.cec.ui.MainScene.daysInMonth;
 
 
-public class DeleteModify implements NormalizeName{
+public class DeleteModify {
 
     static File Launch(File mainSheet, String center) {
 

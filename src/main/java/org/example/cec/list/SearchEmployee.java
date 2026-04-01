@@ -14,7 +14,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class SearchEmployee implements CellValue, NormalizeName {
+public class SearchEmployee implements CellValue {
     private int key = -1;
 
     public SearchEmployee(String nameSearch) {
@@ -57,6 +57,7 @@ public class SearchEmployee implements CellValue, NormalizeName {
             try (Workbook wb = workbook) {
                 Sheet sheet = wb.getSheetAt(ListSheet.EMPLOYEE_SEARCH.asInt());
                 if (sheet == null) return;
+
 
                 String normSearch = NormalizeName.set(nameSearch).replaceAll("[\\s\\-]+", "");
 

@@ -37,7 +37,9 @@ public class WeekendModifyEmployee {
                     // we found the employee, now we can modify the shifts
                     System.out.println("Found employee: " + name + " at row " + (rowIndex + 1));
 
-                    ParseIndividualHours.Parse(row);
+
+                    ParseIndividualHours ParseNow = new ParseIndividualHours(row);
+                    ParseNow.parse();
                     // we parse the base working hours for the employees
 
                     int count = 0;

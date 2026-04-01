@@ -7,7 +7,7 @@ import org.apache.poi.ss.usermodel.Row;
 import static org.example.cec.Placeholders.DAY_OFFSET;
 import static org.example.cec.ui.MainScene.daysInMonth;
 
-public interface WorkingHoursTotal {
+public class WorkingHoursTotal {
 
     static int get(Row row) {
         int total = 0;
@@ -26,6 +26,7 @@ public interface WorkingHoursTotal {
                 total += Integer.parseInt( cell.getStringCellValue() );
             } catch (NumberFormatException e) {
                 // do nothing
+
             }
 
         }

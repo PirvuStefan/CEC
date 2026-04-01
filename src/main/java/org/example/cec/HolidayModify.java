@@ -13,7 +13,7 @@ import java.util.List;
 import static org.example.cec.ui.MainScene.daysInMonth;
 import static org.example.cec.Placeholders.*;
 
-public class HolidayModify implements NormalizeName, WorkingHoursTotal {
+public class HolidayModify {
 
     private File mainSheet, holidaysSheet;
     public HolidayModify(File mainSheet, File holidaysSheet) {

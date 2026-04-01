@@ -2,9 +2,11 @@ package org.example.cec;
 
 import java.text.Normalizer;
 
-public interface NormalizeName {
+    public class NormalizeName {
 
-    static String set(String s) {
+
+
+    public static String set(String s) {
         if (s == null) return "";
         // Normalize to composed form, replace NBSP with normal space, remove invisible chars
         String t = Normalizer.normalize(s, Normalizer.Form.NFKC);
@@ -16,4 +18,6 @@ public interface NormalizeName {
         t = t.replaceAll("\\s+", " ").trim();
         return t.toUpperCase();
     }
+
+
 }
