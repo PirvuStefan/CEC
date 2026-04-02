@@ -17,7 +17,7 @@ public enum MonthsPlaceholders {
 
     private final String value;
 
-    MonthsPlaceholders(String value){ this.value = value;}
+    MonthsPlaceholders(String value){ this.value = value; }
 
     public int asInt() {
         return Integer.parseInt(value);
@@ -34,6 +34,16 @@ public enum MonthsPlaceholders {
 
     public static String asString(int val) {
         return asString(String.valueOf(val));
+    }
+
+    public static MonthsPlaceholders getCurrent() {
+        int currentMonth = java.time.LocalDate.now().getMonthValue();
+        for (MonthsPlaceholders month : values()) {
+            if (month.asInt() == currentMonth) {
+                return month;
+            }
+        }
+        return MonthsPlaceholders.Ianuarie;
     }
 
 }

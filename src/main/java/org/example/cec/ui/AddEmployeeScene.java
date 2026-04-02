@@ -3,14 +3,11 @@ package org.example.cec.ui;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.example.cec.ui.validate.ValidateAddEmployee;
 
 public class AddEmployeeScene implements ColorStyle {
 
@@ -37,6 +34,7 @@ public class AddEmployeeScene implements ColorStyle {
         TextField ciField = new TextField();
         TextField domiciliuField = new TextField();
         DatePicker valabilitateFisaField = new DatePicker();
+        CheckBox newMonth = new CheckBox("Luna noua");
 
         addRow(formGrid, 0, "Nume:", numeField);
         addRow(formGrid, 1, "Salariu:", salariuField);
@@ -49,6 +47,7 @@ public class AddEmployeeScene implements ColorStyle {
         addRow(formGrid, 8, "CI:", ciField);
         addRow(formGrid, 9, "Domiciliu:", domiciliuField);
         addRow(formGrid, 10, "Valabilitate fisa:", valabilitateFisaField);
+        addRow(formGrid, 11, "Luna noua:", newMonth);
 
         ScrollPane scrollPane = new ScrollPane(formGrid);
         scrollPane.setFitToWidth(true);
@@ -79,21 +78,44 @@ public class AddEmployeeScene implements ColorStyle {
 
         saveButton.setOnAction(e -> MainScene.showAlert("Datele au fost completate. Urmatorul pas este salvarea in fisier."));
         clearButton.setOnAction(e -> {
-            numeField.clear();
-            salariuField.clear();
-            dataAngajariiField.setValue(null);
-            cnpField.clear();
-            functiaField.clear();
-            punctDeLucruField.clear();
-            gestiuneField.clear();
-            telefonField.clear();
-            ciField.clear();
-            domiciliuField.clear();
-            valabilitateFisaField.setValue(null);
+            ValidateAddEmployee.getFileds(numeField, salariuField, dataAngajariiField, cnpField, functiaField, punctDeLucruField, gestiuneField, telefonField, ciField, domiciliuField, valabilitateFisaField, newMonth);
         });
         backButton.setOnAction(e -> controller.switchToCommandsScene());
 
+        saveButton.setOnAction(e -> {
+                // Here you would implement the logic to save the employee data to your data source (e.g., database, file, etc.)
+                // For demonstration purposes, we'll just show an alert with the entered data.
+
+                String employeeData = String.format(
+                        "Nume: %s\nSalariu: %s\nData Angajarii: %s\nCNP: %s\nFunctia: %s\nPunct de Lucru: %s\nGestiune: %s\nTelefon: %s\nCI: %s\nDomiciliu: %s\nValabilitate Fisa: %s\nLuna Noua: %s",
+                        numeField.getText(),
+                        salariuField.getText(),
+                        dataAngajariiField.getValue(),
+                        cnpField.getText(),
+                        functiaField.getText(),
+                        punctDeLucruField.getText(),
+                        gestiuneField.getText(),
+                        telefonField.getText(),
+                        ciField.getText(),
+                        domiciliuField.getText(),
+                        valabilitateFisaField.getValue(),
+                        newMonth.isSelected() ? "Da" : "Nu"
+                );
+
+                MainScene.showAlert("Datele angajatului:\n" + employeeData);
+
+        });
+
+
+
         return new Scene(layout, 600, 400);
+    }
+
+    private static void addRow(GridPane formGrid, int i, String s, CheckBox newMonth) {
+        Label label = new Label(s);
+        label.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
+        formGrid.add(label, 0, i);
+        formGrid.add(newMonth, 1, i);
     }
 
     private static void addRow(GridPane grid, int rowIndex, String labelText, TextField input) {
