@@ -13,8 +13,7 @@ public class Password {
     public Password() {
         // Option A: use the class's resource lookup with leading '/'
         InputStream in = Password.class.getResourceAsStream("/password");
-        // Option B (alternate): use the class loader without leading slash
-        // InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("password.txt");
+
 
         if (in == null) {
             throw new IllegalStateException("Resource `/password.txt` not found on classpath. Place it in `src/main/resources/password.txt`.");
