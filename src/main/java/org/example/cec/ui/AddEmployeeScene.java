@@ -7,6 +7,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.example.cec.list.AddEmployee;
+import org.example.cec.list.Person;
 import org.example.cec.ui.validate.ValidateAddEmployee;
 
 public class AddEmployeeScene implements ColorStyle {
@@ -86,23 +88,28 @@ public class AddEmployeeScene implements ColorStyle {
                 // Here you would implement the logic to save the employee data to your data source (e.g., database, file, etc.)
                 // For demonstration purposes, we'll just show an alert with the entered data.
 
-                String employeeData = String.format(
-                        "Nume: %s\nSalariu: %s\nData Angajarii: %s\nCNP: %s\nFunctia: %s\nPunct de Lucru: %s\nGestiune: %s\nTelefon: %s\nCI: %s\nDomiciliu: %s\nValabilitate Fisa: %s\nLuna Noua: %s",
-                        numeField.getText(),
-                        salariuField.getText(),
-                        dataAngajariiField.getValue(),
-                        cnpField.getText(),
-                        functiaField.getText(),
-                        punctDeLucruField.getText(),
-                        gestiuneField.getText(),
-                        telefonField.getText(),
-                        ciField.getText(),
-                        domiciliuField.getText(),
-                        valabilitateFisaField.getValue(),
-                        newMonth.isSelected() ? "Da" : "Nu"
-                );
+                if(ValidateAddEmployee.check(numeField,salariuField,dataAngajariiField,cnpField,functiaField,punctDeLucruField,gestiuneField,telefonField,ciField,domiciliuField,valabilitateFisaField)){
+                    MainScene.showAlert("Completati toate campurile necesare");
+                    return;
+                }
 
-                MainScene.showAlert("Datele angajatului:\n" + employeeData);
+            Person.PersonBuilder builder = new Person.PersonBuilder();
+            builder.setName(numeField.getText())
+                    .setSalary(salariuField.getText())
+                    .setEmploymentDate(dataAngajariiField.getValue())
+                    .setCNP(cnpField.getText())
+                    .setJob(functiaField.getText())
+                    .setPlaceOfWork(punctDeLucruField.getText())
+                    .setGestiune(gestiuneField.getText())
+                    .setPhoneNumber(telefonField.getText())
+                    .setCI(ciField.getText())
+                    .setDomicile(domiciliuField.getText())
+                    .setValability(valabilitateFisaField.getValue());
+
+            Person person = builder.build();
+
+            AddEmployee addEmployee = new AddEmployee(person, newMonth.isSelected());
+
 
         });
 

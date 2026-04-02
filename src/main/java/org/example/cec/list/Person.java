@@ -1,29 +1,33 @@
 package org.example.cec.list;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class Person {
 
     private final String name;
     private final int salary;
-    private final Date employmentDate;
+    private final LocalDate employmentDate;
     private final String CNP;
     private final String job;
     private final String phoneNumber;
+    private final String CI;
     private final String gestiune;
-    private final boolean newMonth;
     private final String placeOfWork;
     private final String domicile;
+    private final LocalDate valability;
 
-    private Person(PersonBuilder builder) {
+    public Person(PersonBuilder builder) {
         this.name = builder.name;
         this.salary = builder.salary;
         this.employmentDate = builder.employmentDate;
         this.CNP = builder.CNP;
         this.job = builder.job;
+        this.CI = builder.CI;
+        this.valability = builder.valability;
         this.phoneNumber = builder.phoneNumber;
         this.gestiune = builder.gestiune;
-        this.newMonth = builder.newMonth;
         this.placeOfWork = builder.placeOfWork;
         this.domicile = builder.domicile;
     }
@@ -37,9 +41,11 @@ public class Person {
         return salary;
     }
 
-    public Date getEmploymentDate() {
+    public LocalDate getEmploymentDate() {
         return employmentDate;
     }
+
+    public LocalDate getValability(){return valability;}
 
     public String getCNP() {
         return CNP;
@@ -53,12 +59,12 @@ public class Person {
         return phoneNumber;
     }
 
-    public String getGestiune() {
-        return gestiune;
+    public String getCI(){
+        return CI;
     }
 
-    public boolean isNewMonth() {
-        return newMonth;
+    public String getGestiune() {
+        return gestiune;
     }
 
     public String getPlaceOfWork() {
@@ -69,73 +75,106 @@ public class Person {
         return domicile;
     }
 
-    protected static class PersonBuilder {
+    public static class PersonBuilder {
         private String name;
         private int salary;
-        private Date employmentDate;
+        private LocalDate employmentDate;
         private String CNP;
         private String job;
         private String phoneNumber;
+        private String CI;
         private String gestiune;
-        private boolean newMonth;
         private String placeOfWork;
         private String domicile;
+        private LocalDate valability;
 
         public PersonBuilder() {
         }
 
-        public PersonBuilder name(String name) {
+        public PersonBuilder setName(String name) {
             this.name = name;
             return this;
         }
 
-        public PersonBuilder salary(int salary) {
-            this.salary = salary;
+        public PersonBuilder setSalary(String salary) {
+            try {
+                this.salary = Integer.parseInt(salary);
+            } catch (NumberFormatException e) {
+                this.salary = 0;
+            }
             return this;
         }
 
-        public PersonBuilder employmentDate(Date employmentDate) {
+        public PersonBuilder setEmploymentDate(LocalDate employmentDate) {
             this.employmentDate = employmentDate;
             return this;
         }
 
-        public PersonBuilder CNP(String CNP) {
+        public PersonBuilder setEmploymentDate(String dateString) {
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                this.employmentDate = LocalDate.parse(dateString, formatter);
+            } catch (DateTimeParseException e) {
+                throw new IllegalArgumentException("Invalid date format. Please use yyyy-MM-dd", e);
+            }
+            return this;
+        }
+
+        public PersonBuilder setValability(LocalDate valabilityDate){
+            this.employmentDate = employmentDate;
+            return this;
+        }
+
+        public PersonBuilder setValability(String dateString) {
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                this.valability = LocalDate.parse(dateString, formatter);
+            } catch (DateTimeParseException e) {
+                throw new IllegalArgumentException("Invalid date format. Please use yyyy-MM-dd", e);
+            }
+            return this;
+        }
+
+        public PersonBuilder setCNP(String CNP) {
             this.CNP = CNP;
             return this;
         }
 
-        public PersonBuilder job(String job) {
+        public PersonBuilder setJob(String job) {
             this.job = job;
             return this;
         }
 
-        public PersonBuilder phoneNumber(String phoneNumber) {
+        public PersonBuilder setPhoneNumber(String phoneNumber) {
             this.phoneNumber = phoneNumber;
             return this;
         }
 
-        public PersonBuilder gestiune(String gestiune) {
+        public PersonBuilder setGestiune(String gestiune) {
             this.gestiune = gestiune;
             return this;
         }
 
-        public PersonBuilder newMonth(boolean newMonth) {
-            this.newMonth = newMonth;
-            return this;
-        }
 
-        public PersonBuilder placeOfWork(String placeOfWork) {
+        public PersonBuilder setPlaceOfWork(String placeOfWork) {
             this.placeOfWork = placeOfWork;
             return this;
         }
 
-        public PersonBuilder domicile(String domicile) {
+        public PersonBuilder setDomicile(String domicile) {
             this.domicile = domicile;
+            return this;
+        }
+
+        public PersonBuilder setCI(String CI){
+            this.CI = CI;
             return this;
         }
 
         public Person build() {
             return new Person(this);
         }
+
+
     }
 }

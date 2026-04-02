@@ -7,7 +7,7 @@ public class AddEmployee {
     Person person ;
     Row row;
 
-    AddEmployee(Person person, Row row, boolean isNewMonth) {
+    public AddEmployee(Person person, Row row, boolean isNewMonth) {
         this.person = person;
         this.row = row;
 
@@ -26,10 +26,6 @@ public class AddEmployee {
             return;
         }
 
-        // Assuming a specific order for the columns, adjust index as needed:
-        // Col 0: Name, Col 1: CNP, Col 2: Job, Col 3: Salary,
-        // Col 4: Employment Date, Col 5: Phone Number, Col 6: Gestiune,
-        // Col 7: Place of Work, Col 8: Domicile
 
         row.createCell(0).setCellValue(person.getName());
         row.createCell(1).setCellValue(person.getCNP());
