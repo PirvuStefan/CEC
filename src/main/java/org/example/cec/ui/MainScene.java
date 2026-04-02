@@ -18,7 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
-public class MainScene {
+public class MainScene implements ColorStyle {
 
     private final Scene scene;
     private final SceneController sceneController;
@@ -148,7 +148,7 @@ public class MainScene {
 
         Button instructionsButton = new Button("Comenzi Aditionale");
         instructionsButton.setPrefWidth(200);
-        instructionsButton.setStyle("-fx-background-color: rgba(0,123,255,0.85); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 10 20 10 20;");
+        styleProcessButton(instructionsButton);
         VBox root = new VBox(30, title, fileSelectors, processButton, instructionsButton);
         root.setAlignment(Pos.CENTER);
         root.setPadding(new Insets(20));
@@ -159,7 +159,7 @@ public class MainScene {
         // Register scene with controller so instructions can switch back
         sceneController.setMainScene(this.scene);
 
-        instructionsButton.setOnAction(e -> sceneController.switchToSearchEmployeeScene());
+        instructionsButton.setOnAction(e -> sceneController.switchToCommandsScene());
     }
 
     public Scene getScene() {
@@ -238,48 +238,6 @@ public class MainScene {
         void setFile(File file);
     }
 
-    static void styleProcessButton(Button processButton) {
-        processButton.setStyle(
-                "-fx-background-color: rgba(0,123,255,0.85); " +
-                        "-fx-text-fill: white; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-background-radius: 10; " +
-                        "-fx-padding: 10 20 10 20;"
-        );
-        processButton.setOnMouseEntered(e -> processButton.setStyle(
-                "-fx-background-color: rgba(0,150,255,1); " +
-                        "-fx-text-fill: white; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-background-radius: 10; " +
-                        "-fx-padding: 10 20 10 20;" +
-                        "-fx-effect: dropshadow(gaussian, #007bff, 10, 0.5, 0, 2);"
-        ));
-        processButton.setOnMouseExited(e -> processButton.setStyle(
-                "-fx-background-color: rgba(0,123,255,0.85); " +
-                        "-fx-text-fill: white; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-background-radius: 10; " +
-                        "-fx-padding: 10 20 10 20;"
-        ));
-        processButton.setOnMousePressed(e -> {
-            processButton.setStyle(
-                    "-fx-background-color: rgba(0,90,200,1); " +
-                            "-fx-text-fill: white; " +
-                            "-fx-font-weight: bold; " +
-                            "-fx-background-radius: 10; " +
-                            "-fx-padding: 10 20 10 20;" +
-                            "-fx-effect: innershadow(gaussian, #003366, 10, 0.5, 0, 2);"
-            );
-        });
-        processButton.setOnMouseReleased(e -> processButton.setStyle(
-                "-fx-background-color: rgba(0,150,255,1); " +
-                        "-fx-text-fill: white; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-background-radius: 10; " +
-                        "-fx-padding: 10 20 10 20;" +
-                        "-fx-effect: dropshadow(gaussian, #007bff, 10, 0.5, 0, 2);"
-        ));
-    }
 
 
 }

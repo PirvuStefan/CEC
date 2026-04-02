@@ -59,7 +59,7 @@ public class SearchEmployeeScene {
         Button backButton = new Button("Back");
         backButton.setPrefWidth(100);
         backButton.setStyle("-fx-font-size: 14px; -fx-padding: 8; -fx-background-radius: 5;");
-        backButton.setOnAction(e -> sceneController.switchToMainScene());
+        backButton.setOnAction(e -> sceneController.switchToCommandsScene());
 
         root.getChildren().addAll(title, searchBox, resultsLabel, resultsArea, backButton);
 

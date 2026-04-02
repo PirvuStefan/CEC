@@ -43,5 +43,15 @@ public class SceneController {
         stage.setScene(scene);
 
     }
+
+    public void switchToCommandsScene() {
+        Scene scene = CommandsScene.create(this);
+        stage.setScene(scene);
+    }
+
+    public void switchToAddEmployeeScene() {
+        Scene scene = AddEmployeeScene.create(this);
+        stage.setScene(scene);
+    }
 }
 
