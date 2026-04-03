@@ -109,6 +109,7 @@ public class AddEmployeeScene implements ColorStyle {
             Person person = builder.build();
 
             AddEmployee addEmployee = new AddEmployee(person, newMonth.isSelected());
+            addEmployee.start();
 
 
         });

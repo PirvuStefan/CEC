@@ -1,10 +1,7 @@
 package org.example.cec.list.add;
 
 import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.*;
 import org.example.cec.NormalizeName;
 import org.example.cec.list.ListConfig;
 import org.example.cec.list.ListSheet;
@@ -56,26 +53,25 @@ public class AddToList implements AddEmployeeToRow{
             }
 
             try (Workbook wb = workbook) {
-                Sheet sheet = wb.getSheetAt(ListSheet.EMPLOYEE_SEARCH.asInt());
+                Sheet sheet = wb.getSheetAt(ListSheet.EMPLOYEE_LIST.asInt());
                 if (sheet == null) return;
 
+                int i;
 
-                for (int i = 10; i <= sheet.getLastRowNum(); i++) {
+                for (i = 10; i <= sheet.getLastRowNum(); i++) {
                     Row row = sheet.getRow(i);
-                    if (sheet.getRow(i) == null) continue; // skip empty rows safely
 
-                    String name = (row.getCell(1) != null) ? row.getCell(1).getStringCellValue() : "";
-                    if(name.isEmpty()){
-                        if(isNewMonth){
-                            MonthsPlaceholders currentMonth = MonthsPlaceholders.getCurrent(); // Adjust as needed
-                            NewMonthParser newMonthParser = new NewMonthParser(sheet.getRow(i++), currentMonth);
-                            newMonthParser.start();
-                        }
+                    if (row == null) break;
+
+                    Cell cell = row.getCell(0);
+                    String name = (cell != null) ? cell.getStringCellValue().trim() : "";
+
+                    if (name.isEmpty()) break;
 
 
-                    }
-
+                    System.out.println("Found existing data: " + name);
                 }
+                setRow(sheet,i);
 
 
 
@@ -85,6 +81,22 @@ public class AddToList implements AddEmployeeToRow{
             e.printStackTrace();
         }
 
+    }
+
+    private void setRow(Sheet sheet, int i) {
+
+        System.out.println("Adding employee at row: " + (i+1));
+        
+
+        
+        if(isNewMonth){
+            Row monthRow = sheet.createRow(i++);
+            MonthsPlaceholders currentMonth = MonthsPlaceholders.getCurrent();
+            NewMonthParser newMonthParser = new NewMonthParser(monthRow, currentMonth);
+            newMonthParser.start();
+        }
+        Row employeeRow = sheet.createRow(i);
+        set(employeeRow);
     }
 
     @Override

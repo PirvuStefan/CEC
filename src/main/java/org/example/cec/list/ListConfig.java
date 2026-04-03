@@ -33,6 +33,7 @@ public class ListConfig {
         if(files == null) return null;
 
         for(File file : files){
+            if( !file.getName().toLowerCase().contains(".xlsx") ) continue;
             if(file.getName().contains("aux")) continue;
             return file;
         } // return the file that does not contain aux since we might need to create additional copy of the main list for safe deletion
