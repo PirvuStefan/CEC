@@ -1,15 +1,16 @@
-package org.example.cec.list;
+package org.example.cec.list.add;
 
 import org.apache.poi.ss.usermodel.Row;
+import org.example.cec.list.MonthsPlaceholders;
+import org.example.cec.list.Person;
 
 public class AddEmployee {
 
     Person person ;
     Row row;
 
-    public AddEmployee(Person person, Row row, boolean isNewMonth) {
+    public AddEmployee(Person person, boolean isNewMonth) {
         this.person = person;
-        this.row = row;
 
         if (isNewMonth) {
             // Placeholder for now, you might need to determine the correct month dynamically.

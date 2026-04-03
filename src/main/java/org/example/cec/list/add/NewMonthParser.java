@@ -1,10 +1,7 @@
-package org.example.cec.list;
+package org.example.cec.list.add;
 
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.IndexedColorMap;
-import org.apache.poi.xssf.usermodel.XSSFColor;
-
-import java.awt.*;
+import org.example.cec.list.MonthsPlaceholders;
 
 public class NewMonthParser {
 

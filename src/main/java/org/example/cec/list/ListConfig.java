@@ -11,7 +11,7 @@ public class ListConfig {
 
     private static ListConfig instance;
     private final Path outputDir = Path.of("arhiva/list");
-    protected Password password;
+    public Password password;
     private File file;
 
     ListConfig() {
@@ -37,7 +37,7 @@ public class ListConfig {
             return file;
         } // return the file that does not contain aux since we might need to create additional copy of the main list for safe deletion
 
-        return null;
+        throw new IllegalStateException("No file found in " + outputDir.toAbsolutePath());
     }
 
     public static synchronized ListConfig getInstance() {
@@ -51,7 +51,7 @@ public class ListConfig {
         return outputDir;
     }
 
-    protected File getFile() {
+    public File getFile() {
         return file;
     }
 }

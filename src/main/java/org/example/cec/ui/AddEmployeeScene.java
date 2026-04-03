@@ -7,7 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import org.example.cec.list.AddEmployee;
+import org.example.cec.list.add.AddEmployee;
 import org.example.cec.list.Person;
 import org.example.cec.ui.validate.ValidateAddEmployee;
 

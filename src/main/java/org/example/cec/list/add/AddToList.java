@@ -1,23 +1,24 @@
-// java
-package org.example.cec.list;
+package org.example.cec.list.add;
 
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.example.cec.CellValue;
 import org.example.cec.NormalizeName;
+import org.example.cec.list.ListConfig;
+import org.example.cec.list.ListSheet;
+import org.example.cec.list.Person;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class SearchEmployee implements CellValue {
-    private int key = -1;
+public class AddToList {
 
-    public SearchEmployee(String nameSearch) {
+
+    protected void addToList(Person person) {
         ListConfig listConfig = ListConfig.getInstance();
         File file = listConfig.getFile();
 
@@ -35,8 +36,8 @@ public class SearchEmployee implements CellValue {
 
         }
 
-        boolean modified = false;
-        Workbook workbook;
+
+        Workbook workbook = null;
 
         try (FileInputStream fis = new FileInputStream(file)) {
             try {
@@ -46,7 +47,7 @@ public class SearchEmployee implements CellValue {
                     workbook = WorkbookFactory.create(fis);
                 }
             } catch (EncryptedDocumentException ede) {
-
+                // if opening from stream failed due to encryption, try file-based open with password
                 if (pwd != null && !pwd.isEmpty()) {
                     workbook = WorkbookFactory.create(file, pwd);
                 } else {
@@ -55,59 +56,25 @@ public class SearchEmployee implements CellValue {
             }
 
             try (Workbook wb = workbook) {
-                Sheet sheet = wb.getSheetAt(ListSheet.EMPLOYEE_LIST.asInt());
+                Sheet sheet = wb.getSheetAt(ListSheet.EMPLOYEE_SEARCH.asInt());
                 if (sheet == null) return;
 
 
-                String normSearch = NormalizeName.set(nameSearch).replaceAll("[\\s\\-]+", "");
-
                 for (int i = 0; i <= sheet.getLastRowNum(); i++) {
                     Row row = sheet.getRow(i);
-                    Row prevRow = (i > 0) ? sheet.getRow(i - 1) : null;
                     if (row == null) continue; // skip empty rows safely
 
                     String name = (row.getCell(1) != null) ? row.getCell(1).getStringCellValue() : "";
-                    int keyNow = getValueint(row, 2);
-                    if (name == null || name.isEmpty()) continue;
 
-                    String normName = NormalizeName.set(name).replaceAll("[\\s\\-]+", "");
-                    if (compareName(normName, normSearch)) {
-                        this.key = keyNow;
-                        break;
-                    }
                 }
 
-                // only write back if workbook was modified (keeps behavior safe)
-                if (modified) {
-                    try (FileOutputStream fos = new FileOutputStream(file)) {
-                        wb.write(fos);
-                    }
-                }
+
+
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
 
-    private boolean compareName(String name, String search) {
-
-        if (name.equals(search)) return true;
-
-
-        name = name.replace("-", " ");
-        if (name.trim().equals(search)) return true;
-
-
-        name = name.replaceAll("[()]", "");
-        if (name.trim().equals(search)) return true;
-
-
-        name = name.replaceAll("\\s+", " ");
-        return name.trim().equalsIgnoreCase(search);
-    }
-
-    public int getKey() {
-        return key;
     }
 }
