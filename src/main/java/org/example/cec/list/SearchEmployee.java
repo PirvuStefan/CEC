@@ -18,7 +18,7 @@ public class SearchEmployee implements CellValue {
     private int key = -1;
 
     public SearchEmployee(String nameSearch) {
-        ListConfig listConfig = ListConfig.getInstance();
+        ListConfig listConfig = new ListConfig();
         File file = listConfig.getFile();
 
         if (file == null || !file.exists() || !file.isFile()) {
@@ -36,7 +36,7 @@ public class SearchEmployee implements CellValue {
         }
 
         boolean modified = false;
-        Workbook workbook;
+        Workbook workbook = null;
 
         try (FileInputStream fis = new FileInputStream(file)) {
             try {
@@ -46,7 +46,7 @@ public class SearchEmployee implements CellValue {
                     workbook = WorkbookFactory.create(fis);
                 }
             } catch (EncryptedDocumentException ede) {
-
+                // if opening from stream failed due to encryption, try file-based open with password
                 if (pwd != null && !pwd.isEmpty()) {
                     workbook = WorkbookFactory.create(file, pwd);
                 } else {
@@ -55,15 +55,13 @@ public class SearchEmployee implements CellValue {
             }
 
             try (Workbook wb = workbook) {
-                Sheet sheet = wb.getSheetAt(ListSheet.EMPLOYEE_LIST.asInt());
+                Sheet sheet = wb.getSheetAt(ListSheet.EMPLOYEE_SEARCH.asInt());
                 if (sheet == null) return;
-
 
                 String normSearch = NormalizeName.set(nameSearch).replaceAll("[\\s\\-]+", "");
 
                 for (int i = 0; i <= sheet.getLastRowNum(); i++) {
                     Row row = sheet.getRow(i);
-                    Row prevRow = (i > 0) ? sheet.getRow(i - 1) : null;
                     if (row == null) continue; // skip empty rows safely
 
                     String name = (row.getCell(1) != null) ? row.getCell(1).getStringCellValue() : "";
