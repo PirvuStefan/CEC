@@ -1,5 +1,7 @@
 package org.example.cec.list;
 
+import java.time.LocalDate;
+
 public enum MonthsPlaceholders {
 
     Ianuarie("1"),
@@ -32,10 +34,6 @@ public enum MonthsPlaceholders {
         throw new IllegalArgumentException("Invalid month number: " + val);
     }
 
-    public static String asString(int val) {
-        return asString(String.valueOf(val));
-    }
-
     public static MonthsPlaceholders getCurrent() {
         int currentMonth = java.time.LocalDate.now().getMonthValue();
         for (MonthsPlaceholders month : values()) {
@@ -44,6 +42,11 @@ public enum MonthsPlaceholders {
             }
         }
         return MonthsPlaceholders.Ianuarie;
+    }
+
+    public String getCurrentYear() {
+        int year = LocalDate.now().getYear();
+        return String.valueOf(year);
     }
 
 }

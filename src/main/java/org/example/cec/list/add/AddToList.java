@@ -58,7 +58,7 @@ public class AddToList implements AddEmployeeToRow{
 
                 int i;
 
-                for (i = 10; i <= sheet.getLastRowNum(); i++) {
+                for (i = 495; i <= sheet.getLastRowNum(); i++) {
                     Row row = sheet.getRow(i);
 
                     if (row == null) break;
@@ -71,10 +71,14 @@ public class AddToList implements AddEmployeeToRow{
 
                     System.out.println("Found existing data: " + name);
                 }
-                setRow(sheet,i);
 
+                setRow(sheet, i);
 
-
+                try (FileOutputStream fileOut = new FileOutputStream("arhiva/list/list.xlsx")) {
+                    workbook.write(fileOut);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
         } catch (IOException e) {
@@ -85,25 +89,34 @@ public class AddToList implements AddEmployeeToRow{
 
     private void setRow(Sheet sheet, int i) {
 
-        System.out.println("Adding employee at row: " + (i+1));
-        
+        if (isNewMonth) {
+            Row monthRow = sheet.getRow(i);
+            if (monthRow == null) monthRow = sheet.createRow(i);
 
-        
-        if(isNewMonth){
-            Row monthRow = sheet.createRow(i++);
+
             MonthsPlaceholders currentMonth = MonthsPlaceholders.getCurrent();
             NewMonthParser newMonthParser = new NewMonthParser(monthRow, currentMonth);
             newMonthParser.start();
+
+
+            i++; // employee goes on next row only when month row is inserted
         }
-        Row employeeRow = sheet.createRow(i);
+
+        Row employeeRow = sheet.getRow(i);
+        if (employeeRow == null) employeeRow = sheet.createRow(i);
         set(employeeRow);
+
     }
+
+
 
     @Override
     public void set(Row row) {
         if (row == null || person == null) {
             return;
         }
+
+
 
 
         row.createCell(0).setCellValue(person.getName());

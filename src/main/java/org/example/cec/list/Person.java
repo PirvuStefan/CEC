@@ -96,6 +96,26 @@ public class Person {
             return this;
         }
 
+        public PersonBuilder setName(String name, boolean ok) {
+            this.name = name;
+
+            if (ok) {
+                this.salary = 4050;
+                this.employmentDate = LocalDate.now();
+                this.CNP = "1990101123456";
+                this.job = "Mock Job Title";
+                this.phoneNumber = "0700123456";
+                this.CI = "AB123456";
+                this.gestiune = "Mock Gestiune";
+                this.placeOfWork = "Mock Location";
+                this.domicile = "Mock Domicile Address";
+                this.valability = LocalDate.now().plusYears(5);
+            }
+
+            return this;
+        }
+
+
         public PersonBuilder setSalary(String salary) {
             try {
                 this.salary = Integer.parseInt(salary);

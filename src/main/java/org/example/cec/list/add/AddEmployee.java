@@ -1,14 +1,11 @@
 package org.example.cec.list.add;
 
-import org.apache.poi.ss.usermodel.Row;
-import org.example.cec.list.MonthsPlaceholders;
 import org.example.cec.list.Person;
 
 public class AddEmployee {
 
     Person person ;
-    boolean isNewMonth = false;
-    Row row;
+    boolean isNewMonth;
 
     public AddEmployee(Person person, boolean isNewMonth) {
         this.person = person;

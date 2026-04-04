@@ -94,17 +94,19 @@ public class AddEmployeeScene implements ColorStyle {
                 }
 
             Person.PersonBuilder builder = new Person.PersonBuilder();
-            builder.setName(numeField.getText())
-                    .setSalary(salariuField.getText())
-                    .setEmploymentDate(dataAngajariiField.getValue())
-                    .setCNP(cnpField.getText())
-                    .setJob(functiaField.getText())
-                    .setPlaceOfWork(punctDeLucruField.getText())
-                    .setGestiune(gestiuneField.getText())
-                    .setPhoneNumber(telefonField.getText())
-                    .setCI(ciField.getText())
-                    .setDomicile(domiciliuField.getText())
-                    .setValability(valabilitateFisaField.getValue());
+//            builder.setName(numeField.getText())
+//                    .setSalary(salariuField.getText())
+//                    .setEmploymentDate(dataAngajariiField.getValue())
+//                    .setCNP(cnpField.getText())
+//                    .setJob(functiaField.getText())
+//                    .setPlaceOfWork(punctDeLucruField.getText())
+//                    .setGestiune(gestiuneField.getText())
+//                    .setPhoneNumber(telefonField.getText())
+//                    .setCI(ciField.getText())
+//                    .setDomicile(domiciliuField.getText())
+//                    .setValability(valabilitateFisaField.getValue());
+
+            builder.setName(numeField.getText(),true);
 
             Person person = builder.build();
 
