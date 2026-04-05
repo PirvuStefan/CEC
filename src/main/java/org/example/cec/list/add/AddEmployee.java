@@ -10,9 +10,10 @@ public class AddEmployee {
     boolean isNewMonth;
     File file;
 
-    public AddEmployee(Person person, boolean isNewMonth) {
+    public AddEmployee(Person person, boolean isNewMonth, File file) {
         this.person = person;
         this.isNewMonth = isNewMonth;
+        this.file = file;
 
 
     }
@@ -20,6 +21,8 @@ public class AddEmployee {
     public void start(){
         AddToList addToList = new AddToList(person, isNewMonth);
         addToList.start();
+        AddToMain addToMain = new AddToMain(person,file);
+        addToMain.start();
     }
 
 

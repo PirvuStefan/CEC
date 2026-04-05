@@ -8,9 +8,16 @@ public interface CellValue {
 
     default int getValueint(Row row, int cellIndex) {
         Cell cell = row.getCell(cellIndex);
-        if (cell == null) {
-            return 0; // sau altă valoare implicită
-        }
+        return extractCell(cell);
+
+    }
+
+    default int getValueInt(Cell cell){
+        return extractCell(cell);
+    }
+
+    private int extractCell(Cell cell) {
+        if(cell == null) return 0;
         if (cell.getCellType() == CellType.NUMERIC) {
             return (int) cell.getNumericCellValue();
         } else if (cell.getCellType() == CellType.STRING) {
@@ -20,11 +27,11 @@ public interface CellValue {
                 return 0; // sau altă valoare implicită
             }
         }
-        return 0; // sau altă valoare implicită
 
+        return 0; // sau altă valoare implicită
     }
 
-     default void setValue(Row row, int cellIndex, String value) {
+    default void setValue(Row row, int cellIndex, String value) {
         Cell cell = row.getCell(cellIndex);
         if (cell == null) {
             cell = row.createCell(cellIndex);

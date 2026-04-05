@@ -13,6 +13,8 @@ import org.example.cec.list.add.AddEmployee;
 import org.example.cec.list.Person;
 import org.example.cec.ui.validate.ValidateAddEmployee;
 
+import static org.example.cec.ui.MainScene.showAlert;
+
 public class AddEmployeeScene implements ColorStyle {
 
     public static Scene create(SceneController controller) {
@@ -55,6 +57,7 @@ public class AddEmployeeScene implements ColorStyle {
         TextField domiciliuField = new TextField();
         DatePicker valabilitateFisaField = new DatePicker();
         CheckBox newMonth = new CheckBox("Luna noua");
+        TextField zileInLunaField = new TextField();
 
         addRow(formGrid, 0, "Fisierul Principal:", fileInputBox);
         addRow(formGrid, 1, "Nume:", numeField);
@@ -69,6 +72,7 @@ public class AddEmployeeScene implements ColorStyle {
         addRow(formGrid, 10, "Domiciliu:", domiciliuField);
         addRow(formGrid, 11, "Valabilitate fisa:", valabilitateFisaField);
         addRow(formGrid, 12, "Luna noua:", newMonth);
+        addRow(formGrid, 13, "Zile in luna:", zileInLunaField);
 
         ScrollPane scrollPane = new ScrollPane(formGrid);
         scrollPane.setFitToWidth(true);
@@ -97,18 +101,27 @@ public class AddEmployeeScene implements ColorStyle {
         layout.setPadding(new Insets(20));
         layout.setStyle("-fx-background-color: linear-gradient(to bottom right, rgba(0,100,200,0.85), rgba(0,180,255,0.85));");
 
-        saveButton.setOnAction(e -> MainScene.showAlert("Datele au fost completate. Urmatorul pas este salvarea in fisier."));
+        saveButton.setOnAction(e -> showAlert("Datele au fost completate. Urmatorul pas este salvarea in fisier."));
         clearButton.setOnAction(e -> {
             ValidateAddEmployee.getFileds(numeField, salariuField, dataAngajariiField, cnpField, functiaField, punctDeLucruField, gestiuneField, telefonField, ciField, domiciliuField, valabilitateFisaField, newMonth);
         });
         backButton.setOnAction(e -> controller.switchToCommandsScene());
 
         saveButton.setOnAction(e -> {
-                // Here you would implement the logic to save the employee data to your data source (e.g., database, file, etc.)
-                // For demonstration purposes, we'll just show an alert with the entered data.
+
+
+            try {
+                int val = Integer.parseInt(zileInLunaField.getText().trim());
+                if (val >= 1 && val <= 31) {
+                    MainScene.daysInMonth = val;
+                }
+            } catch (NumberFormatException ignored) {
+                showAlert("Te rog introdu un numar valid intre 1 si 31 pentru zilele din luna!");
+
+            }
 
                 if(ValidateAddEmployee.check(numeField,salariuField,dataAngajariiField,cnpField,functiaField,punctDeLucruField,gestiuneField,telefonField,ciField,domiciliuField,valabilitateFisaField)){
-                    MainScene.showAlert("Completati toate campurile necesare");
+                    showAlert("Completati toate campurile necesare");
                     return;
                 }
 
@@ -129,7 +142,8 @@ public class AddEmployeeScene implements ColorStyle {
 
             Person person = builder.build();
 
-            AddEmployee addEmployee = new AddEmployee(person, newMonth.isSelected());
+            File fileToProcess = new File(fisierPrincipalField.getText());
+            AddEmployee addEmployee = new AddEmployee(person, newMonth.isSelected(), fileToProcess);
             addEmployee.start();
 
 

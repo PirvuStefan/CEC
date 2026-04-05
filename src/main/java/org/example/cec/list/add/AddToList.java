@@ -13,7 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 
-public class AddToList implements AddEmployeeToRow{
+public class AddToList implements AddEmployeeToRow, FreePosition{
 
     Person person;
     boolean isNewMonth;
@@ -58,7 +58,7 @@ public class AddToList implements AddEmployeeToRow{
 
 
 
-                setRow(sheet, FreePosition.get(sheet));
+                setRow(sheet, getPos(sheet));
 
                 try (FileOutputStream fileOut = new FileOutputStream("arhiva/list/list.xlsx")) {
                     workbook.write(fileOut);
@@ -121,5 +121,28 @@ public class AddToList implements AddEmployeeToRow{
         if (person.getValability() != null) {
             row.createCell(EmployeeColumnList.VALABILITY).setCellValue(person.getValability().format(formatter));
         }
+    }
+
+    @Override
+    public int getPos(Sheet sheet) {
+
+
+            int i;
+
+            for (i = 10; i <= sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
+
+                if (row == null) break;
+
+                Cell cell = row.getCell(0);
+                String name = (cell != null) ? cell.getStringCellValue().trim() : "";
+
+                if (name.isEmpty()) break;
+
+
+                System.out.println("Found existing data: " + name);
+            }
+            return i;
+
     }
 }

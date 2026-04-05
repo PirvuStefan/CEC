@@ -24,7 +24,7 @@ import static org.example.cec.Placeholders.MEDICAL_OFFSET;
 import static org.example.cec.Placeholders.WORKING_OFFSET;
 import static org.example.cec.ui.MainScene.daysInMonth;
 
-public class AddToMain implements AddEmployeeToRow, CellValue {
+public class AddToMain implements AddEmployeeToRow, CellValue, FreePosition {
 
     // adaugare la fisierul de pontaj pe luna curenta
     Person person;
@@ -36,26 +36,28 @@ public class AddToMain implements AddEmployeeToRow, CellValue {
 
     public void start(){
 
+        Workbook workbook = null;
+
         try (FileInputStream fis = new FileInputStream(file)) {
+            workbook = WorkbookFactory.create(fis);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
 
-            Workbook workbook = WorkbookFactory.create(fis);
+        try (Workbook wb = workbook) {
+            Sheet sheet = wb.getSheetAt(0);
+            if (sheet == null) return;
 
-            try (Workbook wb = workbook) {
-                Sheet sheet = wb.getSheetAt(0);
-                if (sheet == null) return;
+            int i = getPos(sheet);
 
-                int i = FreePosition.get(sheet);
+            set(sheet.createRow(i));
 
-                set(sheet.createRow(i));
-
-
-                try (FileOutputStream fileOut = new FileOutputStream(file)) {
-                    workbook.write(fileOut);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            try (FileOutputStream fileOut = new FileOutputStream(file)) {
+                workbook.write(fileOut);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -102,5 +104,27 @@ public class AddToMain implements AddEmployeeToRow, CellValue {
         style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
         cell.setCellStyle(style);
+    }
+
+    @Override
+    public int getPos(Sheet sheet) {
+
+            int i;
+
+            for (i = 10; i <= sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
+
+                if (row == null) break;
+
+                Cell cell = row.getCell(2);
+                String name = (cell != null) ? cell.getStringCellValue().trim() : "";
+
+                if (name.isEmpty()) break;
+
+
+                System.out.println("Found existing data: " + name);
+            }
+            return i;
+
     }
 }
