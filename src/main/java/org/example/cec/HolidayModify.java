@@ -35,7 +35,6 @@ public class HolidayModify {
         HolidayInitialize holidayInitialize = new HolidayInitialize(holidaysSheet);
 
         holidays = holidayInitialize.InitialiseHolidaysList();
-        System.out.println("Total holidays loaded: " + holidays.size());
 
         // now we do have the holiday data, we can modify the mainSheet
         try (FileInputStream fis = new FileInputStream(mainSheet);

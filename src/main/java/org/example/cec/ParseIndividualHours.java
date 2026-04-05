@@ -14,16 +14,6 @@ public class ParseIndividualHours {
         this.row = row;
         this.startDay = getStartDay(row);
 
-        String employee = "";
-        Cell nameCell = row.getCell(2);
-        if (nameCell != null) {
-            if (nameCell.getCellType() == CellType.STRING) {
-                employee = nameCell.getStringCellValue();
-            } else if (nameCell.getCellType() == CellType.NUMERIC) {
-                employee = String.valueOf((int) nameCell.getNumericCellValue());
-            }
-        }
-
     }
 
     public void parse() {

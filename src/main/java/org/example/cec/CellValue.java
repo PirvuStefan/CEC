@@ -6,7 +6,7 @@ import org.apache.poi.ss.usermodel.Row;
 
 public interface CellValue {
 
-    default int  getValueint(Row row, int cellIndex) {
+    default int getValueint(Row row, int cellIndex) {
         Cell cell = row.getCell(cellIndex);
         if (cell == null) {
             return 0; // sau altă valoare implicită

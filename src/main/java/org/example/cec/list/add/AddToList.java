@@ -2,7 +2,6 @@ package org.example.cec.list.add;
 
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.*;
-import org.example.cec.NormalizeName;
 import org.example.cec.list.ListConfig;
 import org.example.cec.list.ListSheet;
 import org.example.cec.list.MonthsPlaceholders;
@@ -12,6 +11,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 
 public class AddToList implements AddEmployeeToRow{
 
@@ -56,23 +56,9 @@ public class AddToList implements AddEmployeeToRow{
                 Sheet sheet = wb.getSheetAt(ListSheet.EMPLOYEE_LIST.asInt());
                 if (sheet == null) return;
 
-                int i;
-
-                for (i = 495; i <= sheet.getLastRowNum(); i++) {
-                    Row row = sheet.getRow(i);
-
-                    if (row == null) break;
-
-                    Cell cell = row.getCell(0);
-                    String name = (cell != null) ? cell.getStringCellValue().trim() : "";
-
-                    if (name.isEmpty()) break;
 
 
-                    System.out.println("Found existing data: " + name);
-                }
-
-                setRow(sheet, i);
+                setRow(sheet, FreePosition.get(sheet));
 
                 try (FileOutputStream fileOut = new FileOutputStream("arhiva/list/list.xlsx")) {
                     workbook.write(fileOut);
@@ -116,21 +102,24 @@ public class AddToList implements AddEmployeeToRow{
             return;
         }
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
-
-
-        row.createCell(0).setCellValue(person.getName());
-        row.createCell(1).setCellValue(person.getCNP());
-        row.createCell(2).setCellValue(person.getJob());
-        row.createCell(3).setCellValue(person.getSalary());
-
+        row.createCell(EmployeeColumnList.NAME).setCellValue(person.getName());
+        row.createCell(EmployeeColumnList.SALARY).setCellValue(person.getSalary());
         if (person.getEmploymentDate() != null) {
-            row.createCell(4).setCellValue(person.getEmploymentDate().toString()); // Or format Date properly
+            row.createCell(EmployeeColumnList.EMPLOYMENT_DATE).setCellValue(person.getEmploymentDate().format(formatter));
         }
+        row.createCell(EmployeeColumnList.CNP).setCellValue(person.getCNP());
+        row.createCell(EmployeeColumnList.CONTRACT_TYPE).setCellValue("nedet");
+        row.createCell(EmployeeColumnList.JOB).setCellValue(person.getJob());
+        row.createCell(EmployeeColumnList.PLACE_OF_WORK).setCellValue(person.getPlaceOfWork());
+        row.createCell(EmployeeColumnList.GESTIUNE).setCellValue(person.getGestiune());
 
-        row.createCell(5).setCellValue(person.getPhoneNumber());
-        row.createCell(6).setCellValue(person.getGestiune());
-        row.createCell(7).setCellValue(person.getPlaceOfWork());
-        row.createCell(8).setCellValue(person.getDomicile());
+        row.createCell(EmployeeColumnList.PHONE_NUMBER).setCellValue(person.getPhoneNumber());
+        row.createCell(EmployeeColumnList.CI).setCellValue(person.getCI());
+        row.createCell(EmployeeColumnList.DOMICILE).setCellValue(person.getDomicile());
+        if (person.getValability() != null) {
+            row.createCell(EmployeeColumnList.VALABILITY).setCellValue(person.getValability().format(formatter));
+        }
     }
 }

@@ -7,6 +7,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import java.io.File;
 import org.example.cec.list.add.AddEmployee;
 import org.example.cec.list.Person;
 import org.example.cec.ui.validate.ValidateAddEmployee;
@@ -25,6 +27,22 @@ public class AddEmployeeScene implements ColorStyle {
         formGrid.setVgap(12);
         formGrid.setAlignment(Pos.CENTER);
 
+        TextField fisierPrincipalField = new TextField();
+        fisierPrincipalField.setPrefWidth(220);
+        fisierPrincipalField.setStyle("-fx-background-radius: 8; -fx-background-color: white;");
+        Button browseFileButton = new Button("...");
+        browseFileButton.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Selecteaza Fisierul Principal");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files", "*.xlsx", "*.xls"));
+            File selectedFile = fileChooser.showOpenDialog(formGrid.getScene().getWindow());
+            if (selectedFile != null) {
+                fisierPrincipalField.setText(selectedFile.getAbsolutePath());
+            }
+        });
+        HBox fileInputBox = new HBox(5, fisierPrincipalField, browseFileButton);
+        fileInputBox.setAlignment(Pos.CENTER_LEFT);
+
         TextField numeField = new TextField();
         TextField salariuField = new TextField();
         DatePicker dataAngajariiField = new DatePicker();
@@ -38,18 +56,19 @@ public class AddEmployeeScene implements ColorStyle {
         DatePicker valabilitateFisaField = new DatePicker();
         CheckBox newMonth = new CheckBox("Luna noua");
 
-        addRow(formGrid, 0, "Nume:", numeField);
-        addRow(formGrid, 1, "Salariu:", salariuField);
-        addRow(formGrid, 2, "Data angajarii:", dataAngajariiField);
-        addRow(formGrid, 3, "CNP:", cnpField);
-        addRow(formGrid, 4, "Functia:", functiaField);
-        addRow(formGrid, 5, "Punct de lucru:", punctDeLucruField);
-        addRow(formGrid, 6, "Gestiune:", gestiuneField);
-        addRow(formGrid, 7, "Telefon:", telefonField);
-        addRow(formGrid, 8, "CI:", ciField);
-        addRow(formGrid, 9, "Domiciliu:", domiciliuField);
-        addRow(formGrid, 10, "Valabilitate fisa:", valabilitateFisaField);
-        addRow(formGrid, 11, "Luna noua:", newMonth);
+        addRow(formGrid, 0, "Fisierul Principal:", fileInputBox);
+        addRow(formGrid, 1, "Nume:", numeField);
+        addRow(formGrid, 2, "Salariu:", salariuField);
+        addRow(formGrid, 3, "Data angajarii:", dataAngajariiField);
+        addRow(formGrid, 4, "CNP:", cnpField);
+        addRow(formGrid, 5, "Functia:", functiaField);
+        addRow(formGrid, 6, "Punct de lucru:", punctDeLucruField);
+        addRow(formGrid, 7, "Gestiune:", gestiuneField);
+        addRow(formGrid, 8, "Telefon:", telefonField);
+        addRow(formGrid, 9, "CI:", ciField);
+        addRow(formGrid, 10, "Domiciliu:", domiciliuField);
+        addRow(formGrid, 11, "Valabilitate fisa:", valabilitateFisaField);
+        addRow(formGrid, 12, "Luna noua:", newMonth);
 
         ScrollPane scrollPane = new ScrollPane(formGrid);
         scrollPane.setFitToWidth(true);
@@ -128,6 +147,13 @@ public class AddEmployeeScene implements ColorStyle {
         formGrid.add(newMonth, 1, i);
     }
 
+    private static void addRow(GridPane grid, int rowIndex, String labelText, HBox input) {
+        Label label = new Label(labelText);
+        label.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
+        grid.add(label, 0, rowIndex);
+        grid.add(input, 1, rowIndex);
+    }
+
     private static void addRow(GridPane grid, int rowIndex, String labelText, TextField input) {
         Label label = new Label(labelText);
         label.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
@@ -146,4 +172,3 @@ public class AddEmployeeScene implements ColorStyle {
         grid.add(input, 1, rowIndex);
     }
 }
-

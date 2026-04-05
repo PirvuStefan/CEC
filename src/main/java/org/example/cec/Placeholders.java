@@ -8,7 +8,8 @@ public enum Placeholders {
     HOLIDAY_OFFSET("7"),
     WEEKEND_OFFSET("9"),
     SARBATORI_OFFSET("10"),
-    ABSENTEE_OFFSET("15");
+    ABSENTEE_OFFSET("15"),
+    SALARY_OFFSET("16");
 
     private final String value;
 

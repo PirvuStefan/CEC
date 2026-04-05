@@ -9,7 +9,7 @@ import static org.example.cec.ui.MainScene.daysInMonth;
 
 public class WorkingHoursTotal {
 
-    static int get(Row row) {
+    public static int get(Row row) {
         int total = 0;
         for (int j = 1; j <= daysInMonth; j++) { // starting from column F (index 5)
             int i = j + DAY_OFFSET.asInt();
