@@ -16,7 +16,10 @@ flowchart TD
     
     ProcessingPhase --> MainSheet[Read Main Sheet Data]
     
-    MainSheet --> HolidayCheck{Holidays Sheet Selected?}
+    MainSheet --> SheetsSelected{Are Files Selected?}
+    SheetsSelected --> BaseShifts[Assign Base Normal-Day Shifts]
+    
+    BaseShifts --> HolidayCheck{Holidays Sheet Selected?}
     HolidayCheck -- Yes --> ProcessHolidays[Process Holidays/Leaves]
     ProcessHolidays --> PanamaCheck
     HolidayCheck -- No --> PanamaCheck
@@ -28,12 +31,10 @@ flowchart TD
     
     WeekendCheck{Weekend Sheet Selected?}
     WeekendCheck -- Yes --> ProcessWeekends[Process Weekend Shifts]
-    ProcessWeekends --> BaseShifts
-    WeekendCheck -- No --> BaseShifts
+    ProcessWeekends --> Archiving
+    WeekendCheck -- No --> Archiving
     
-    BaseShifts[Assign Base Normal-Day Shifts]
-    
-    BaseShifts --> Archiving[Save and Archive Processed Files]
+    Archiving[Save and Archive Processed Files]
     Archiving --> End([Process Complete])
     
     %% Sub-processes details
@@ -76,29 +77,30 @@ flowchart TD
         * **Fisierul Weekend (Weekend Sheet)**: *Optional*. Contains weekend availability.
 * **Validation**: Upon clicking "Proceseaza Datele" (Process Data), the system checks if the Main Sheet and at least one other optional file are provided. If not, it halts and prompts the user.
 
-### 2. Data Parsing & Holiday Processing
-If the Holidays Sheet is provided, the system processes it first to ensure absences take priority:
+### 2. Base Schedule Alignment
+* **Start Day Tracking**: The algorithm looks for an initial start day (marked with a navy blue cell) representing the employee’s onboarding.
+* **Normal Shift Filling**: Assigns standard daily work shifts from their specific start day through the end of the month.
+
+### 3. Data Parsing & Holiday Processing
+If the Holidays Sheet is provided, the system processes it to ensure absences overwrite normal schedules:
 * **Employee Matching**: The software matches names using a normalized comparison (ignoring accents and special characters).
 * **Date Parsing**: The format `DD*DD` is parsed to find start and end dates.
 * **Shift Clearing**: The system marks the respective calendar days with specific hex colors (e.g., Green for Vacation, Aqua for Medical, Red for Resignation). During this period, any pre-existing shifts are cleared.
 * **Calculation**: Vacation days exclude weekends, while medical leaves count consecutively. The employee's available leave balances are updated at the end of the sheet.
 
-### 3. Panama Shifts Processing
+### 4. Panama Shifts Processing
 If the Panama Sheet is provided, the system applies the uneven shift rotation:
 * **Pattern Assignment**: Automatically detects whether an employee is on a 4-day (Sunday) or 3-day (Friday) working variant using `X` markers.
 * **Reverse Ordering**: It computes the schedules backward (reverse chronological order) to prevent overwriting prior days' logic.
 * **Hour Allocation**: Places **11-hour** working values into the correct days on the Main Sheet. 
 
-### 4. Weekend Shift Processing
+### 5. Weekend Shift Processing
 If the Weekend Sheet is provided, weekend days are balanced among employees:
 * **History Checking**: Checks if the employee worked the last Saturday of the preceding month, particularly critical if the current month begins on a Sunday.
 * **Allocation Algorithm**: Iteratively assigns weekend shifts based on an intelligent algorithm balancing fairness, minimum coverage, and a hard cap of 4 weekend shifts per month.
 * **Conflict Resolution**: Bypasses any weekend day that falls on an already processed Holiday/Vacation sequence.
 * **Shift Writing**: Writes standard **8-hour** blocks for assigned weekend days, updating cumulative monthly tracking columns for weekend work versus holiday-weekend work.
 
-### 5. Base Schedule Alignment
-* **Start Day Tracking**: The algorithm looks for an initial start day (marked with a navy blue cell) representing the employee’s onboarding.
-* **Normal Shift Filling**: Assigns standard daily work shifts from their specific start day through the end of the month, bridging gaps between weekends and skipping holidays.
 
 ### 6. Archiving & Finalization
 * **Data Saving**: The manipulated data is written back to Excel standard structures.
