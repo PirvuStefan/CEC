@@ -72,7 +72,7 @@ public class AddToMain implements AddEmployeeToRow, CellValue, FreePosition {
         row.createCell(1).setCellValue(person.getPlaceOfWork());
         row.createCell(2).setCellValue(person.getName());
         row.createCell(3).setCellValue( getValueint(prev,3) + 1 );
-        row.createCell(4).setCellValue(person.getCNP());
+        row.createCell(4).setCellValue(Integer.parseInt(person.getCNP()));
         setHire(row, person.getEmploymentDate());
 
 
@@ -92,9 +92,6 @@ public class AddToMain implements AddEmployeeToRow, CellValue, FreePosition {
         int hirePos = hireDate.getDayOfMonth();
 
         Cell cell = row.createCell(hirePos + WORKING_OFFSET.asInt());
-
-        cell.setCellValue(8);
-
 
         Workbook workbook = row.getSheet().getWorkbook();
         XSSFCellStyle style = (XSSFCellStyle) workbook.createCellStyle();
@@ -122,7 +119,6 @@ public class AddToMain implements AddEmployeeToRow, CellValue, FreePosition {
                 if (name.isEmpty()) break;
 
 
-                System.out.println("Found existing data: " + name);
             }
             return i;
 

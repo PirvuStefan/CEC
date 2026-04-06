@@ -109,7 +109,7 @@ public class AddToList implements AddEmployeeToRow, FreePosition{
         if (person.getEmploymentDate() != null) {
             row.createCell(EmployeeColumnList.EMPLOYMENT_DATE).setCellValue(person.getEmploymentDate().format(formatter));
         }
-        row.createCell(EmployeeColumnList.CNP).setCellValue(person.getCNP());
+        row.createCell(EmployeeColumnList.CNP).setCellValue(Integer.parseInt(person.getCNP()));
         row.createCell(EmployeeColumnList.CONTRACT_TYPE).setCellValue("nedet");
         row.createCell(EmployeeColumnList.JOB).setCellValue(person.getJob());
         row.createCell(EmployeeColumnList.PLACE_OF_WORK).setCellValue(person.getPlaceOfWork());
