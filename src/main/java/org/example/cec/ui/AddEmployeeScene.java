@@ -9,11 +9,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import java.io.File;
+import java.time.LocalDate;
 import org.example.cec.list.add.AddEmployee;
 import org.example.cec.list.Person;
 import org.example.cec.ui.validate.ValidateAddEmployee;
+import org.example.cec.ui.validate.ValidateDays;
 
-import static org.example.cec.ui.MainScene.showAlert;
+import static org.example.cec.ui.validate.AlertUtility.showAlert;
 
 public class AddEmployeeScene implements ColorStyle {
 
@@ -32,7 +34,8 @@ public class AddEmployeeScene implements ColorStyle {
         TextField fisierPrincipalField = new TextField();
         fisierPrincipalField.setPrefWidth(220);
         fisierPrincipalField.setStyle("-fx-background-radius: 8; -fx-background-color: white;");
-        Button browseFileButton = new Button("...");
+        Button browseFileButton = new Button("Browse");
+        browseFileButton.setStyle("-fx-background-color: rgba(255,255,255,0.8); -fx-background-radius: 8; -fx-font-weight: bold;");
         browseFileButton.setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Selecteaza Fisierul Principal");
@@ -57,6 +60,7 @@ public class AddEmployeeScene implements ColorStyle {
         TextField domiciliuField = new TextField();
         DatePicker valabilitateFisaField = new DatePicker();
         CheckBox newMonth = new CheckBox("Luna noua");
+        newMonth.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
         TextField zileInLunaField = new TextField();
 
         addRow(formGrid, 0, "Fisierul Principal:", fileInputBox);
@@ -109,36 +113,32 @@ public class AddEmployeeScene implements ColorStyle {
 
         saveButton.setOnAction(e -> {
 
+            ValidateDays.checkAndUpdate(zileInLunaField.getText(), null);
 
-            try {
-                int val = Integer.parseInt(zileInLunaField.getText().trim());
-                if (val >= 1 && val <= 31) {
-                    MainScene.daysInMonth = val;
-                }
-            } catch (NumberFormatException ignored) {
-                showAlert("Te rog introdu un numar valid intre 1 si 31 pentru zilele din luna!");
-
+            if(ValidateAddEmployee.check(numeField,salariuField,dataAngajariiField,cnpField,functiaField,punctDeLucruField,gestiuneField,telefonField,ciField,domiciliuField,valabilitateFisaField)){
+                showAlert("Completati toate campurile necesare");
+                return;
             }
 
-                if(ValidateAddEmployee.check(numeField,salariuField,dataAngajariiField,cnpField,functiaField,punctDeLucruField,gestiuneField,telefonField,ciField,domiciliuField,valabilitateFisaField)){
-                    showAlert("Completati toate campurile necesare");
-                    return;
-                }
+            String salaryStr = salariuField.getText().isEmpty() ? "4050" : salariuField.getText();
+            String jobStr = functiaField.getText().isEmpty() ? "vanzator" : functiaField.getText();
+            LocalDate hireDate = dataAngajariiField.getValue() == null ? LocalDate.now() : dataAngajariiField.getValue();
 
             Person.PersonBuilder builder = new Person.PersonBuilder();
-//            builder.setName(numeField.getText())
-//                    .setSalary(salariuField.getText())
-//                    .setEmploymentDate(dataAngajariiField.getValue())
-//                    .setCNP(cnpField.getText())
-//                    .setJob(functiaField.getText())
-//                    .setPlaceOfWork(punctDeLucruField.getText())
-//                    .setGestiune(gestiuneField.getText())
-//                    .setPhoneNumber(telefonField.getText())
-//                    .setCI(ciField.getText())
-//                    .setDomicile(domiciliuField.getText())
-//                    .setValability(valabilitateFisaField.getValue());
-
-            builder.setName(numeField.getText(),true);
+            builder.setName(numeField.getText())
+                    .setSalary(salaryStr)
+                    .setEmploymentDate(hireDate)
+                    .setCNP(cnpField.getText())
+                    .setJob(jobStr)
+                    .setPlaceOfWork(punctDeLucruField.getText())
+                    .setGestiune(gestiuneField.getText())
+                    .setPhoneNumber(telefonField.getText())
+                    .setCI(ciField.getText())
+                    .setDomicile(domiciliuField.getText());
+            
+            if (valabilitateFisaField.getValue() != null) {
+                builder.setValability(valabilitateFisaField.getValue());
+            }
 
             Person person = builder.build();
 

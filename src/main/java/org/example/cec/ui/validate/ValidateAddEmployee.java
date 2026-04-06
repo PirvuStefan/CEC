@@ -29,18 +29,13 @@ public class ValidateAddEmployee {
     }
 
     public static boolean check(TextField numeField, TextField salariuField, DatePicker dataAngajariiField, TextField cnpField, TextField functiaField, TextField punctDeLucruField, TextField gestiuneField, TextField telefonField, TextField ciField, TextField domiciliuField, DatePicker valabilitateFisaField) {
-        return numeField.getText().isEmpty();
-//        return numeField.getText().isEmpty()
-//                || salariuField.getText().isEmpty()
-//                || dataAngajariiField.getValue() == null
-//                || cnpField.getText().isEmpty()
-//                || functiaField.getText().isEmpty()
-//                || punctDeLucruField.getText().isEmpty()
-//                || gestiuneField.getText().isEmpty()
-//                || telefonField.getText().isEmpty()
-//                || ciField.getText().isEmpty()
-//                || domiciliuField.getText().isEmpty()
-//                || valabilitateFisaField.getValue() == null;
+        return numeField.getText().isEmpty()
+                || cnpField.getText().isEmpty()
+                || punctDeLucruField.getText().isEmpty()
+                || gestiuneField.getText().isEmpty()
+                || telefonField.getText().isEmpty()
+                || ciField.getText().isEmpty()
+                || domiciliuField.getText().isEmpty();
     }
 
 }

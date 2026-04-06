@@ -141,7 +141,7 @@ public class Person {
         }
 
         public PersonBuilder setValability(LocalDate valabilityDate){
-            this.employmentDate = employmentDate;
+            this.valability = valabilityDate;
             return this;
         }
 

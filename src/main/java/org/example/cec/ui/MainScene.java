@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import org.example.cec.ui.validate.ValidateDays;
+import static org.example.cec.ui.validate.AlertUtility.showAlert;
 
 public class MainScene implements ColorStyle {
 
@@ -62,15 +64,7 @@ public class MainScene implements ColorStyle {
                 reset = false;
                 return;
             }
-            try {
-                int val = Integer.parseInt(newVal.trim());
-                if (val >= 1 && val <= 31) {
-                    daysInMonth = val;
-                }
-            } catch (NumberFormatException ignored) {
-                showAlert("Te rog introdu un numar valid intre 1 si 31 pentru zilele din luna!");
-                daysInput.clear();
-            }
+            ValidateDays.checkAndUpdate(newVal, daysInput);
         });
         HBox daysBox = new HBox(10, daysLabel, daysInput);
         daysBox.setAlignment(Pos.CENTER);
@@ -226,13 +220,6 @@ public class MainScene implements ColorStyle {
         return box;
     }
 
-    static void showAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
     @FunctionalInterface
     interface FileConsumer {
         void setFile(File file);
@@ -241,4 +228,3 @@ public class MainScene implements ColorStyle {
 
 
 }
-

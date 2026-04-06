@@ -8,7 +8,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.example.cec.list.SearchEmployee;
 
-public class SearchEmployeeScene {
+public class SearchEmployeeScene implements ColorStyle {
 
     private final Scene scene;
     private final SceneController sceneController;
@@ -20,7 +20,7 @@ public class SearchEmployeeScene {
         VBox root = new VBox(15);
         root.setPadding(new Insets(20));
         root.setAlignment(Pos.TOP_CENTER);
-        root.setStyle("-fx-background-color: #2c3e50;");
+        root.setStyle("-fx-background-color: linear-gradient(to bottom right, rgba(0,100,200,0.85), rgba(0,180,255,0.85));");
 
         // Title
         Label title = new Label("Search Employee");
@@ -37,11 +37,11 @@ public class SearchEmployeeScene {
         TextField searchInput = new TextField();
         searchInput.setPromptText("Enter employee name...");
         searchInput.setPrefWidth(300);
-        searchInput.setStyle("-fx-background-radius: 5; -fx-padding: 8;");
+        searchInput.setStyle("-fx-background-radius: 8; -fx-background-color: white; -fx-padding: 8;");
 
         Button searchButton = new Button("Search");
         searchButton.setPrefWidth(100);
-        searchButton.setStyle("-fx-font-size: 14px; -fx-padding: 8; -fx-background-radius: 5;");
+        styleProcessButton(searchButton);
 
         searchBox.getChildren().addAll(searchLabel, searchInput, searchButton);
 
@@ -53,12 +53,12 @@ public class SearchEmployeeScene {
         resultsArea.setEditable(false);
         resultsArea.setWrapText(true);
         resultsArea.setPrefHeight(300);
-        resultsArea.setStyle("-fx-control-inner-background: #ecf0f1; -fx-text-fill: black;");
+        resultsArea.setStyle("-fx-background-radius: 8; -fx-control-inner-background: white; -fx-text-fill: black;");
 
         // Back Button
         Button backButton = new Button("Back");
         backButton.setPrefWidth(100);
-        backButton.setStyle("-fx-font-size: 14px; -fx-padding: 8; -fx-background-radius: 5;");
+        styleProcessButton(backButton);
         backButton.setOnAction(e -> sceneController.switchToCommandsScene());
 
         root.getChildren().addAll(title, searchBox, resultsLabel, resultsArea, backButton);
