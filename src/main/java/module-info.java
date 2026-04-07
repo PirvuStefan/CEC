@@ -6,8 +6,7 @@ module org.example.cec {
     requires org.apache.poi.ooxml;
     requires java.desktop;
     requires org.apache.poi.poi;
-
-
+    requires com.fasterxml.jackson.databind;
 
     opens org.example.cec to javafx.fxml;
     exports org.example.cec;

@@ -9,9 +9,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import org.example.cec.list.add.AddEmployee;
 import org.example.cec.list.Person;
+import org.example.cec.list.add.config.SalaryConfig;
 import org.example.cec.ui.validate.ValidateAddEmployee;
 import org.example.cec.ui.validate.ValidateDays;
 
@@ -34,19 +36,7 @@ public class AddEmployeeScene implements ColorStyle {
         TextField fisierPrincipalField = new TextField();
         fisierPrincipalField.setPrefWidth(220);
         fisierPrincipalField.setStyle("-fx-background-radius: 8; -fx-background-color: white;");
-        Button browseFileButton = new Button("Browse");
-        browseFileButton.setStyle("-fx-background-color: rgba(255,255,255,0.8); -fx-background-radius: 8; -fx-font-weight: bold;");
-        browseFileButton.setOnAction(e -> {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Selecteaza Fisierul Principal");
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files", "*.xlsx", "*.xls"));
-            File selectedFile = fileChooser.showOpenDialog(formGrid.getScene().getWindow());
-            if (selectedFile != null) {
-                fisierPrincipalField.setText(selectedFile.getAbsolutePath());
-            }
-        });
-        HBox fileInputBox = new HBox(5, fisierPrincipalField, browseFileButton);
-        fileInputBox.setAlignment(Pos.CENTER_LEFT);
+        HBox fileInputBox = getHBox(formGrid, fisierPrincipalField);
 
         TextField numeField = new TextField();
         TextField salariuField = new TextField();
@@ -120,7 +110,16 @@ public class AddEmployeeScene implements ColorStyle {
                 return;
             }
 
-            String salaryStr = salariuField.getText().isEmpty() ? "4050" : salariuField.getText();
+            String salary;
+            try {
+                salary = SalaryConfig.getInstance().getSalary();
+            } catch (IOException ex) {
+                showAlert("Eroare la incarcarea salariului default, asigurati va fisierul config.json se afla in arhiva");
+                return;
+            }
+
+
+            String salaryStr = salariuField.getText().isEmpty() ? salary : salariuField.getText();
             String jobStr = functiaField.getText().isEmpty() ? "vanzator" : functiaField.getText();
             LocalDate hireDate = dataAngajariiField.getValue() == null ? LocalDate.now() : dataAngajariiField.getValue();
 
@@ -152,6 +151,23 @@ public class AddEmployeeScene implements ColorStyle {
 
 
         return new Scene(layout, 600, 400);
+    }
+
+    private static HBox getHBox(GridPane formGrid, TextField fisierPrincipalField) {
+        Button browseFileButton = new Button("Browse");
+        browseFileButton.setStyle("-fx-background-color: rgba(255,255,255,0.8); -fx-background-radius: 8; -fx-font-weight: bold;");
+        browseFileButton.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Selecteaza Fisierul Principal");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files", "*.xlsx", "*.xls"));
+            File selectedFile = fileChooser.showOpenDialog(formGrid.getScene().getWindow());
+            if (selectedFile != null) {
+                fisierPrincipalField.setText(selectedFile.getAbsolutePath());
+            }
+        });
+        HBox fileInputBox = new HBox(5, fisierPrincipalField, browseFileButton);
+        fileInputBox.setAlignment(Pos.CENTER_LEFT);
+        return fileInputBox;
     }
 
     private static void addRow(GridPane formGrid, int i, String s, CheckBox newMonth) {
