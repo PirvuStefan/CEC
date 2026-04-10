@@ -3,7 +3,7 @@ package org.example.cec.list.add;
 import org.apache.poi.ss.usermodel.*;
 import org.example.cec.CellValue;
 import org.example.cec.list.*;
-import org.example.cec.list.holiday.NewYearMigrate;
+import org.example.cec.list.update.NewYearMigrate;
 
 import java.io.File;
 import java.io.FileInputStream;

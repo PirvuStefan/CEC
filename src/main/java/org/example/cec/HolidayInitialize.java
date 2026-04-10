@@ -1,6 +1,7 @@
 package org.example.cec;
 
 import org.apache.poi.ss.usermodel.*;
+import org.example.cec.holiday.Holiday;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -60,7 +61,7 @@ public class HolidayInitialize {
                     case "dem", "DEM" -> "demisie";
                     default -> "concediu";
                 };
-                Holiday holiday = new Holiday(Integer.parseInt(firstDay), Integer.parseInt(lastDay), reason, name, magazin);
+                Holiday holiday = Holiday.of(Integer.parseInt(firstDay), Integer.parseInt(lastDay), reason, name, magazin);
                 holidays.add(holiday);
             }
 

@@ -8,7 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import org.example.cec.list.holiday.NewYearMigrate;
+import org.example.cec.list.update.NewYearMigrate;
 
 public class CommandsScene implements ColorStyle {
 
