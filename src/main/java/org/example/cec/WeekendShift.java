@@ -36,10 +36,10 @@ public class WeekendShift implements CellValue {
             while (row.getCell(count + 2) != null) {
 
                 if(!checkColor(row.getCell(count + 2))){
-                    System.out.println("NU E ALB " + getValueint(row, count + 2) ) ;
-                    sarbatoare[sarbatoriCount++] = getValueint(row, count + 2);
+                    System.out.println("NU E ALB " + getValueInt(row, count + 2) ) ;
+                    sarbatoare[sarbatoriCount++] = getValueInt(row, count + 2);
                 }
-                else pos[position++] = getValueint(row, count + 2);
+                else pos[position++] = getValueInt(row, count + 2);
                 count++;
                 if( count > 15) break;
             }

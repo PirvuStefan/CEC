@@ -1,6 +1,5 @@
 package org.example.cec.list.add;
 
-import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.*;
 import org.example.cec.CellValue;
 import org.example.cec.list.*;
@@ -111,9 +110,9 @@ public class AddToList implements AddEmployeeToRow, FreePosition, CellValue {
         int marc;
         Row prev = row.getSheet().getRow(row.getRowNum() - 1);
         if(prev.getCell(EmployeeColumnList.MARK).getCellType() == CellType.BLANK){
-            marc = getValueint(prev,3) + 1;
+            marc = getValueInt(prev,3) + 1;
         } else {
-            marc =getValueint(row,3) + 11;
+            marc = getValueInt(row,3) + 11;
         }
         row.createCell(EmployeeColumnList.MARK).setCellValue(marc);
 

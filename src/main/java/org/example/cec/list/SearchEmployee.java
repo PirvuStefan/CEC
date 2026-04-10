@@ -65,7 +65,7 @@ public class SearchEmployee implements CellValue {
                     if (row == null) continue; // skip empty rows safely
 
                     String name = (row.getCell(1) != null) ? row.getCell(1).getStringCellValue() : "";
-                    int keyNow = getValueint(row, 2);
+                    int keyNow = getValueInt(row, 2);
                     if (name == null || name.isEmpty()) continue;
 
                     String normName = NormalizeName.set(name).replaceAll("[\\s\\-]+", "");

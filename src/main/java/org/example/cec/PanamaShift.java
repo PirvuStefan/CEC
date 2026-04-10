@@ -41,7 +41,7 @@ public class PanamaShift extends WeekendShift {
 
                if( checkColor(firstRow.getCell(currentDay)) ) {
 
-                   int day1 = getValueint(firstRow, currentDay);
+                   int day1 = getValueInt(firstRow, currentDay);
 
                    if(whatDay(day1, PanamaShift.pos).equals("duminicaF")) addPanama(granted, day1);
                    else if(whatDay(day1, PanamaShift.pos).equals("samabataF")) addPanama(granted, day1 + 1);

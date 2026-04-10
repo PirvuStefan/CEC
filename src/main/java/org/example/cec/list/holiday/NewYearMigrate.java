@@ -1,6 +1,7 @@
 package org.example.cec.list.holiday;
 
 import org.apache.poi.ss.usermodel.Row;
+import org.example.cec.CellValue;
 import org.example.cec.list.EmployeeColumnList;
 import org.example.cec.list.ListConfig;
 import org.example.cec.list.add.config.SalaryConfig;
@@ -18,18 +19,21 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.example.cec.list.ListSheet;
 import org.apache.poi.EncryptedDocumentException;
 
-public class NewYearMigrate {
+public class NewYearMigrate implements CellValue {
 
 
-    public static void updateRow(Row row){
+    public void updateRow(Row row){
 
-    int sum = (int) (row.getCell(EmployeeColumnList.HOLIDAY_NUMBER_LEFT_CURRENT_YEAR).getNumericCellValue() + row.getCell(EmployeeColumnList.HOLIDAY_NUMBER_LEFT_LAST_YEARS).getNumericCellValue());
 
-    row.getCell(EmployeeColumnList.HOLIDAY_NUMBER_LEFT_LAST_YEARS).setCellValue(sum);
-    row.getCell(EmployeeColumnList.HOLIDAY_NUMBER_LEFT_CURRENT_YEAR).setCellValue(0);
 
-    row.getCell(EmployeeColumnList.HOLIDAY_NUMBER_USED_CURRENT_YEAR).setCellValue(0);
-    row.getCell(EmployeeColumnList.HOLIDAY_NUMBER_USED).setCellValue(0);
+    float sum = getValueFloat(row.getCell(EmployeeColumnList.HOLIDAY_NUMBER_LEFT_CURRENT_YEAR)) + getValueFloat(row.getCell(EmployeeColumnList.HOLIDAY_NUMBER_LEFT_LAST_YEARS));
+
+
+    row.createCell(EmployeeColumnList.HOLIDAY_NUMBER_LEFT_LAST_YEARS).setCellValue(sum);
+    row.createCell(EmployeeColumnList.HOLIDAY_NUMBER_LEFT_CURRENT_YEAR).setCellValue(0);
+
+    row.createCell(EmployeeColumnList.HOLIDAY_NUMBER_USED_CURRENT_YEAR).setCellValue(0);
+    row.createCell(EmployeeColumnList.HOLIDAY_NUMBER_USED).setCellValue(0);
     }
 
     // this should only be called when a new year starts, to migrate the remaining holidays of the employee to the last years left column, and reset the used holidays for the new year

@@ -6,7 +6,7 @@ import org.apache.poi.ss.usermodel.Row;
 
 public interface CellValue {
 
-    default int getValueint(Row row, int cellIndex) {
+    default int getValueInt(Row row, int cellIndex) {
         Cell cell = row.getCell(cellIndex);
         return extractCell(cell);
 
@@ -14,6 +14,30 @@ public interface CellValue {
 
     default int getValueInt(Cell cell){
         return extractCell(cell);
+    }
+
+    default float getValueFloat(Row row, int cellIndex) {
+        Cell cell = row.getCell(cellIndex);
+        return extractCellFloat(cell);
+    }
+
+    default float getValueFloat(Cell cell){
+        return extractCellFloat(cell);
+    }
+
+    private float extractCellFloat(Cell cell){
+        if(cell == null) return 0;
+        if (cell.getCellType() == CellType.NUMERIC) {
+            return (float) cell.getNumericCellValue();
+        } else if (cell.getCellType() == CellType.STRING) {
+            try {
+                return Float.parseFloat(cell.getStringCellValue());
+            } catch (NumberFormatException e) {
+                return 0; // sau altă valoare implicită
+            }
+        }
+
+        return 0;
     }
 
     private int extractCell(Cell cell) {
