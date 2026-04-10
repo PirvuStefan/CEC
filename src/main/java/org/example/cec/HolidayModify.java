@@ -91,7 +91,7 @@ public class HolidayModify {
                                 }
                             }
 
-                            int colIndex = i + 4; // because we start from column F (index 5)
+                            int colIndex = i + DAY_OFFSET.asInt(); // because we start from column F (index 5)
                             if (colIndex >= row.getLastCellNum()) break; // skip if column index is out of bounds
 
                             Cell cell = row.getCell(colIndex);

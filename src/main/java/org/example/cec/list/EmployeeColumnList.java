@@ -2,6 +2,7 @@ package org.example.cec.list;
 
 public class EmployeeColumnList {
     public static final int NAME = 0;
+    public static final int HOLIDAY_PERIODS = 1;
     public static final int HOLIDAY_NUMBER_USED = 2;
     public static final int HOLIDAY_NUMBER_USED_CURRENT_YEAR = 3;
     public static final int HOLIDAY_NUMBER_LEFT_LAST_YEARS = 4;
