@@ -145,6 +145,8 @@ public class AddEmployeeScene implements ColorStyle {
             AddEmployee addEmployee = new AddEmployee(person, newMonth.isSelected(), fileToProcess);
             addEmployee.start();
 
+            showAlert("Angajatul " + person.getName() + " a fost adaugat cu succes. Verificati fisierul pentru detalii si asigurati-va ca toate datele sunt conforme.");
+
 
         });
 

@@ -4,7 +4,10 @@ import org.example.cec.list.Person;
 
 import java.io.File;
 
+
 public class AddEmployee {
+
+    public final double DAY_ADD = 0.055; // daily constant for each worked day, calculated as 20/365
 
     Person person ;
     boolean isNewMonth;
