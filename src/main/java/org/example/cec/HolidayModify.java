@@ -1,7 +1,9 @@
 package org.example.cec;
 
 import org.apache.poi.ss.usermodel.*;
+import org.example.cec.holiday.ConcediuHoliday;
 import org.example.cec.holiday.Holiday;
+import org.example.cec.list.update.HolidayUpdate;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,6 +30,7 @@ public class HolidayModify {
     public File launch() {
         HolidayInitialize holidayInitialize = new HolidayInitialize(holidaysSheet);
         List<Holiday> holidays = holidayInitialize.InitialiseHolidaysList();
+        HolidayUpdate holidayUpdate = new HolidayUpdate();
 
         try (FileInputStream fis = new FileInputStream(mainSheet);
              Workbook workbook = WorkbookFactory.create(fis)) {
@@ -47,8 +50,11 @@ public class HolidayModify {
 
                     if (normalizedMain.equals(normalizedHoliday)) {
                         System.out.println(name.toLowerCase());
-                        System.out.println("Days in month: " + daysInMonth);
                         holiday.apply(row, headerRow, daysInMonth);
+
+                        if (holiday instanceof ConcediuHoliday concediuHoliday) {
+                            holidayUpdate.addHoliday(name, concediuHoliday);
+                        }
                     }
                 }
             }
@@ -62,6 +68,8 @@ public class HolidayModify {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        holidayUpdate.apply();
 
         System.out.println("Holiday modification completed.");
         return mainSheet;

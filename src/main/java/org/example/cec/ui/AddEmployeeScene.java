@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import org.example.cec.list.add.AddEmployee;
 import org.example.cec.list.Person;
-import org.example.cec.list.add.config.SalaryConfig;
+import org.example.cec.list.add.config.JsonConfig;
 import org.example.cec.ui.validate.ValidateAddEmployee;
 import org.example.cec.ui.validate.ValidateDays;
 
@@ -112,7 +112,7 @@ public class AddEmployeeScene implements ColorStyle {
 
             String salary;
             try {
-                salary = SalaryConfig.getInstance().getSalary();
+                salary = JsonConfig.getInstance().getSalary();
             } catch (IOException ex) {
                 showAlert("Eroare la incarcarea salariului default, asigurati va fisierul config.json se afla in arhiva");
                 return;
