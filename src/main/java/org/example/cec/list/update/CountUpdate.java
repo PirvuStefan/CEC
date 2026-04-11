@@ -3,13 +3,16 @@ package org.example.cec.list.update;
 import org.apache.poi.ss.usermodel.*;
 import org.example.cec.CellValue;
 import org.example.cec.list.EmployeeColumnList;
+import org.example.cec.list.EmployeeRowList;
 import org.example.cec.list.ListConfig;
 import org.example.cec.list.ListSheet;
 import org.example.cec.list.add.config.JsonConfig;
+import org.example.cec.ui.validate.AlertUtility;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -24,10 +27,13 @@ public class CountUpdate implements CellValue {
     CountUpdate() {
         try {
             this.lastUpdate = JsonConfig.getInstance().getLastUpdate();
-        } catch (Exception e) {
-            System.err.println("Error loading config: " + e.getMessage());
-            this.lastUpdate = LocalDate.now();
+        } catch (IOException e) {
+            AlertUtility.showAlert("Asigurați-vă că fișierul de configurare există și este corect formatat: " + e.getMessage());
+            throw new RuntimeException(e);
         }
+
+
+
     }
 
     private void updateRow(Row row) {
@@ -71,7 +77,7 @@ public class CountUpdate implements CellValue {
                 Sheet sheet = wb.getSheetAt(ListSheet.EMPLOYEE_LIST.asInt());
                 if (sheet == null) return;
 
-                for (int i = 7; i <= sheet.getLastRowNum(); i++) {
+                for (int i = EmployeeRowList.EMPLOYEE_START_POS; i <= sheet.getLastRowNum(); i++) {
                     Row row = sheet.getRow(i);
                     if (row == null) break;
 
@@ -98,5 +104,12 @@ public class CountUpdate implements CellValue {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        JsonDateUpdate jsonDateUpdate = new JsonDateUpdate();
+        jsonDateUpdate.start();
+    }
+
+    public static void start() {
+        new CountUpdate().update();
     }
 }

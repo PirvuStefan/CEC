@@ -124,7 +124,7 @@ public class AddToList implements AddEmployeeToRow, FreePosition, CellValue {
 
             int i;
 
-            for (i = 8; i <= sheet.getLastRowNum(); i++) {
+            for (i = EmployeeRowList.EMPLOYEE_START_POS; i <= sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
 
                 if (row == null) break;

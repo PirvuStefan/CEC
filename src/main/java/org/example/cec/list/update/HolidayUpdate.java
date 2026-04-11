@@ -4,10 +4,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.example.cec.CellValue;
 import org.example.cec.NormalizeName;
 import org.example.cec.holiday.ConcediuHoliday;
-import org.example.cec.list.EmployeeColumnList;
-import org.example.cec.list.ListConfig;
-import org.example.cec.list.ListSheet;
-import org.example.cec.list.MonthsPlaceholders;
+import org.example.cec.list.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -46,7 +43,7 @@ public class HolidayUpdate implements CellValue {
                 Sheet sheet = wb.getSheetAt(ListSheet.EMPLOYEE_LIST.asInt());
                 if (sheet == null) return;
 
-                for (int i = 7; i <= sheet.getLastRowNum(); i++) {
+                for (int i = EmployeeRowList.EMPLOYEE_START_POS; i <= sheet.getLastRowNum(); i++) {
                     Row row = sheet.getRow(i);
                     if (row == null) break;
 

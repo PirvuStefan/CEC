@@ -3,6 +3,7 @@ package org.example.cec.list.update;
 import org.apache.poi.ss.usermodel.Row;
 import org.example.cec.CellValue;
 import org.example.cec.list.EmployeeColumnList;
+import org.example.cec.list.EmployeeRowList;
 import org.example.cec.list.ListConfig;
 
 import java.io.File;
@@ -55,7 +56,7 @@ public class NewYearMigrate implements CellValue {
             try (Workbook wb = workbook) {
                 Sheet sheet = wb.getSheetAt(ListSheet.EMPLOYEE_LIST.asInt());
                 if (sheet != null) {
-                    for (int i = 7; i <= sheet.getLastRowNum(); i++) {
+                    for (int i = EmployeeRowList.EMPLOYEE_START_POS; i <= sheet.getLastRowNum(); i++) {
                         Row row = sheet.getRow(i);
                         if (row == null) break;
                         
