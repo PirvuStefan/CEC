@@ -360,6 +360,179 @@ Result:
 - Final working day = 19
 ```
 
+## Employee List Management
+
+The application maintains a dedicated employee registry stored as an Excel file at `arhiva/list/list.xlsx`. This file is separate from the main schedule sheet and tracks personal details, contract info, and holiday balances for every employee.
+
+### List File Structure
+
+Each employee row contains:
+
+| Column | Field |
+|--------|-------|
+| NAME | Full name |
+| HOLIDAY_PERIODS | Vacation periods taken this year (e.g. `1-5.JANUARY,10-14.MARCH`) |
+| HOLIDAY_NUMBER_USED | Total vacation days used |
+| HOLIDAY_NUMBER_USED_CURRENT_YEAR | Vacation days used in the current year |
+| HOLIDAY_NUMBER_LEFT_LAST_YEARS | Carried-over days from previous years |
+| HOLIDAY_NUMBER_LEFT_CURRENT_YEAR | Accrued days for the current year |
+| SALARY | Monthly salary |
+| EMPLOYMENT_DATE | Hire date (`dd.MM.yyyy`) |
+| CNP | National ID number |
+| JOB | Job title |
+| PLACE_OF_WORK | Work location |
+| GESTIUNE | Department/management unit |
+| PHONE_NUMBER | Contact number |
+| CI | ID card number |
+| DOMICILE | Home address |
+| VALABILITY | ID card expiry date |
+
+### JSON Configuration (`arhiva/config.json`)
+
+A small JSON file controls two shared defaults used by the list management features:
+
+```json
+{
+  "salary": "4050",
+  "lastUpdate": "2025-01-01"
+}
+```
+
+- **`salary`** – default gross salary applied when adding a new employee and the salary field is left blank
+- **`lastUpdate`** – the date used by the holiday accrual logic as the starting point for calculating earned days; updated automatically after each list update
+
+The file is loaded from `arhiva/config.json` at runtime, falling back to the bundled `/config.json` resource if the external file is missing.
+
+---
+
+## Additional Commands
+
+A dedicated **Comenzi Aditionale** (Additional Commands) screen is accessible from the main scene. It provides four actions that operate on the employee list file:
+
+| Button | Action |
+|--------|--------|
+| Cauta Angajat | Open the Search Employee screen |
+| Adauga Angajat | Open the Add Employee form |
+| Migreaza Anul | Run the year-end holiday migration |
+| Updateaza Lista | Accrue holiday days up to today |
+
+### Search Employee
+
+Type a name in the search box; the application normalises both the query and every entry in the list (strips accents, spaces, and hyphens) before comparing, so partial or accent-free input still finds the right row.
+
+```
+Search: "Ion Popescu"
+Result: row key 42          ← internal row index in the list file
+        "Niciun angajat..." ← when no match is found
+```
+
+### Add Employee
+
+The **Adauga Angajat** form collects all required fields and writes the new employee into both the list file and the main schedule file in one step.
+
+**Required fields:**
+- Fisierul Principal (main schedule `.xlsx`)
+- Nume (full name)
+- CNP, CI, Domiciliu
+- Data angajarii, Valabilitate fisa
+
+**Optional fields** (fall back to `config.json` defaults when blank):
+- Salariu → defaults to `salary` from `config.json`
+- Functia → defaults to `"vanzator"`
+- Data angajarii → defaults to today
+
+**"Luna noua" checkbox** — when checked, a month-header row is inserted in the list before the new employee row, marking the start of a new hiring month.
+
+**Example:**
+```
+Nume:            Maria Ionescu
+Salariu:         (blank → uses config default)
+Data angajarii:  2026-04-01
+CNP:             2900401123456
+Functia:         casier
+Punct de lucru:  Magazin Nord
+→ Employee added to list file and initialised in main schedule
+```
+
+### Holiday Balance Tracking
+
+Every time a **Concediu (CO)** holiday period is processed from the Holidays Sheet, the application automatically updates the matching employee row in the list file:
+
+- **HOLIDAY_NUMBER_USED** is incremented by the number of calendar days in the period
+- **HOLIDAY_PERIODS** has the period appended in the format `firstDay-lastDay.MONTH`
+- Days are first subtracted from **HOLIDAY_NUMBER_LEFT_LAST_YEARS**; any remainder comes from **HOLIDAY_NUMBER_LEFT_CURRENT_YEAR**
+- **HOLIDAY_NUMBER_USED_CURRENT_YEAR** is updated accordingly
+
+```
+Employee: Maria Ionescu
+Period:   10*17  (8 days, type: concediu)
+Before:   left_last=3, left_current=12, used=0
+After:    left_last=0, left_current=7,  used=8
+          periods: "10-17.APRIL"
+```
+
+### List Update (Holiday Accrual)
+
+The **Updateaza Lista** button accrues earned vacation days for every active employee from their last-update date (stored in `config.json`) up to today.
+
+- Accrual rate: **0.055 days per calendar day** (≈ 20 days / 365)
+- The effective start date is `max(lastUpdate, employmentDate)`, so newly hired employees are not over-credited
+- Rows highlighted **yellow** in the list are skipped (used to flag special-status employees)
+- After the update, `lastUpdate` in `config.json` is set to today
+
+```
+Employee: Ion Popescu
+Employment date: 2025-01-01
+Last update:     2025-12-01
+Today:           2026-04-11
+Days elapsed:    131
+Days to add:     131 × 0.055 = 7.205
+New left_current: previous + 7.205
+```
+
+### Year Migration
+
+The **Migreaza Anul** button runs the end-of-year process (requires confirmation dialog):
+
+1. For every employee row (skipping yellow-marked rows):
+   - `HOLIDAY_NUMBER_LEFT_LAST_YEARS` = old `left_last` + old `left_current`
+   - `HOLIDAY_NUMBER_LEFT_CURRENT_YEAR` = 0
+   - `HOLIDAY_NUMBER_USED` = 0
+   - `HOLIDAY_NUMBER_USED_CURRENT_YEAR` = 0
+   - `HOLIDAY_PERIODS` cleared
+
+This ensures unused days carry over into the next year while resetting all current-year counters.
+
+---
+
+## Holiday Polymorphism
+
+The five leave types are implemented as concrete subclasses of the abstract `Holiday` class using the **Template Method** pattern. Each subclass only overrides the parts of the processing pipeline that differ.
+
+```
+Holiday  (abstract)
+├── apply(row, headerRow, daysInMonth)   ← final template method
+│     ├── beforeRange()   hook
+│     ├── applyRange()    shared range logic
+│     ├── afterRange()    hook
+│     └── updateSummary() hook
+│
+├── ConcediuHoliday    → green, skips weekends, updates CO summary column
+├── MedicalHoliday     → aqua,  does NOT skip weekends, updates CM column
+├── MaternitateHoliday → pink,  skips weekends, no summary update
+├── AbsentaHoliday     → orange, skips weekends, updates ABS column
+└── DemisieHoliday     → red,   beforeRange colors name cell,
+                                afterRange colors rest of month red
+```
+
+Creating the right subclass from a string reason code:
+```java
+Holiday h = Holiday.of(10, 17, "concediu", "Maria Ionescu", "Magazin Nord");
+h.apply(employeeRow, headerRow, 30);
+```
+
+---
+
 ## File Structure
 
 ```
@@ -368,30 +541,82 @@ CEC/
 │   ├── main/
 │   │   ├── java/
 │   │   │   └── org/example/cec/
-│   │   │       ├── HelloApplication.java    # Main application & GUI
-│   │   │       ├── Launcher.java            # JAR entry point
-│   │   │       ├── Employee.java            # Employee model
-│   │   │       ├── Holiday.java             # Holiday/absence model
-│   │   │       ├── WeekendShift.java        # Weekend shift data model
-│   │   │       ├── WeekendModify.java       # Weekend shift processing logic
-│   │   │       ├── HolidayModify.java       # Holiday processing logic
-│   │   │       ├── PanamaShift.java         # Panama schedule shift model
-│   │   │       ├── PanamaModify.java        # Panama schedule processing logic
-│   │   │       ├── ParseWorkingHours.java   # Global daily shift initializer
-│   │   │       ├── ParseIndividualHours.java# Per-employee daily shift parser
-│   │   │       ├── DeleteModify.java        # Store data reset logic
-│   │   │       ├── Placeholders.java        # Column offset constants (enum)
-│   │   │       ├── HelloController.java     # FXML controller (minimal)
-│   │   │       └── panama/
-│   │   │           ├── Panama.java          # Abstract Panama week model
-│   │   │           ├── PanamaFriday.java    # Fri/Thu/Tue shift pattern
-│   │   │           └── PanamaSunday.java    # Mon/Wed/Sat/Sun shift pattern
+│   │   │       ├── HelloApplication.java      # Main application entry
+│   │   │       ├── Launcher.java              # JAR entry point
+│   │   │       ├── Employee.java              # Employee schedule model
+│   │   │       ├── CellValue.java             # Cell read/write utilities
+│   │   │       ├── NormalizeName.java         # Name normalisation helper
+│   │   │       ├── WeekendShift.java          # Weekend shift data model
+│   │   │       ├── WeekendModify.java         # Weekend shift processing
+│   │   │       ├── WeekendModifyEmployee.java # Per-employee weekend writer
+│   │   │       ├── WeekendInitialize.java     # Weekend sheet initialiser
+│   │   │       ├── WeekendGenerate.java       # Weekend schedule generator
+│   │   │       ├── HolidayModify.java         # Holiday processing orchestrator
+│   │   │       ├── HolidayInitialize.java     # Holiday sheet parser
+│   │   │       ├── PanamaShift.java           # Panama shift data model
+│   │   │       ├── PanamaModify.java          # Panama processing logic
+│   │   │       ├── ParseIndividualHours.java  # Per-employee daily shift parser
+│   │   │       ├── WorkingHoursTotal.java     # Hours totalling logic
+│   │   │       ├── VariableReset.java         # State reset between runs
+│   │   │       ├── Placeholders.java          # Column offset constants (enum)
+│   │   │       ├── holiday/
+│   │   │       │   ├── Holiday.java           # Abstract holiday (template method)
+│   │   │       │   ├── ConcediuHoliday.java   # Vacation leave
+│   │   │       │   ├── MedicalHoliday.java    # Medical leave
+│   │   │       │   ├── MaternitateHoliday.java# Maternity leave
+│   │   │       │   ├── AbsentaHoliday.java    # Absence
+│   │   │       │   └── DemisieHoliday.java    # Resignation
+│   │   │       ├── panama/
+│   │   │       │   ├── Panama.java            # Abstract Panama week model
+│   │   │       │   ├── PanamaFriday.java      # Fri/Thu/Tue pattern
+│   │   │       │   └── PanamaSunday.java      # Mon/Wed/Sat/Sun pattern
+│   │   │       ├── list/
+│   │   │       │   ├── ListConfig.java        # Singleton for list file access
+│   │   │       │   ├── ListSheet.java         # Sheet index reference
+│   │   │       │   ├── Person.java            # Employee data model (builder)
+│   │   │       │   ├── EmployeeColumnList.java# Column index constants
+│   │   │       │   ├── EmployeeRowList.java   # Row index constants
+│   │   │       │   ├── MonthsPlaceholders.java# Month enum with row offsets
+│   │   │       │   ├── Password.java          # Password-protected workbook helper
+│   │   │       │   ├── SearchEmployee.java    # Name search in list file
+│   │   │       │   ├── add/
+│   │   │       │   │   ├── AddEmployee.java       # Add orchestrator
+│   │   │       │   │   ├── AddToList.java         # Writes to list file
+│   │   │       │   │   ├── AddToMain.java         # Writes to main schedule
+│   │   │       │   │   ├── AddEmployeeToRow.java  # Row write interface
+│   │   │       │   │   ├── FreePosition.java      # Finds first empty row
+│   │   │       │   │   ├── NewMonthParser.java    # Inserts month-header row
+│   │   │       │   │   └── config/
+│   │   │       │   │       ├── JsonConfig.java    # Singleton for config.json
+│   │   │       │   │       └── JsonFileReader.java# JSON file reader
+│   │   │       │   └── update/
+│   │   │       │       ├── CountUpdate.java       # Holiday accrual logic
+│   │   │       │       ├── HolidayUpdate.java     # Syncs CO days to list file
+│   │   │       │       ├── JsonDateUpdate.java    # Updates lastUpdate in config
+│   │   │       │       └── NewYearMigrate.java    # Year-end migration
+│   │   │       └── ui/
+│   │   │           ├── MainScene.java         # Main processing screen
+│   │   │           ├── CommandsScene.java     # Additional commands hub
+│   │   │           ├── AddEmployeeScene.java  # Add employee form
+│   │   │           ├── SearchEmployeeScene.java# Employee search
+│   │   │           ├── WeekendDetailsScene.java# Weekend schedule details
+│   │   │           ├── VacanteDetailsScene.java# Holiday details view
+│   │   │           ├── InstructionsScene.java # Instructions screen
+│   │   │           ├── SceneController.java   # Scene navigation controller
+│   │   │           ├── ColorStyle.java        # Shared button styling
+│   │   │           └── validate/
+│   │   │               ├── AlertUtility.java      # Alert helper
+│   │   │               ├── ValidateAddEmployee.java# Add-employee form validation
+│   │   │               └── ValidateDays.java      # Days-in-month validation
 │   │   └── resources/
 │   │       └── org/example/cec/
-│   │           ├── hello-view.fxml          # FXML layout
+│   │           ├── hello-view.fxml            # FXML layout
 │   │           └── icons/
-│   │               └── icon.png             # Application icon
-├── arhiva/                                   # Output folder (auto-created)
+│   │               └── icon.png               # Application icon
+├── arhiva/                                     # Output folder (auto-created)
+│   ├── list/
+│   │   └── list.xlsx                          # Employee registry
+│   └── config.json                            # Salary & last-update config
 ├── pom.xml
 └── README.md
 ```
