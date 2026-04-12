@@ -33,7 +33,6 @@ public class NewYearMigrate implements CellValue {
     row.createCell(EmployeeColumnList.HOLIDAY_NUMBER_LEFT_CURRENT_YEAR).setCellValue(0);
 
     row.createCell(EmployeeColumnList.HOLIDAY_PERIODS).setCellValue("");
-    row.createCell(EmployeeColumnList.HOLIDAY_NUMBER_USED_CURRENT_YEAR).setCellValue(0);
     row.createCell(EmployeeColumnList.HOLIDAY_NUMBER_USED).setCellValue(0);
     }
 

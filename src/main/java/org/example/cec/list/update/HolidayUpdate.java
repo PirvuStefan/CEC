@@ -76,14 +76,12 @@ public class HolidayUpdate implements CellValue {
                             // Subtract from HOLIDAY_NUMBER_LEFT_LAST_YEARS first, overflow from HOLIDAY_NUMBER_LEFT_CURRENT_YEAR
                             int leftLast = getValueInt(row, EmployeeColumnList.HOLIDAY_NUMBER_LEFT_LAST_YEARS);
                             int leftCurrent = getValueInt(row, EmployeeColumnList.HOLIDAY_NUMBER_LEFT_CURRENT_YEAR);
-                            int usedCurrent = getValueInt(row, EmployeeColumnList.HOLIDAY_NUMBER_USED_CURRENT_YEAR);
 
                             int fromLast = Math.min(days, leftLast);
                             int fromCurrent = days - fromLast;
 
                             setIntCell(row, EmployeeColumnList.HOLIDAY_NUMBER_LEFT_LAST_YEARS, leftLast - fromLast);
                             setIntCell(row, EmployeeColumnList.HOLIDAY_NUMBER_LEFT_CURRENT_YEAR, leftCurrent - fromCurrent);
-                            setIntCell(row, EmployeeColumnList.HOLIDAY_NUMBER_USED_CURRENT_YEAR, usedCurrent + fromCurrent);
                         }
                         break;
                     }
