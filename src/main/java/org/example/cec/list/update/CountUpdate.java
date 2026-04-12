@@ -24,7 +24,7 @@ public class CountUpdate implements CellValue {
     LocalDate lastUpdate;
     public static final double DAY_ADD = 0.055;
 
-    CountUpdate() {
+    public CountUpdate() {
         try {
             this.lastUpdate = JsonConfig.getInstance().getLastUpdate();
         } catch (IOException e) {
@@ -109,7 +109,5 @@ public class CountUpdate implements CellValue {
         jsonDateUpdate.start();
     }
 
-    public static void start() {
-        new CountUpdate().update();
-    }
+
 }

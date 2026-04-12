@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import org.example.cec.list.update.CountUpdate;
 import org.example.cec.list.update.NewYearMigrate;
+import org.example.cec.ui.validate.AlertUtility;
 
 public class CommandsScene implements ColorStyle {
 
@@ -64,8 +65,12 @@ public class CommandsScene implements ColorStyle {
 				}
 			});
 		});
-		
-		updateListButton.setOnAction(e -> CountUpdate.start());
+
+		CountUpdate countUpdate = new CountUpdate();
+		updateListButton.setOnAction(e -> {
+			countUpdate.update();
+			AlertUtility.showAlert("Lista a fost actualizata cu succes!");
+		});
 		
 		backButton.setOnAction(e -> controller.switchToMainScene());
 

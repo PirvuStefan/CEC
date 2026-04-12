@@ -84,6 +84,9 @@ public class NewYearMigrate implements CellValue {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        CountUpdate countUpdate = new CountUpdate();
+        countUpdate.update();
     }
 
     public static Workbook getSheetsWithPassword(File listFile, String pwd, FileInputStream fis) throws IOException {
