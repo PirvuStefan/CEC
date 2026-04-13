@@ -3,7 +3,9 @@ package org.example.cec.list.add;
 import org.apache.poi.ss.usermodel.*;
 import org.example.cec.CellValue;
 import org.example.cec.list.*;
+import org.example.cec.list.update.CountUpdate;
 import org.example.cec.list.update.NewYearMigrate;
+import org.example.cec.ui.validate.AlertUtility;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,6 +29,7 @@ public class AddToList implements AddEmployeeToRow, FreePosition, CellValue {
         File file = listConfig.getFile();
 
         if (file == null || !file.exists() || !file.isFile()) {
+            AlertUtility.showAlert("Fișierul Lista Excel nu a fost găsit: " + (file == null ? "null" : file.getAbsolutePath()));
             throw new IllegalStateException("Excel file not found: " + (file == null ? "null" : file.getAbsolutePath()));
         }
 
@@ -77,6 +80,9 @@ public class AddToList implements AddEmployeeToRow, FreePosition, CellValue {
         if (employeeRow == null) employeeRow = sheet.createRow(i);
         set(employeeRow);
 
+        CountUpdate countUpdate = new CountUpdate();
+        countUpdate.update();
+
     }
 
 
@@ -90,6 +96,9 @@ public class AddToList implements AddEmployeeToRow, FreePosition, CellValue {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
         row.createCell(EmployeeColumnList.NAME).setCellValue(person.getName());
+        row.createCell(EmployeeColumnList.HOLIDAY_NUMBER_USED).setCellValue(0);
+        row.createCell(EmployeeColumnList.HOLIDAY_NUMBER_LEFT_CURRENT_YEAR).setCellValue(0);
+        row.createCell(EmployeeColumnList.HOLIDAY_NUMBER_LEFT_LAST_YEARS).setCellValue(0);
         row.createCell(EmployeeColumnList.SALARY).setCellValue(person.getSalary());
         if (person.getEmploymentDate() != null) {
             row.createCell(EmployeeColumnList.EMPLOYMENT_DATE).setCellValue(person.getEmploymentDate().format(formatter));
@@ -110,9 +119,9 @@ public class AddToList implements AddEmployeeToRow, FreePosition, CellValue {
         int marc;
         Row prev = row.getSheet().getRow(row.getRowNum() - 1);
         if(prev.getCell(EmployeeColumnList.MARK).getCellType() == CellType.BLANK){
-            marc = getValueInt(prev,3) + 1;
+            marc = getValueInt(prev,EmployeeColumnList.MARK) + 1;
         } else {
-            marc = getValueInt(row,3) + 11;
+            marc = getValueInt(row,EmployeeColumnList.MARK) + 1;
         }
         row.createCell(EmployeeColumnList.MARK).setCellValue(marc);
 

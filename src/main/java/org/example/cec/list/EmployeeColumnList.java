@@ -4,8 +4,8 @@ public class EmployeeColumnList {
     public static final int NAME = 0;
     public static final int HOLIDAY_PERIODS = 1;
     public static final int HOLIDAY_NUMBER_USED = 2;
-    public static final int HOLIDAY_NUMBER_LEFT_LAST_YEARS = 3;
-    public static final int HOLIDAY_NUMBER_LEFT_CURRENT_YEAR =4;
+    public static final int HOLIDAY_NUMBER_LEFT_CURRENT_YEAR = 3;
+    public static final int HOLIDAY_NUMBER_LEFT_LAST_YEARS = 4;
     public static final int SALARY = 6;
     public static final int EMPLOYMENT_DATE = 7;
     public static final int CNP = 8;

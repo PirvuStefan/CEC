@@ -8,6 +8,12 @@ module org.example.cec {
     requires org.apache.poi.poi;
     requires com.fasterxml.jackson.databind;
 
+    requires org.apache.commons.compress;
+    requires org.apache.xmlbeans;
+    requires org.apache.logging.log4j;
+
+    uses org.apache.poi.ss.usermodel.WorkbookProvider;
+
     opens org.example.cec to javafx.fxml;
     exports org.example.cec;
 }
