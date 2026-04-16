@@ -49,4 +49,8 @@ public enum MonthsPlaceholders {
         return String.valueOf(year);
     }
 
+    public int getCurrentYearAsInt(){
+        return LocalDate.now().getYear();
+    }
+
 }

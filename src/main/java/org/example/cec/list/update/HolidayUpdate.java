@@ -34,7 +34,7 @@ public class HolidayUpdate implements CellValue {
             }
         } catch (Exception ignored) {}
 
-        String currentMonth = MonthsPlaceholders.getCurrent().name();
+        int currentMonth = MonthsPlaceholders.getCurrent().asInt();
 
         try (FileInputStream fis = new FileInputStream(listFile)) {
             Workbook workbook = NewYearMigrate.getSheetsWithPassword(listFile, pwd, fis);
@@ -71,7 +71,7 @@ public class HolidayUpdate implements CellValue {
                             if (periodsCell == null) periodsCell = row.createCell(EmployeeColumnList.HOLIDAY_PERIODS, CellType.STRING);
                             String existing = periodsCell.getCellType() == CellType.STRING ? periodsCell.getStringCellValue().trim() : "";
                             String period = holiday.getFirstDay() + "-" + holiday.getLastDay() + "." + currentMonth;
-                            periodsCell.setCellValue(existing.isEmpty() ? period : existing + "," + period);
+                            periodsCell.setCellValue(existing.isEmpty() ? period : existing + ", " + period);
 
                             // Subtract from HOLIDAY_NUMBER_LEFT_LAST_YEARS first, overflow from HOLIDAY_NUMBER_LEFT_CURRENT_YEAR
                             int leftLast = getValueInt(row, EmployeeColumnList.HOLIDAY_NUMBER_LEFT_LAST_YEARS);
@@ -79,6 +79,7 @@ public class HolidayUpdate implements CellValue {
 
                             int fromLast = Math.min(days, leftLast);
                             int fromCurrent = days - fromLast;
+
 
                             setIntCell(row, EmployeeColumnList.HOLIDAY_NUMBER_LEFT_LAST_YEARS, leftLast - fromLast);
                             setIntCell(row, EmployeeColumnList.HOLIDAY_NUMBER_LEFT_CURRENT_YEAR, leftCurrent - fromCurrent);

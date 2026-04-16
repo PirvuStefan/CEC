@@ -80,9 +80,6 @@ public class AddToList implements AddEmployeeToRow, FreePosition, CellValue {
         if (employeeRow == null) employeeRow = sheet.createRow(i);
         set(employeeRow);
 
-        CountUpdate countUpdate = new CountUpdate();
-        countUpdate.update();
-
     }
 
 
