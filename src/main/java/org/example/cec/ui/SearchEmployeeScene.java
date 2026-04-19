@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.example.cec.list.Person;
 import org.example.cec.list.SearchEmployee;
 
 public class SearchEmployeeScene implements ColorStyle {
@@ -70,12 +71,30 @@ public class SearchEmployeeScene implements ColorStyle {
 
         searchButton.setOnAction(e -> {
             String text = searchInput.getText();
-            SearchEmployee Search = new SearchEmployee(text);
-            int key = Search.getKey();
-            if(key == -1) {
+            SearchEmployee search = new SearchEmployee(text);
+            int key = search.getKey();
+            if (key == -1) {
                 resultsArea.setText("Niciun angajat cu numele \"" + text + "\" nu a fost gasit.");
             } else {
-                resultsArea.setText(Integer.toString(key));
+                Person person = search.getPerson();
+                if (person != null) {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("Angajat gasit (key=").append(key).append("):\n\n");
+                    sb.append("Nume: ").append(person.getName()).append("\n");
+                    sb.append("Data angajarii: ").append(search.getEmploymentDateStr()).append("\n");
+                    sb.append("Job: ").append(person.getJob()).append("\n");
+                    sb.append("Salariu: ").append(person.getSalary()).append("\n");
+                    sb.append("CNP: ").append(person.getCNP()).append("\n");
+                    sb.append("Telefon: ").append(person.getPhoneNumber()).append("\n");
+                    sb.append("CI: ").append(person.getCI()).append("\n");
+                    sb.append("Valabilitate CI: ").append(search.getValabilityStr()).append("\n");
+                    sb.append("Loc de munca: ").append(person.getPlaceOfWork()).append("\n");
+                    sb.append("Gestiune: ").append(person.getGestiune()).append("\n");
+                    sb.append("Domiciliu: ").append(person.getDomicile());
+                    resultsArea.setText(sb.toString());
+                } else {
+                    resultsArea.setText("Angajat gasit (key=" + key + ") dar datele nu au putut fi citite.");
+                }
             }
         });
 
