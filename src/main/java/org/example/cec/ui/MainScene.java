@@ -135,7 +135,7 @@ public class MainScene implements ColorStyle {
                 }
             }
 
-            showAlert("Fisierul principal a fost modificat cu succes folosind ambele fisiere!");
+            showAlert("Fisierul principal a fost modificat cu succes!");
             VariableReset.resetStaticVariables();
             clearFileSelections(fileSelectors);
         });

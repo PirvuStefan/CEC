@@ -9,18 +9,21 @@ public abstract class Holiday {
 
     protected final int firstDay;
     protected final int lastDay;
+    protected int totalDays;
     protected final String name;
     protected final String magazin;
 
     protected Holiday(int firstDay, int lastDay, String name, String magazin) {
         this.firstDay = firstDay;
         this.lastDay = lastDay;
+        this.totalDays = lastDay - firstDay + 1;
         this.name = name;
         this.magazin = magazin;
     }
 
     public int getFirstDay() { return firstDay; }
     public int getLastDay() { return lastDay; }
+    public int getTotalDays(){ return totalDays; }
     public String getName() { return name; }
     public String getMagazin() { return magazin; }
     public abstract String getReason();
@@ -28,7 +31,6 @@ public abstract class Holiday {
 
     public static Holiday of(int firstDay, int lastDay, String reason, String name, String magazin) {
         return switch (reason) {
-            case "concediu"   -> new ConcediuHoliday(firstDay, lastDay, name, magazin);
             case "maternitate" -> new MaternitateHoliday(firstDay, lastDay, name, magazin);
             case "medical"    -> new MedicalHoliday(firstDay, lastDay, name, magazin);
             case "absenta"    -> new AbsentaHoliday(firstDay, lastDay, name, magazin);
@@ -156,5 +158,10 @@ public abstract class Holiday {
             }
         }
         return awayCellValue;
+    }
+
+
+    public void setTotal(int total) {
+        this.totalDays = total;
     }
 }

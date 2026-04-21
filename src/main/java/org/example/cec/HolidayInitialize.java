@@ -2,6 +2,7 @@ package org.example.cec;
 
 import org.apache.poi.ss.usermodel.*;
 import org.example.cec.holiday.Holiday;
+import org.example.cec.ui.validate.AlertUtility;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,7 +27,6 @@ public class HolidayInitialize {
              Workbook workbook = WorkbookFactory.create(fis)) { // Updated to use WorkbookFactory.create
 
             Sheet sheet = workbook.getSheetAt(0);
-            System.out.println(sheet.getSheetName() );
 
             for (int rowIndex = 2; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
@@ -34,7 +34,6 @@ public class HolidayInitialize {
 
                 String name = (row.getCell(0) != null && row.getCell(0).getCellType() == CellType.STRING) ? row.getCell(0).getStringCellValue() : null;
                 if( name == null || name.isEmpty() ) break;
-                System.out.println("Processing row " + (rowIndex + 1) + " for employee: " + name);
                 String magazin = row.getCell(1).getStringCellValue();
                 String period;
                 if (row.getCell(2).getCellType() == CellType.STRING) {
@@ -52,16 +51,33 @@ public class HolidayInitialize {
                 String firstDay = parts[0].trim().replaceFirst("^0+(?!$)", "");
                 String lastDay = parts[1].trim().replaceFirst("^0+(?!$)", "");
 
-                String reason = row.getCell(3).getStringCellValue();
+                int total = 0;
+                Cell totalCell = row.getCell(3);
+                if (totalCell != null) {
+                    if (totalCell.getCellType() == CellType.NUMERIC) {
+                        total = (int) totalCell.getNumericCellValue();
+                    } else if (totalCell.getCellType() == CellType.STRING) {
+                        String totalStr = totalCell.getStringCellValue().replaceAll("\\D+", "");
+                        if (!totalStr.isEmpty()) {
+                            total = Integer.parseInt(totalStr);
+                        }
+                    }
+                }
+
+                String reason = row.getCell(4).getStringCellValue();
                 reason = switch (reason) {
                     case "co", "CO" -> "concediu";
                     //case "m", "M" -> "maternitate";
                     case "cm", "m", "CM", "M" -> "medical";
                     case "abs", "ABS" -> "absenta";
                     case "dem", "DEM" -> "demisie";
-                    default -> "concediu";
+                    default -> {
+                        AlertUtility.showAlert("Motiv necunoscut in fisierul de concedii    : " + reason);
+                        throw new IllegalStateException("Unexpected reason: " + reason);
+                    }
                 };
                 Holiday holiday = Holiday.of(Integer.parseInt(firstDay), Integer.parseInt(lastDay), reason, name, magazin);
+                holiday.setTotal(total);
                 holidays.add(holiday);
             }
 

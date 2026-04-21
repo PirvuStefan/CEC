@@ -60,7 +60,7 @@ public class HolidayUpdate implements CellValue {
                         if (!normalizedRow.equals(normalizedKey)) continue;
 
                         for (ConcediuHoliday holiday : entry.getValue()) {
-                            int days = holiday.getLastDay() - holiday.getFirstDay() + 1;
+                            int days = holiday.getTotalDays();
 
                             // HOLIDAY_NUMBER_USED
                             int used = getValueInt(row, EmployeeColumnList.HOLIDAY_NUMBER_USED);
