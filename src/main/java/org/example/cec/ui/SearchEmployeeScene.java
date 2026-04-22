@@ -6,8 +6,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.example.cec.list.EmployeeResult;
 import org.example.cec.list.Person;
 import org.example.cec.list.SearchEmployee;
+
+import java.util.List;
 
 public class SearchEmployeeScene implements ColorStyle {
 
@@ -70,31 +73,23 @@ public class SearchEmployeeScene implements ColorStyle {
 
 
         searchButton.setOnAction(e -> {
-            String text = searchInput.getText();
+            String text = searchInput.getText().trim();
             SearchEmployee search = new SearchEmployee(text);
-            int key = search.getKey();
-            if (key == -1) {
+            List<EmployeeResult> results = search.getResults();
+
+            if (results.isEmpty()) {
                 resultsArea.setText("Niciun angajat cu numele \"" + text + "\" nu a fost gasit.");
+            } else if (results.size() == 1) {
+                resultsArea.setText(formatResult(results.get(0)));
             } else {
-                Person person = search.getPerson();
-                if (person != null) {
-                    StringBuilder sb = new StringBuilder();
-                    sb.append("Angajat gasit (key=").append(key).append("):\n\n");
-                    sb.append("Nume: ").append(person.getName()).append("\n");
-                    sb.append("Data angajarii: ").append(search.getEmploymentDateStr()).append("\n");
-                    sb.append("Job: ").append(person.getJob()).append("\n");
-                    sb.append("Salariu: ").append(person.getSalary()).append("\n");
-                    sb.append("CNP: ").append(person.getCNP()).append("\n");
-                    sb.append("Telefon: ").append(person.getPhoneNumber()).append("\n");
-                    sb.append("CI: ").append(person.getCI()).append("\n");
-                    sb.append("Valabilitate CI: ").append(search.getValabilityStr()).append("\n");
-                    sb.append("Loc de munca: ").append(person.getPlaceOfWork()).append("\n");
-                    sb.append("Gestiune: ").append(person.getGestiune()).append("\n");
-                    sb.append("Domiciliu: ").append(person.getDomicile());
-                    resultsArea.setText(sb.toString());
-                } else {
-                    resultsArea.setText("Angajat gasit (key=" + key + ") dar datele nu au putut fi citite.");
+                StringBuilder sb = new StringBuilder();
+                sb.append(results.size()).append(" angajati gasiti cu numele de familie \"").append(text).append("\":\n\n");
+                for (int i = 0; i < results.size(); i++) {
+                    sb.append("--- Angajat ").append(i + 1).append(" ---\n");
+                    sb.append(formatResult(results.get(i)));
+                    sb.append("\n\n");
                 }
+                resultsArea.setText(sb.toString());
             }
         });
 
@@ -104,6 +99,32 @@ public class SearchEmployeeScene implements ColorStyle {
     }
 
 
+
+    private String formatResult(EmployeeResult result) {
+        Person person = result.getPerson();
+        if (person == null) {
+            return "Angajat gasit (key=" + result.getKey() + ") dar datele nu au putut fi citite.";
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("Angajat (key=").append(result.getKey()).append("):\n");
+        sb.append("Nume: ").append(person.getName()).append("\n");
+        sb.append("Data angajarii: ").append(result.getEmploymentDateStr()).append("\n");
+        sb.append("Job: ").append(person.getJob()).append("\n");
+        sb.append("Salariu: ").append(person.getSalary()).append("\n");
+        sb.append("CNP: ").append(person.getCNP()).append("\n");
+        sb.append("Telefon: ").append(person.getPhoneNumber()).append("\n");
+        sb.append("CI: ").append(person.getCI()).append("\n");
+        sb.append("Valabilitate CI: ").append(result.getValabilityStr()).append("\n");
+        sb.append("Loc de munca: ").append(person.getPlaceOfWork()).append("\n");
+        sb.append("Gestiune: ").append(person.getGestiune()).append("\n");
+        sb.append("Domiciliu: ").append(person.getDomicile()).append("\n");
+        sb.append("Perioade concediu: ").append(result.getHolidayPeriods()).append("\n");
+        sb.append("Zile concediu folosite: ").append(result.getHolidayUsed()).append("\n");
+        sb.append("Zile ramase (an curent): ").append(result.getHolidayLeftCurrentYear()).append("\n");
+        sb.append("Zile ramase (ani anteriori): ").append(result.getHolidayLeftLastYears()).append("\n");
+        sb.append("Total zile ramase: ").append(result.getHolidayLeftTotal());
+        return sb.toString();
+    }
 
     public static Scene create(SceneController sceneController) {
         SearchEmployeeScene scene = new SearchEmployeeScene(sceneController);

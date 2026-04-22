@@ -15,16 +15,16 @@ import org.example.cec.NormalizeName;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SearchEmployee implements CellValue {
-    private int key = -1;
-    private Person person;
-    private String employmentDateStr = "";
-    private String valabilityStr = "";
 
+    private final List<EmployeeResult> results = new ArrayList<>();
     private final DataFormatter dataFormatter = new DataFormatter();
 
     public SearchEmployee(String nameSearch) {
@@ -42,10 +42,8 @@ public class SearchEmployee implements CellValue {
             }
         } catch (Exception ignored) {
             return;
-
         }
 
-        boolean modified = false;
         Workbook workbook = null;
 
         try (FileInputStream fis = new FileInputStream(file)) {
@@ -56,7 +54,6 @@ public class SearchEmployee implements CellValue {
                     workbook = WorkbookFactory.create(fis);
                 }
             } catch (EncryptedDocumentException ede) {
-                // if opening from stream failed due to encryption, try file-based open with password
                 if (pwd != null && !pwd.isEmpty()) {
                     workbook = WorkbookFactory.create(file, pwd);
                 } else {
@@ -65,62 +62,71 @@ public class SearchEmployee implements CellValue {
             }
 
             try (Workbook wb = workbook) {
-                Sheet sheet = wb.getSheetAt(ListSheet.EMPLOYEE_SEARCH.asInt());
-                if (sheet == null) return;
+                String[] words = nameSearch.trim().split("\\s+");
+                boolean isFamilyNameOnly = words.length == 1;
+
+                // Build normalized-name → key map from EMPLOYEE_SEARCH sheet
+                Map<String, Integer> nameToKey = new HashMap<>();
+                Sheet searchSheet = wb.getSheetAt(ListSheet.EMPLOYEE_SEARCH.asInt());
+                if (searchSheet != null) {
+                    for (int i = 0; i <= searchSheet.getLastRowNum(); i++) {
+                        Row row = searchSheet.getRow(i);
+                        if (row == null) continue;
+                        String name = (row.getCell(1) != null) ? row.getCell(1).getStringCellValue() : "";
+                        if (name.isEmpty()) continue;
+                        int key = getValueInt(row, 2);
+                        String normName = NormalizeName.set(name).replaceAll("[\\s\\-]+", "");
+                        nameToKey.put(normName, key);
+                    }
+                }
+
+                Sheet listSheet = wb.getSheetAt(ListSheet.EMPLOYEE_LIST.asInt());
+                if (listSheet == null) return;
 
                 String normSearch = NormalizeName.set(nameSearch).replaceAll("[\\s\\-]+", "");
 
-                for (int i = 0; i <= sheet.getLastRowNum(); i++) {
-                    Row row = sheet.getRow(i);
-                    if (row == null) continue; // skip empty rows safely
+                for (int i = EmployeeRowList.EMPLOYEE_START_POS; i <= listSheet.getLastRowNum(); i++) {
+                    Row personRow = listSheet.getRow(i);
+                    if (personRow == null) continue;
+                    String rowName = getString(personRow, EmployeeColumnList.NAME);
+                    if (rowName.isEmpty()) continue;
 
-                    String name = (row.getCell(1) != null) ? row.getCell(1).getStringCellValue() : "";
-                    int keyNow = getValueInt(row, 2);
-                    if (name == null || name.isEmpty()) continue;
-
-                    String normName = NormalizeName.set(name).replaceAll("[\\s\\-]+", "");
-                    if (compareName(normName, normSearch)) {
-                        this.key = keyNow;
-                        break;
+                    boolean matches;
+                    if (isFamilyNameOnly) {
+                        matches = matchesFamilyName(rowName, nameSearch);
+                    } else {
+                        String normRowName = NormalizeName.set(rowName).replaceAll("[\\s\\-]+", "");
+                        matches = compareName(normRowName, normSearch);
                     }
-                }
 
-                if (this.key != -1) {
-                    Sheet listSheet = wb.getSheetAt(ListSheet.EMPLOYEE_LIST.asInt());
-                    if (listSheet != null) {
-                        for (int i = EmployeeRowList.EMPLOYEE_START_POS; i <= listSheet.getLastRowNum(); i++) {
-                            Row personRow = listSheet.getRow(i);
-                            if (personRow == null) continue;
-                            String rowName = getString(personRow, EmployeeColumnList.NAME);
-                            if (rowName.isEmpty()) continue;
-                            String normRowName = NormalizeName.set(rowName).replaceAll("[\\s\\-]+", "");
-                            if (compareName(normRowName, normSearch)) {
-                                this.employmentDateStr = getDateString(personRow, EmployeeColumnList.EMPLOYMENT_DATE);
-                                this.valabilityStr = getDateString(personRow, EmployeeColumnList.VALABILITY);
-                                this.person = new Person.PersonBuilder()
-                                    .setName(rowName)
-                                    .setSalary(getString(personRow, EmployeeColumnList.SALARY))
-                                    .setEmploymentDate(getLocalDate(personRow, EmployeeColumnList.EMPLOYMENT_DATE))
-                                    .setCNP(getString(personRow, EmployeeColumnList.CNP))
-                                    .setJob(getString(personRow, EmployeeColumnList.JOB))
-                                    .setPhoneNumber(getString(personRow, EmployeeColumnList.PHONE_NUMBER))
-                                    .setCI(getString(personRow, EmployeeColumnList.CI))
-                                    .setGestiune(getString(personRow, EmployeeColumnList.GESTIUNE))
-                                    .setPlaceOfWork(getString(personRow, EmployeeColumnList.PLACE_OF_WORK))
-                                    .setDomicile(getString(personRow, EmployeeColumnList.DOMICILE))
-                                    .setValability(getLocalDate(personRow, EmployeeColumnList.VALABILITY))
-                                    .build();
-                                break;
-                            }
-                        }
-                    }
-                }
+                    if (!matches) continue;
 
-                // only write back if workbook was modified (keeps behavior safe)
-                if (modified) {
-                    try (FileOutputStream fos = new FileOutputStream(file)) {
-                        wb.write(fos);
-                    }
+                    String normRowName = NormalizeName.set(rowName).replaceAll("[\\s\\-]+", "");
+                    int key = nameToKey.getOrDefault(normRowName, -1);
+
+                    String employmentDateStr = getDateString(personRow, EmployeeColumnList.EMPLOYMENT_DATE);
+                    String valabilityStr = getDateString(personRow, EmployeeColumnList.VALABILITY);
+                    String holidayPeriods = getString(personRow, EmployeeColumnList.HOLIDAY_PERIODS);
+                    int holidayUsed = getValueInt(personRow, EmployeeColumnList.HOLIDAY_NUMBER_USED);
+                    int holidayLeftCurrentYear = getValueInt(personRow, EmployeeColumnList.HOLIDAY_NUMBER_LEFT_CURRENT_YEAR);
+                    int holidayLeftLastYears = getValueInt(personRow, EmployeeColumnList.HOLIDAY_NUMBER_LEFT_LAST_YEARS);
+
+                    Person person = new Person.PersonBuilder()
+                        .setName(rowName)
+                        .setSalary(getString(personRow, EmployeeColumnList.SALARY))
+                        .setEmploymentDate(getLocalDate(personRow, EmployeeColumnList.EMPLOYMENT_DATE))
+                        .setCNP(getString(personRow, EmployeeColumnList.CNP))
+                        .setJob(getString(personRow, EmployeeColumnList.JOB))
+                        .setPhoneNumber(getString(personRow, EmployeeColumnList.PHONE_NUMBER))
+                        .setCI(getString(personRow, EmployeeColumnList.CI))
+                        .setGestiune(getString(personRow, EmployeeColumnList.GESTIUNE))
+                        .setPlaceOfWork(getString(personRow, EmployeeColumnList.PLACE_OF_WORK))
+                        .setDomicile(getString(personRow, EmployeeColumnList.DOMICILE))
+                        .setValability(getLocalDate(personRow, EmployeeColumnList.VALABILITY))
+                        .build();
+
+                    results.add(new EmployeeResult(key, person, employmentDateStr, valabilityStr,
+                        holidayPeriods, holidayUsed, holidayLeftCurrentYear, holidayLeftLastYears));
                 }
             }
 
@@ -129,37 +135,27 @@ public class SearchEmployee implements CellValue {
         }
     }
 
+    private boolean matchesFamilyName(String rowName, String familyNameSearch) {
+        // Family name is the first space/hyphen-delimited token of the full name
+        String[] parts = rowName.trim().split("[\\s\\-]+");
+        if (parts.length == 0) return false;
+        String familyName = NormalizeName.set(parts[0]);
+        String normSearch = NormalizeName.set(familyNameSearch);
+        return familyName.equalsIgnoreCase(normSearch);
+    }
+
     private boolean compareName(String name, String search) {
-
         if (name.equals(search)) return true;
-
-
         name = name.replace("-", " ");
         if (name.trim().equals(search)) return true;
-
-
         name = name.replaceAll("[()]", "");
         if (name.trim().equals(search)) return true;
-
-
         name = name.replaceAll("\\s+", " ");
         return name.trim().equalsIgnoreCase(search);
     }
 
-    public int getKey() {
-        return key;
-    }
-
-    public Person getPerson() {
-        return person;
-    }
-
-    public String getEmploymentDateStr() {
-        return employmentDateStr;
-    }
-
-    public String getValabilityStr() {
-        return valabilityStr;
+    public List<EmployeeResult> getResults() {
+        return results;
     }
 
     private String getString(Row row, int col) {
