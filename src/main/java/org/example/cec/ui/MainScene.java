@@ -7,10 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.example.cec.HolidayModify;
-import org.example.cec.PanamaModify;
-import org.example.cec.VariableReset;
-import org.example.cec.WeekendModify;
+import org.example.cec.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -110,7 +107,7 @@ public class MainScene implements ColorStyle {
 
             if (weekendSheet != null) {
                 WeekendModify weekendModify = new WeekendModify(mainSheet, weekendSheet);
-                File modifiedSheet = weekendModify.launch(mainSheet, weekendSheet);
+                File modifiedSheet = weekendModify.launch();
                 if (modifiedSheet != null) {
                     mainSheet = modifiedSheet;
                     try {
@@ -123,7 +120,8 @@ public class MainScene implements ColorStyle {
             }
 
             if (panamaSheet != null) {
-                File modifiedSheet = PanamaModify.launch(mainSheet, panamaSheet);
+                PanamaModify panamaModify = new PanamaModify(mainSheet, panamaSheet);
+                File modifiedSheet = panamaModify.launch();
                 if (modifiedSheet != null) {
                     mainSheet = modifiedSheet;
                     try {

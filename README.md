@@ -574,11 +574,12 @@ CEC/
 │   │   │       │   ├── ListConfig.java        # Singleton for list file access
 │   │   │       │   ├── ListSheet.java         # Sheet index reference
 │   │   │       │   ├── Person.java            # Employee data model (builder)
+│   │   │       │   ├── EmployeeResult.java    # Search result: person + holiday summary
 │   │   │       │   ├── EmployeeColumnList.java# Column index constants
 │   │   │       │   ├── EmployeeRowList.java   # Row index constants
 │   │   │       │   ├── MonthsPlaceholders.java# Month enum with row offsets
 │   │   │       │   ├── Password.java          # Password-protected workbook helper
-│   │   │       │   ├── SearchEmployee.java    # Name search in list file
+│   │   │       │   ├── SearchEmployee.java    # Name search; single word = family name (returns list)
 │   │   │       │   ├── add/
 │   │   │       │   │   ├── AddEmployee.java       # Add orchestrator
 │   │   │       │   │   ├── AddToList.java         # Writes to list file
@@ -598,7 +599,7 @@ CEC/
 │   │   │           ├── MainScene.java         # Main processing screen
 │   │   │           ├── CommandsScene.java     # Additional commands hub
 │   │   │           ├── AddEmployeeScene.java  # Add employee form
-│   │   │           ├── SearchEmployeeScene.java# Employee search
+│   │   │           ├── SearchEmployeeScene.java# Employee search (list-aware display)
 │   │   │           ├── WeekendDetailsScene.java# Weekend schedule details
 │   │   │           ├── VacanteDetailsScene.java# Holiday details view
 │   │   │           ├── InstructionsScene.java # Instructions screen

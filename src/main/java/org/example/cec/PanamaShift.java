@@ -28,7 +28,7 @@ public class PanamaShift extends WeekendShift {
            Sheet sheet = workbook.getSheetAt(0);
            Row firstRow = sheet.getRow(1);
 
-           for(int i = 0 ; i < sarbatoriSize + size;i++){
+           for(int i = 0 ; i < sarbatoriSize + size; i++){
 
                int currentDay = i+2;
 
@@ -68,6 +68,10 @@ public class PanamaShift extends WeekendShift {
            System.out.println("Error initializing PanamaShift: " + e.getMessage());
            e.printStackTrace();
        }
+
+       addLastPanama();
+
+       print();
     }
 
     private void addPanama(boolean value, int position) {

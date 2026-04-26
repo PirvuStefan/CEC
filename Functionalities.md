@@ -70,7 +70,7 @@ if(weekendSheet == null && holidaysSheet != null){
 // If both sheets are selected
 File modifiedSheet = HolidayModify.launch(mainSheet, holidaysSheet);
 WeekendModify.launch(modifiedSheet, weekendSheet);
-// Panama processing is invoked separately via PanamaModify.launch(mainSheet, panamaSheet)
+// Panama processing is invoked separately via PanamaInitialise.launch(mainSheet, panamaSheet)
 ```
 
 ### Name Normalization

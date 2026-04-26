@@ -23,7 +23,7 @@ public class WeekendModify {
         this.weekendSheet = weekendSheet;
     }
 
-    public File launch(File mainSheet, File weekendSheet){
+    public File launch(){
 
         Map< String , List<Employee>> weekendEmployees;
         System.out.println("Modifying main sheet with weekend shifts...");
