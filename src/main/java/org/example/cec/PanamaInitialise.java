@@ -33,26 +33,16 @@ public class PanamaInitialise {
 
             Sheet sheet = workbook.getSheetAt(0);
 
-            for(int i = 0 ; i <= sheet.getLastRowNum(); i++) {
+            for(int i = 2 ; i <= sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
                 if (row == null) break;
                 // every type of this document should end with 2 empty rows in order to work
                 String name = row.getCell(1).getStringCellValue();
                 if( name == null || name.isEmpty() ) break;
 
-                for(int j = 2; j < row.getLastCellNum(); j++) {
-                    Cell cell = row.getCell(j);
-                    if (cell == null) continue;
-                    String cellValue = cell.getStringCellValue();
-                    if (cellValue == null || cellValue.isEmpty()) continue;
 
-                    PanamaShift shift = new PanamaShift(panamaSheet, row);
-                    List.put(name, shift);
-
-                    // Process the cell value as needed
-                    System.out.println("Processing cell value: " + cellValue);
-                }
-
+                PanamaShift shift = new PanamaShift(panamaSheet, row);
+                List.put(name, shift);
 
 
             }

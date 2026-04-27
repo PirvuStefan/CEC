@@ -14,7 +14,7 @@ public abstract class Panama {
         return lastDay;
     }
 
-    protected void setCellValue(Cell cell, int value){
+    protected void setCellValue(Cell cell){
         if(cell == null) return;
         if(cell.getCellType().equals(CellType.NUMERIC)){
             cell.setCellValue(11);

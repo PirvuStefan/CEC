@@ -13,19 +13,19 @@ public class PanamaSunday extends Panama {
     public void setWeekShift(Row row) {
          // lastDay is always Sunday, so we start from Sunday and go backwards to see if we can parse a full week of Sunday, Saturday, Wednesday, Monday
          if(lastDay > 0 && lastDay <= daysInMonth) {
-             setCellValue(row.getCell(lastDay),11);
+             setCellValue(row.getCell(lastDay));
          }
          lastDay--;
          if(lastDay > 0 && lastDay <= daysInMonth) {
-             setCellValue(row.getCell(lastDay),11);
+             setCellValue(row.getCell(lastDay));
          }
          lastDay = lastDay - 3;
          if(lastDay > 0 && lastDay <= daysInMonth) {
-             setCellValue(row.getCell(lastDay),11);
+             setCellValue(row.getCell(lastDay));
          }
          lastDay = lastDay - 2;
          if(lastDay > 0 && lastDay <= daysInMonth) {
-             setCellValue(row.getCell(lastDay),11);
+             setCellValue(row.getCell(lastDay));
          }
      }
 

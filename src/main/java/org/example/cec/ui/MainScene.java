@@ -91,47 +91,8 @@ public class MainScene implements ColorStyle {
                 return;
             }
 
-            if (holidaysSheet != null) {
-                HolidayModify holidayModify = new HolidayModify(mainSheet, holidaysSheet);
-                File modifiedSheet = holidayModify.launch();
-                if (modifiedSheet != null) {
-                    mainSheet = modifiedSheet;
-                    try {
-                        Files.copy(modifiedSheet.toPath(), outputDir.resolve(modifiedSheet.getName()), StandardCopyOption.REPLACE_EXISTING);
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                        showAlert("Failed to copy the modified file to the output directory.");
-                    }
-                }
-            }
-
-            if (weekendSheet != null) {
-                WeekendModify weekendModify = new WeekendModify(mainSheet, weekendSheet);
-                File modifiedSheet = weekendModify.launch();
-                if (modifiedSheet != null) {
-                    mainSheet = modifiedSheet;
-                    try {
-                        Files.copy(modifiedSheet.toPath(), outputDir.resolve(modifiedSheet.getName()), StandardCopyOption.REPLACE_EXISTING);
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                        showAlert("Failed to copy the modified file to the output directory.");
-                    }
-                }
-            }
-
-            if (panamaSheet != null) {
-                PanamaModify panamaModify = new PanamaModify(mainSheet, panamaSheet);
-                File modifiedSheet = panamaModify.launch();
-                if (modifiedSheet != null) {
-                    mainSheet = modifiedSheet;
-                    try {
-                        Files.copy(modifiedSheet.toPath(), outputDir.resolve(modifiedSheet.getName()), StandardCopyOption.REPLACE_EXISTING);
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                        showAlert("Failed to copy the modified file to the output directory.");
-                    }
-                }
-            }
+            SheetModificationFacade facade = new SheetModificationFacade(outputDir);
+            mainSheet = facade.processSheets(mainSheet, holidaysSheet, weekendSheet, panamaSheet);
 
             showAlert("Fisierul principal a fost modificat cu succes!");
             VariableReset.resetStaticVariables();

@@ -28,25 +28,25 @@ public class PanamaShift extends WeekendShift {
            Sheet sheet = workbook.getSheetAt(0);
            Row firstRow = sheet.getRow(1);
 
-           for(int i = 0 ; i < sarbatoriSize + size; i++){
+           for(int i = 2 ; i < row.getRowNum(); i++){
 
-               int currentDay = i+2;
 
-               Cell cell = row.getCell(currentDay);
+               Cell cell = row.getCell(i);
                if(cell == null) break;
                boolean granted = false;
                if(cell.getCellType() == CellType.STRING) {
                    if (cell.getStringCellValue().equals("X") || cell.getStringCellValue().equals("x")) granted = true;
                }
 
-               if( checkColor(firstRow.getCell(currentDay)) ) {
+               if( checkColor(firstRow.getCell(i)) ) {
 
-                   int day1 = getValueInt(firstRow, currentDay);
+                   int day1 = getValueInt(firstRow, i);
 
                    if(whatDay(day1, PanamaShift.pos).equals("duminicaF")) addPanama(granted, day1);
                    else if(whatDay(day1, PanamaShift.pos).equals("samabataF")) addPanama(granted, day1 + 1);
                    else{
-                       if(row.getCell(currentDay+1) == null) continue;
+                       if(row.getCell(i + 1) == null) continue;
+                       cell = row.getCell(i + 1);
                        granted = granted || (cell.getCellType() == CellType.STRING && (cell.getStringCellValue().equals("X") || cell.getStringCellValue().equals("x")));
                        addPanama(granted,day1 + 1);
                        i++;
@@ -64,6 +64,7 @@ public class PanamaShift extends WeekendShift {
 
 
            }
+          //addLastPanama();
        } catch (Exception e) {
            System.out.println("Error initializing PanamaShift: " + e.getMessage());
            e.printStackTrace();
@@ -71,7 +72,9 @@ public class PanamaShift extends WeekendShift {
 
        addLastPanama();
 
-       print();
+
+        System.out.println("PanamaShift initialized successfully for employee: " + row.getCell(1).getStringCellValue());
+        print();
     }
 
     private void addPanama(boolean value, int position) {
