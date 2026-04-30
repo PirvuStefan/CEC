@@ -44,16 +44,40 @@ public class AddToList implements AddEmployeeToRow, FreePosition, CellValue {
                 Sheet sheet = wb.getSheetAt(ListSheet.EMPLOYEE_LIST.asInt());
                 if (sheet == null) return;
 
+                setRow(sheet);
 
-
-                setRow(sheet, getPos(sheet));
-
-                try (FileOutputStream fileOut = new FileOutputStream("arhiva/list/list.xlsx")) {
+                try (FileOutputStream fileOut = new FileOutputStream(file)) {
                     workbook.write(fileOut);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        try (FileInputStream fis = new FileInputStream(file)) {
+            workbook = NewYearMigrate.getSheetsWithPassword(file, pwd, fis);
+
+            try (Workbook wb = workbook) {
+                Sheet sheet = wb.getSheetAt(ListSheet.EMPLOYEE_SEARCH.asInt());
+                if (sheet == null) return;
+
+
+                AddKeyToConfig addKeyToConfig = new AddKeyToConfig(person.getName(), person.getMark());
+                addKeyToConfig.setRow(sheet);
+
+                try (FileOutputStream fileOut = new FileOutputStream(file)) {
+                    workbook.write(fileOut);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -61,7 +85,9 @@ public class AddToList implements AddEmployeeToRow, FreePosition, CellValue {
 
     }
 
-    private void setRow(Sheet sheet, int i) {
+    private void setRow(Sheet sheet) {
+
+        int i = getPos(sheet);
 
         if (isNewMonth) {
             Row monthRow = sheet.getRow(i);
@@ -121,6 +147,8 @@ public class AddToList implements AddEmployeeToRow, FreePosition, CellValue {
             marc = getValueInt(row,EmployeeColumnList.MARK) + 1;
         }
         row.createCell(EmployeeColumnList.MARK).setCellValue(marc);
+
+        person.setMark(marc);
 
     }
 

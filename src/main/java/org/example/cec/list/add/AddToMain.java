@@ -4,6 +4,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.example.cec.CellValue;
 import org.example.cec.WorkingHoursTotal;
+import org.example.cec.list.EmployeeRowList;
 import org.example.cec.list.Person;
 
 import java.io.File;
@@ -102,7 +103,7 @@ public class AddToMain implements AddEmployeeToRow, CellValue, FreePosition {
 
             int i;
 
-            for (i = 10; i <= sheet.getLastRowNum(); i++) {
+            for (i = EmployeeRowList.EMPLOYEE_START_POS; i <= sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
 
                 if (row == null) break;

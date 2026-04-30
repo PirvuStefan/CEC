@@ -18,6 +18,8 @@ public class Person {
     private final String domicile;
     private final LocalDate valability;
 
+    private int mark;
+
     public Person(PersonBuilder builder) {
         this.name = builder.name;
         this.salary = builder.salary;
@@ -30,6 +32,14 @@ public class Person {
         this.gestiune = builder.gestiune;
         this.placeOfWork = builder.placeOfWork;
         this.domicile = builder.domicile;
+    }
+
+    public void setMark(int mark){
+        this.mark = mark;
+    }
+
+    public int getMark(){
+        return mark;
     }
 
 
@@ -87,6 +97,7 @@ public class Person {
         private String placeOfWork;
         private String domicile;
         private LocalDate valability;
+        private int mark;
 
         public PersonBuilder() {
         }
@@ -96,22 +107,8 @@ public class Person {
             return this;
         }
 
-        public PersonBuilder setName(String name, boolean ok) {
-            this.name = name;
-
-            if (ok) {
-                this.salary = 4050;
-                this.employmentDate = LocalDate.now();
-                this.CNP = "1990101123456";
-                this.job = "Mock Job Title";
-                this.phoneNumber = "0700123456";
-                this.CI = "AB123456";
-                this.gestiune = "Mock Gestiune";
-                this.placeOfWork = "Mock Location";
-                this.domicile = "Mock Domicile Address";
-                this.valability = LocalDate.now().plusYears(5);
-            }
-
+        public PersonBuilder setMark(int mark){
+            this.mark = mark;
             return this;
         }
 
