@@ -101,27 +101,27 @@ public class SearchEmployeeScene implements ColorStyle {
 
 
     private String formatResult(EmployeeResult result) {
-        Person person = result.getPerson();
+        Person person = result.person();
         if (person == null) {
-            return "Angajat gasit (key=" + result.getKey() + ") dar datele nu au putut fi citite.";
+            return "Angajat gasit (key=" + result.key() + ") dar datele nu au putut fi citite.";
         }
         StringBuilder sb = new StringBuilder();
-        sb.append("Angajat (key=").append(result.getKey()).append("):\n");
+        sb.append("Angajat (key=").append(result.key()).append("):\n");
         sb.append("Nume: ").append(person.getName()).append("\n");
-        sb.append("Data angajarii: ").append(result.getEmploymentDateStr()).append("\n");
+        sb.append("Data angajarii: ").append(result.employmentDateStr()).append("\n");
         sb.append("Job: ").append(person.getJob()).append("\n");
         sb.append("Salariu: ").append(person.getSalary()).append("\n");
         sb.append("CNP: ").append(person.getCNP()).append("\n");
         sb.append("Telefon: ").append(person.getPhoneNumber()).append("\n");
         sb.append("CI: ").append(person.getCI()).append("\n");
-        sb.append("Valabilitate CI: ").append(result.getValabilityStr()).append("\n");
+        sb.append("Valabilitate CI: ").append(result.valabilityStr()).append("\n");
         sb.append("Loc de munca: ").append(person.getPlaceOfWork()).append("\n");
         sb.append("Gestiune: ").append(person.getGestiune()).append("\n");
         sb.append("Domiciliu: ").append(person.getDomicile()).append("\n");
-        sb.append("Perioade concediu: ").append(result.getHolidayPeriods()).append("\n");
-        sb.append("Zile concediu folosite: ").append(result.getHolidayUsed()).append("\n");
-        sb.append("Zile ramase (an curent): ").append(result.getHolidayLeftCurrentYear()).append("\n");
-        sb.append("Zile ramase (ani anteriori): ").append(result.getHolidayLeftLastYears()).append("\n");
+        sb.append("Perioade concediu: ").append(result.holidayPeriods()).append("\n");
+        sb.append("Zile concediu folosite: ").append(result.holidayUsed()).append("\n");
+        sb.append("Zile ramase (an curent): ").append(result.holidayLeftCurrentYear()).append("\n");
+        sb.append("Zile ramase (ani anteriori): ").append(result.holidayLeftLastYears()).append("\n");
         sb.append("Total zile ramase: ").append(result.getHolidayLeftTotal());
         return sb.toString();
     }
