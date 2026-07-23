@@ -39,3 +39,6 @@ build/
 
 src/main/resources/password
 arhiva/list/**
+
+out/artifacts/**
+arhiva/**

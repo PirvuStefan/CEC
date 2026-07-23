@@ -43,6 +43,7 @@ public class PanamaModify {
                     name = name.trim().toUpperCase();
                     if (name.isEmpty()) break;
 
+
                     assert panamaShifts != null;
                     if(panamaShifts.containsKey(name) || panamaShifts.containsKey(set(name))) {
                         PanamaShift shift = panamaShifts.get(name);

@@ -68,7 +68,7 @@ public class WeekendModifyEmployee {
                     }
                     for (int i = 0; i < shifts.length; i++) {
                         if (shifts[i] == 1) {
-                            nr++;
+
                             int day = pos[i];
                             int colIndex = day + DAY_OFFSET.asInt(); // because we start from column F (index 5)
 
@@ -111,6 +111,7 @@ public class WeekendModifyEmployee {
                                 if(!checkColor(row.getCell(colIndex - 2))) skip = true; // if the cell is not white, we skip it
                             }
                             if(skip) continue;
+                            nr++;
                             System.out.println("Modifying shift for " + employeeName + " on day " + day + " at column index " + colIndex + " with shift type " + whatDay(day, pos));
 
 
@@ -129,6 +130,7 @@ public class WeekendModifyEmployee {
                                     if (day > 2) row.getCell(colIndex - 2).setCellValue("");
                                     if (day > 1) row.getCell(colIndex - 1).setCellValue("");
                                 }
+
                             }
 
 

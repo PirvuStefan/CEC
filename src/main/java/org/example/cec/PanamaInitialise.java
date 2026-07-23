@@ -40,9 +40,12 @@ public class PanamaInitialise {
                 String name = row.getCell(1).getStringCellValue();
                 if( name == null || name.isEmpty() ) break;
 
+                String normaliseName = set(name);
+
 
                 PanamaShift shift = new PanamaShift(panamaSheet, row);
-                List.put(name, shift);
+
+                List.put(normaliseName, shift);
 
 
             }
