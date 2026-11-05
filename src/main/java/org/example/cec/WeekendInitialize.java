@@ -44,7 +44,7 @@ public class WeekendInitialize {
                 if(!row.getCell(0).getStringCellValue().isEmpty()) magazin = row.getCell(0).getStringCellValue();
 
 
-
+                System.out.println(name + " from " + magazin + " has " + row.getLastCellNum() + " cells.");
 
 
                 WeekendShift shift = new WeekendShift();

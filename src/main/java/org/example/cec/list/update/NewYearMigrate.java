@@ -38,7 +38,11 @@ public class NewYearMigrate implements CellValue {
 
     // this should only be called when a new year starts, to migrate the remaining holidays of the employee to the last years left column, and reset the used holidays for the new year
     public void update(){
-        File listFile = new File(ListConfig.getInstance().getFile().toURI());
+        File configuredFile = ListConfig.getInstance().getFile();
+        if (configuredFile == null || !configuredFile.isFile() || configuredFile.length() == 0) {
+            return;
+        }
+        File listFile = configuredFile;
         
         String pwd = null;
         try {
@@ -51,6 +55,9 @@ public class NewYearMigrate implements CellValue {
         try (FileInputStream fis = new FileInputStream(listFile)) {
             Workbook workbook;
             workbook = getSheetsWithPassword(listFile, pwd, fis);
+            if (workbook == null) {
+                return;
+            }
 
             try (Workbook wb = workbook) {
                 Sheet sheet = wb.getSheetAt(ListSheet.EMPLOYEE_LIST.asInt());
@@ -90,6 +97,10 @@ public class NewYearMigrate implements CellValue {
     }
 
     public static Workbook getSheetsWithPassword(File listFile, String pwd, FileInputStream fis) throws IOException {
+        if (listFile == null || !listFile.isFile() || listFile.length() == 0) {
+            return null;
+        }
+
         Workbook workbook;
         try {
             if (pwd != null && !pwd.isEmpty()) {

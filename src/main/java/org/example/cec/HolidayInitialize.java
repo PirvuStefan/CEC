@@ -53,7 +53,7 @@ public class HolidayInitialize {
                 String lastDay = parts[1].trim().replaceFirst("^0+(?!$)", "");
 
                 int total = 0;
-                Cell totalCell = row.getCell(3);
+                Cell totalCell = row.getCell(4);
                 if (totalCell != null) {
                     if (totalCell.getCellType() == CellType.NUMERIC) {
                         total = (int) totalCell.getNumericCellValue();
@@ -65,7 +65,7 @@ public class HolidayInitialize {
                     }
                 }
 
-                String reason = row.getCell(4).getStringCellValue();
+                String reason = row.getCell(3).getStringCellValue();
                 reason = switch (reason) {
                     case "co", "CO" -> "concediu";
                     //case "m", "M" -> "maternitate";

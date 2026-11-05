@@ -39,6 +39,7 @@ public class AddToList implements AddEmployeeToRow, FreePosition, CellValue {
 
         try (FileInputStream fis = new FileInputStream(file)) {
             workbook = NewYearMigrate.getSheetsWithPassword(file, pwd, fis);
+            if (workbook == null) return;
 
             try (Workbook wb = workbook) {
                 Sheet sheet = wb.getSheetAt(ListSheet.EMPLOYEE_LIST.asInt());
@@ -62,6 +63,7 @@ public class AddToList implements AddEmployeeToRow, FreePosition, CellValue {
 
         try (FileInputStream fis = new FileInputStream(file)) {
             workbook = NewYearMigrate.getSheetsWithPassword(file, pwd, fis);
+            if (workbook == null) return;
 
             try (Workbook wb = workbook) {
                 Sheet sheet = wb.getSheetAt(ListSheet.EMPLOYEE_SEARCH.asInt());

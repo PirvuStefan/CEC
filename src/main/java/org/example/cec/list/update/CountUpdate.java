@@ -72,6 +72,7 @@ public class CountUpdate implements CellValue {
 
         try (FileInputStream fis = new FileInputStream(listFile)) {
             Workbook workbook = NewYearMigrate.getSheetsWithPassword(listFile, pwd, fis);
+            if (workbook == null) return;
 
             try (Workbook wb = workbook) {
                 Sheet sheet = wb.getSheetAt(ListSheet.EMPLOYEE_LIST.asInt());
